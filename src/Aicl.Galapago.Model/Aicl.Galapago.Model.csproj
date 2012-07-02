@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Aicl.Galapago.Model</RootNamespace>
+    <AssemblyName>Aicl.Galapago.Model</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\..\lib\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite">
+      <HintPath>..\..\lib\ServiceStack.OrmLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="ServiceStack.FluentValidation.Mvc3">
+      <HintPath>..\..\lib\ServiceStack.FluentValidation.Mvc3.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.ServiceInterface">
+      <HintPath>..\..\lib\ServiceStack.ServiceInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Operations\Response.cs" />
+    <Compile Include="Operations\AuthenticationResponse.cs" />
+    <Compile Include="Operations\AuthorizationResponse.cs" />
+    <Compile Include="Types\Authentication.cs" />
+    <Compile Include="Types\Authorization.cs" />
+    <Compile Include="Types\AuthRole.cs" />
+    <Compile Include="Types\RoleAndPermission.cs" />
+    <Compile Include="Attributes\Authentication.cs" />
+    <Compile Include="Attributes\AuthRole.cs" />
+    <Compile Include="Types\SucursalAutorizada.cs" />
+    <Compile Include="Types\CentroAutorizado.cs" />
+    <Compile Include="Types\SucursalCentro.cs" />
+    <Compile Include="Attributes\SucursalCentro.cs" />
+    <Compile Include="Types\UsuarioSucursalCentro.cs" />
+    <Compile Include="Attributes\UsuarioSucursalCentro.cs" />
+    <Compile Include="Types\Centro.cs" />
+    <Compile Include="Types\Sucursal.cs" />
+    <Compile Include="Attributes\Sucursal.cs" />
+    <Compile Include="Types\AuthPermission.cs" />
+    <Compile Include="Types\AuthRolePermission.cs" />
+    <Compile Include="Types\AuthRoleUser.cs" />
+    <Compile Include="Attributes\AuthPermission.cs" />
+    <Compile Include="Attributes\AuthRolePermission.cs" />
+    <Compile Include="Attributes\AuthRoleUser.cs" />
+    <Compile Include="IHasIdUsuario.cs" />
+    <Compile Include="Types\Consecutivo.cs" />
+    <Compile Include="Attributes\Consecutivo.cs" />
+    <Compile Include="Types\PeriodoSucursal.cs" />
+    <Compile Include="Attributes\PeriodoSucursal.cs" />
+    <Compile Include="Types\Periodo.cs" />
+    <Compile Include="Attributes\Periodo.cs" />
+    <Compile Include="IHasIdSucursal.cs" />
+    <Compile Include="IHasPeriodo.cs" />
+    <Compile Include="Types\Cuenta.cs" />
+    <Compile Include="Attributes\Cuenta.cs" />
+    <Compile Include="IHasFechaAsentado.cs" />
+    <Compile Include="IHasFechaAnulado.cs" />
+    <Compile Include="Operaciones.cs" />
+    <Compile Include="Validations\IdValidator.cs" />
+    <Compile Include="Definiciones.cs" />
+    <Compile Include="Validations\CuentaValidator.cs" />
+    <Compile Include="Secured.cs" />
+    <Compile Include="IHasIdCentro.cs" />
+    <Compile Include="Types\Tercero.cs" />
+    <Compile Include="Attributes\Tercero.cs" />
+    <Compile Include="Validations\TerceroValidator.cs" />
+    <Compile Include="Types\CodigoDocumento.cs" />
+    <Compile Include="Attributes\CodigoDocumento.cs" />
+    <Compile Include="Attributes\Egreso.cs" />
+    <Compile Include="Types\Egreso.cs" />
+    <Compile Include="Validations\EgresoValidator.cs" />
+    <Compile Include="IHasIdTercero.cs" />
+    <Compile Include="IHasCodigoDocumento.cs" />
+    <Compile Include="Types\EgresoItem.cs" />
+    <Compile Include="Attributes\EgresoItem.cs" />
+    <Compile Include="Types\MayorPresupuesto.cs" />
+    <Compile Include="Attributes\MayorPresupuesto.cs" />
+    <Compile Include="Types\Presupuesto.cs" />
+    <Compile Include="Types\PresupuestoItem.cs" />
+    <Compile Include="Attributes\Presupuesto.cs" />
+    <Compile Include="Attributes\PresupuestoItem.cs" />
+    <Compile Include="Validations\EgresoItemValidador.cs" />
+    <Compile Include="Validations\PresupuestoItemValidador.cs" />
+    <Compile Include="Types\ComprobanteEgreso.cs" />
+    <Compile Include="Types\ComprobanteEgresoItem.cs" />
+    <Compile Include="Validations\ComprobanteEgresoValidator.cs" />
+    <Compile Include="Attributes\ComprobanteEgreso.cs" />
+    <Compile Include="Attributes\ComprobanteEgresoItem.cs" />
+    <Compile Include="Types\ComprobanteEgresoRetencion.cs" />
+    <Compile Include="Attributes\ComprobanteEgresoRetencion.cs" />
+    <Compile Include="Types\UsuarioGiradora.cs" />
+    <Compile Include="Attributes\UsuarioGiradora.cs" />
+    <Compile Include="Validations\ComprobanteEgresoItemValidator.cs" />
+    <Compile Include="Validations\ComprobanteEgresoRetencionValidador.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Operations\" />
+    <Folder Include="Properties\" />
+    <Folder Include="Attributes\" />
+    <Folder Include="Validations\" />
+  </ItemGroup>
+</Project>

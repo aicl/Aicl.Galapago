@@ -1,0 +1,1 @@
+<%@ Application Inherits="Aicl.Galapago.Host.Web.Global" %>

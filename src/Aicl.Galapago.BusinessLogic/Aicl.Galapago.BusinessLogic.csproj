@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D707DF47-5A41-407B-87F5-6003ED961B3A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Aicl.Galapago.BusinessLogic</RootNamespace>
+    <AssemblyName>Aicl.Galapago.BusinessLogic</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\..\lib\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.ServiceInterface">
+      <HintPath>..\..\lib\ServiceStack.ServiceInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\..\lib\ServiceStack.Text.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EgresoExtensiones.cs" />
+    <Compile Include="CodigoDocumentoExtensiones.cs" />
+    <Compile Include="CuentaExtensiones.cs" />
+    <Compile Include="PresupuestoExtensiones.cs" />
+    <Compile Include="PresupuestoItemExtensiones.cs" />
+    <Compile Include="TerceroExtensiones.cs" />
+    <Compile Include="AuthorizationExtensions.cs" />
+    <Compile Include="EgresoItemExtensiones.cs" />
+    <Compile Include="ComprobanteEgresoExtensiones.cs" />
+    <Compile Include="UsuarioGiradoraExtensiones.cs" />
+    <Compile Include="ComprobanteEgresoItemExtensiones.cs" />
+    <Compile Include="ComprobanteEgresoRetencionExtensiones.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aicl.Galapago.Model\Aicl.Galapago.Model.csproj">
+      <Project>{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}</Project>
+      <Name>Aicl.Galapago.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Aicl.Galapago.DataAccess\Aicl.Galapago.DataAccess.csproj">
+      <Project>{C0319E77-DA72-47AD-A64F-5E25C634DC4B}</Project>
+      <Name>Aicl.Galapago.DataAccess</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

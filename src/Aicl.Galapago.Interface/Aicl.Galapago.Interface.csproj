@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A04440F6-FF47-4E5B-9B61-C2EC27DC52F9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Aicl.Galapago.Interface</RootNamespace>
+    <AssemblyName>Aicl.Galapago.Interface</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="ServiceStack.Common">
+      <HintPath>..\..\lib\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack">
+      <HintPath>..\..\lib\ServiceStack.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite">
+      <HintPath>..\..\lib\ServiceStack.OrmLite.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.ServiceInterface">
+      <HintPath>..\..\lib\ServiceStack.ServiceInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\..\lib\ServiceStack.Text.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AppConfig.cs" />
+    <Compile Include="HttpResponse.cs" />
+    <Compile Include="AppRestService.cs" />
+    <Compile Include="SecuredService.cs" />
+    <Compile Include="Attributes\RequiresAuthenticateAttribute.cs" />
+    <Compile Include="Attributes\PermissionAttribute.cs" />
+    <Compile Include="Attributes\RoleAttribute.cs" />
+    <Compile Include="Auth\AuthenticationProvider.cs" />
+    <Compile Include="Auth\AuthorizationService.cs" />
+    <Compile Include="Auth\AuthenticationService.cs" />
+    <Compile Include="Services\EgresoService.cs" />
+    <Compile Include="Services\EgresoItemService.cs" />
+    <Compile Include="Services\ComprobanteEgresoService.cs" />
+    <Compile Include="Services\ComprobanteEgresoItemService.cs" />
+    <Compile Include="Services\ComprobanteEgresoRetencionService.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Aicl.Galapago.Model\Aicl.Galapago.Model.csproj">
+      <Project>{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}</Project>
+      <Name>Aicl.Galapago.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Aicl.Galapago.DataAccess\Aicl.Galapago.DataAccess.csproj">
+      <Project>{C0319E77-DA72-47AD-A64F-5E25C634DC4B}</Project>
+      <Name>Aicl.Galapago.DataAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Aicl.Galapago.BusinessLogic\Aicl.Galapago.BusinessLogic.csproj">
+      <Project>{D707DF47-5A41-407B-87F5-6003ED961B3A}</Project>
+      <Name>Aicl.Galapago.BusinessLogic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+    <Folder Include="Services\" />
+    <Folder Include="Attributes\" />
+    <Folder Include="Auth\" />
+    <Folder Include="Services\Asiento\" />
+  </ItemGroup>
+</Project>
