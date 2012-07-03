@@ -19,17 +19,50 @@ namespace Aicl.Galapago.Interface
 	public class EgresoService:AppRestService<Egreso>
 	{
 
+        public override object OnGet (Egreso request)
+        {
+            var httpRequest = RequestContext.Get<IHttpRequest>();       
+
+            int page;
+            int? pageNumber=null;
+            if (int.TryParse( httpRequest.QueryString["page"], out page))
+                pageNumber=page-1;
+
+            int limit;
+            int? pageSize=null;
+
+            if (int.TryParse( httpRequest.QueryString["limit"], out limit))
+                pageSize=limit;
+
+            string nombreTerecero= httpRequest.QueryString["NombreTercero"];
+            if(!nombreTerecero.IsNullOrEmpty()) request.NombreTercero=nombreTerecero;
+
+            string docTercero= httpRequest.QueryString["DocumentoTercero"];
+            if(!docTercero.IsNullOrEmpty()) request.DocumentoTercero=docTercero;
+
+            string periodo= httpRequest.QueryString["Periodo"];
+            if(periodo.IsNullOrEmpty()) periodo=DateTime.Today.ObtenerPeriodo();
+            request.Periodo=periodo;
+
+            string asentado= httpRequest.QueryString["Asentado"];
+            if(!asentado.IsNullOrEmpty())
+            {
+                bool tomarSoloAsentado;
+                if( bool.TryParse(asentado,out tomarSoloAsentado))
+                {
+                    request.FechaAsentado= tomarSoloAsentado?DateTime.Today:default(DateTime);
+                }
+            }
+
+
+            return request.Get(Factory, httpRequest.GetSession(),pageNumber, pageSize);
+        }
+
 		public override object OnPost (Egreso request)
 		{
             var httpRequest = RequestContext.Get<IHttpRequest>();       
 			return request.Post(Factory, httpRequest.GetSession());
-		}
-		
-		
-		public override object OnGet (Egreso request)
-		{
-			return OnPost(request);
-		}
+		}	
 
         public override object OnPut (Egreso request)
         {

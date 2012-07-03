@@ -6,6 +6,8 @@ namespace Aicl.Galapago.Model.Operations
 {
 	public class Response<T>:IHasResponseStatus where T:new()
 	{
+        private long? totalCount;
+
 		public Response ()
 		{
 			ResponseStatus= new ResponseStatus();
@@ -15,6 +17,12 @@ namespace Aicl.Galapago.Model.Operations
 		public ResponseStatus ResponseStatus { get; set; }
 		
 		public List<T> Data {get; set;}
+
+
+        public long? TotalCount {
+            get {return totalCount.HasValue? totalCount.Value: Data.Count;}
+            set { totalCount=value;}
+        }
 		
 	}
 }

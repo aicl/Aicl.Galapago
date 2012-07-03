@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Collections.Generic;
 using System.Reflection;
 using ServiceStack.OrmLite;
@@ -18,7 +19,32 @@ namespace Aicl.Galapago.DataAccess
 {
     public static partial class DAL
     {
-                
+       
+        public static List<T> Get<T>( this DALProxy proxy, SqlExpressionVisitor<T> visitor)
+            where T: new()
+        {
+            return proxy.Execute(dbCmd=>{
+                return dbCmd.Select(visitor);
+            });
+
+        }
+         
+        public static long Count<T>( this DALProxy proxy,
+                                    Expression<Func<T,bool>> predicate,
+                                    bool excludeJoin=false
+                                    )
+            where T: IHasId<int>, new()
+        {
+            var expression= ReadExtensions.CreateExpression<T>();
+            expression.ExcludeJoin=excludeJoin;
+            expression.Select(r=> Sql.Count(r.Id)).Where(predicate);
+
+            return proxy.Execute(dbCmd=>{
+                return dbCmd.GetScalar<T,long>(expression) ;
+            });
+
+        }
+
         public static Consecutivo GetNextConsecutivo(DALProxy proxy,
                                                    int idSucursal, string documento)
         {

@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Galapago.Model", "Aicl.Galapago.Model\Aicl.Galapago.Model.csproj", "{E0C40BDB-3D96-4FE3-850C-944FFFD63F8C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aicl.Galapago.DataAccess", "Aicl.Galapago.DataAccess\Aicl.Galapago.DataAccess.csproj", "{C0319E77-DA72-47AD-A64F-5E25C634DC4B}"

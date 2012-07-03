@@ -17,6 +17,13 @@ namespace Aicl.Galapago.Interface
 	[Permission(ApplyTo.Delete, "EgresoItem.destroy")]
 	public class EgresoItemService:AppRestService<EgresoItem>
 	{
+
+        public override object OnGet (EgresoItem request)
+        {
+            var httpRequest = RequestContext.Get<IHttpRequest>();       
+            return request.Get(Factory, httpRequest.GetSession());
+        }
+
         public override object OnPost (EgresoItem request)
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       

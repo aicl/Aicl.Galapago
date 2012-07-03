@@ -6,6 +6,9 @@ using ServiceStack.DesignPatterns.Model;
 
 namespace Aicl.Galapago.Model.Types
 {
+    [JoinTo(typeof(PresupuestoItem),"IdPresupuestoItem", "Id", Order=0)]
+    [JoinTo(typeof(Centro),"IdCentro", "Id", Order=1)]
+    [JoinTo(typeof(Tercero),"IdTercero", "Id", Order=2, JoinType=JoinType.Left)]
 	[Alias("EGRESO_ITEM")]
 	public partial class EgresoItem:IHasId<System.Int32>, IHasIdCentro{
 
@@ -36,5 +39,30 @@ namespace Aicl.Galapago.Model.Types
         [Alias("ID_TERCERO")]
         public System.Int32? IdTercero { get; set;} 
 
+        #region PresupuestoItem
+        [BelongsTo(typeof(PresupuestoItem),"Codigo")]
+        public string CodigoItem {get; set;}
+
+        [BelongsTo(typeof(PresupuestoItem),"Nombre")]
+        public string NombreItem {get; set;}
+        #endregion PresupuestoItem
+
+        #region Centro
+        [BelongsTo(typeof(Centro),"Nombre")]
+        public string NombreCentro {get; set;}
+        #endregion Centro
+
+        #region Tercero
+        [BelongsTo(typeof(Tercero),"Nombre")]
+        public string NombreTercero {get; set;}
+
+        [BelongsTo(typeof(Tercero),"Documento")]
+        public string DocumentoTercero {get;set;}
+
+        [BelongsTo(typeof(Tercero),"DigitoVerificacion")]
+        public string DVTercero {get;set;}
+        #endregion Tercero
+
 	}
+
 }

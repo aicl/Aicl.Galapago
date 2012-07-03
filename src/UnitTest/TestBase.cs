@@ -148,3 +148,6 @@ Aicl.Util.executeAjaxRequest({url:'http://0.0.0.0:8080/api/Egreso/patch/357/reve
 	
 */
 //Aicl.Util.executeAjaxRequest({url:'http://0.0.0.0:8080/api/EgresoItem/create', method:'POST', params:{IdEgreso:361,IdCentro:2,IdTercero:1,Valor:15, IdPresupuestoItem:14, TipoPartida:1} })
+//http://0.0.0.0:8080/api/Egreso/read?format=json&Periodo=2012&NombreTercero=varios&NombreSucursal=Bog&Asentado=true
+//Aicl.Util.executeAjaxRequest({url:'http://0.0.0.0:8080/api/Egreso/read', method:'GET', params:{Periodo:'2012', Asentado:false, NombreTercero:'angel'} })
+// get los params van como queryParams.....

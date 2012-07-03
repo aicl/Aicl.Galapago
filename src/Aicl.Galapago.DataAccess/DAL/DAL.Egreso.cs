@@ -32,9 +32,12 @@ namespace Aicl.Galapago.DataAccess
         }
 
 
-        public static Egreso GetEgresoById( DALProxy proxy, int idEgreso){
+        public static Egreso GetEgresoById( DALProxy proxy, int idEgreso, bool excludeJoin=true){
             return proxy.Execute(dbCmd=>{
-                return dbCmd.GetByIdOrDefault<Egreso>(idEgreso);
+                var visitor = ReadExtensions.CreateExpression<Egreso>();
+                visitor.ExcludeJoin=excludeJoin;
+                visitor.Where(q=>q.Id==idEgreso);
+                return dbCmd.FirstOrDefault(visitor);
             });
         }
 

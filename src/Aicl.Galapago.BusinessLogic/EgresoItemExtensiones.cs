@@ -22,6 +22,30 @@ namespace Aicl.Galapago.BusinessLogic
 {
     public static class EgresoItemExtensiones
     {
+
+        #region Get
+        public static Response<EgresoItem> Get(this EgresoItem request,
+                                            Factory factory,
+                                            IAuthSession authSession)
+        {
+
+
+            var data = factory.Execute(proxy=>{
+               var visitor = ReadExtensions.CreateExpression<EgresoItem>();
+               
+               visitor.Where(r=>r.IdEgreso==request.IdEgreso).OrderByDescending(r=>r.TipoPartida);
+
+               return proxy.Get(visitor);
+            });
+
+                        
+            return new Response<EgresoItem>(){
+                Data=data
+            };
+
+        }
+        #endregion Get
+
         #region Post        
         public static Response<EgresoItem> Post(this EgresoItem request,
                                             Factory factory,

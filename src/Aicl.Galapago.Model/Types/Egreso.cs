@@ -7,6 +7,12 @@ using ServiceStack.DesignPatterns.Model;
 namespace Aicl.Galapago.Model.Types
 {
 	[Alias("EGRESO")]
+
+    [JoinTo(typeof(Sucursal),"IdSucursal", "Id", Order=0)]
+    [JoinTo(typeof(Tercero),"IdTercero","Id", Order=1)]
+    [JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", Order=2)]
+    [JoinTo(typeof(Tercero),"IdTerceroReceptor","Id", ChildAlias="Receptor", Order=3, JoinType=JoinType.Left)]
+    [JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", ParentAlias="Receptor", ChildAlias="DocRec", Order=4, JoinType=JoinType.Left)]
 	public partial class Egreso:IHasId<System.Int32>, IHasIdSucursal,IHasPeriodo,IHasIdTercero, IHasCodigoDocumento{
 
 		public Egreso(){}
@@ -70,5 +76,47 @@ namespace Aicl.Galapago.Model.Types
 
         [Alias("ID_TERCERO_RECEPTOR")]
         public System.Int32? IdTerceroReceptor  { get; set;} 
+
+
+        #region Sucursal
+        [BelongsTo(typeof(Sucursal),"Nombre")]
+        public string NombreSucursal{ get;set;}
+        #endregion Sucursal
+
+        #region Tercero
+        [BelongsTo(typeof(Tercero),"Documento")]
+        public string DocumentoTercero {get;set;}
+
+        [BelongsTo(typeof(Tercero),"DigitoVerificacion")]
+        public string DVTercero {get;set;}
+
+        [BelongsTo(typeof(Tercero),"Nombre")]
+        public string NombreTercero {get;set;}
+
+        #endregion Tercero
+
+        #region TipoDocumento Tercero
+        [BelongsTo(typeof(TipoDocumento),"Nombre")]
+        public string NombreDocumentoTercero {get;set;}
+        #endregion TipoDocumento Tercero
+
+        #region TerceroReceptor
+        [BelongsTo(typeof(Tercero),"Documento", ParentAlias="Receptor" )]
+        public string DocumentoReceptor {get;set;}
+
+        [BelongsTo(typeof(Tercero),"DigitoVerificacion", ParentAlias="Receptor")]
+        public string DVReceptor {get;set;}
+
+        [BelongsTo(typeof(Tercero), "Nombre", ParentAlias="Receptor")]
+        public string NombreReceptor {get;set;}
+
+        #endregion TerceroReceptor
+
+        #region TipoDocumento TerceroReceptor
+        [BelongsTo(typeof(TipoDocumento),"Nombre", ParentAlias="DocRec")]
+        public string NombreDocumentoReceptor {get;set;}
+        #endregion TipoDocumento TerceroReceptor
+
+
 	}
 }
