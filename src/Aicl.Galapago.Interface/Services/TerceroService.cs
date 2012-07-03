@@ -6,6 +6,8 @@ using ServiceStack.ServiceInterface;
 
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
+using Aicl.Galapago.DataAccess;
+using Aicl.Galapago.BusinessLogic;
 
 namespace Aicl.Galapago.Interface
 {
@@ -16,5 +18,9 @@ namespace Aicl.Galapago.Interface
 	[Permission(ApplyTo.Delete, "Tercero.destroy")]
 	public class TerceroService:AppRestService<Tercero>
 	{
+        public override object OnGet (Tercero request)
+        {
+            return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+        }
 	}
 }

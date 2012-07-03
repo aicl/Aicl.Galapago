@@ -29,7 +29,7 @@ namespace Aicl.Galapago.BusinessLogic
         public static Response<Egreso> Get(this Egreso request,
                                            Factory factory,
                                            IAuthSession authSession,
-                                           int? pageNumber=null, int? pageSize=null )
+                                           Paginador paginador )
         {
             long? totalCount=null;
 
@@ -57,11 +57,11 @@ namespace Aicl.Galapago.BusinessLogic
 
                 var visitor = ReadExtensions.CreateExpression<Egreso>();
 
-                if(pageNumber.HasValue)
+                if(paginador.PageNumber.HasValue)
                 {
                     totalCount= proxy.Count(predicate);
-                    int rows= pageSize.HasValue? pageSize.Value:BL.PageSize;
-                    visitor.Limit(pageNumber.Value*rows, rows);
+                    int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.PageSize;
+                    visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                                 
                 visitor.Where(predicate).OrderByDescending(r=>r.Fecha);

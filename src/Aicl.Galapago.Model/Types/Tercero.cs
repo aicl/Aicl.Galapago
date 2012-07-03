@@ -7,6 +7,8 @@ using ServiceStack.DesignPatterns.Model;
 namespace Aicl.Galapago.Model.Types
 {
 	[Alias("TERCERO")]
+    //[JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", Order=0)] // asi produce stackOverflow!
+    [JoinTo(typeof(TipoDocumento),"IdTipoDocumento","Id", Order=0)]
 	public partial class Tercero:IHasId<System.Int32>{
 
 		public Tercero(){}
@@ -75,6 +77,12 @@ namespace Aicl.Galapago.Model.Types
 
 		[Alias("ES_PARAFISCAL")]
 		public System.Boolean EsParafiscal { get; set;} 
+
+        #region TipoDocumento
+        [BelongsTo(typeof(TipoDocumento),"Nombre")]
+        public string NombreDocumento {get;set;}
+        #endregion TipoDocumento
+
 
 	}
 }

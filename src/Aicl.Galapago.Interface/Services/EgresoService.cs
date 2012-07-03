@@ -23,16 +23,7 @@ namespace Aicl.Galapago.Interface
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       
 
-            int page;
-            int? pageNumber=null;
-            if (int.TryParse( httpRequest.QueryString["page"], out page))
-                pageNumber=page-1;
-
-            int limit;
-            int? pageSize=null;
-
-            if (int.TryParse( httpRequest.QueryString["limit"], out limit))
-                pageSize=limit;
+            Paginador paginador= new Paginador(httpRequest);
 
             string nombreTerecero= httpRequest.QueryString["NombreTercero"];
             if(!nombreTerecero.IsNullOrEmpty()) request.NombreTercero=nombreTerecero;
@@ -55,7 +46,7 @@ namespace Aicl.Galapago.Interface
             }
 
 
-            return request.Get(Factory, httpRequest.GetSession(),pageNumber, pageSize);
+            return request.Get(Factory, httpRequest.GetSession(), paginador);
         }
 
 		public override object OnPost (Egreso request)
