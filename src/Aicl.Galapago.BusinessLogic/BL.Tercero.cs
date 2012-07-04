@@ -37,11 +37,16 @@ namespace Aicl.Galapago.BusinessLogic
 
 
                 Expression<Func<Tercero, bool>> predicate;
-                bool activo;
-                if (bool.TryParse( queryString["Activo"], out activo))
-                    predicate=q=>q.Activo== activo;                          
+
+                int id;
+                if(int.TryParse(queryString["Id"], out id))
+                    predicate=q=>q.Id== id;                          
                 else
                     predicate= PredicateBuilder.True<Tercero>();
+
+                bool activo;
+                if (bool.TryParse( queryString["Activo"], out activo))
+                    predicate= predicate.AndAlso( q=>q.Activo== activo);                          
 
                 var documento= queryString["Documento"];
                 if(!documento.IsNullOrEmpty())
@@ -99,9 +104,7 @@ namespace Aicl.Galapago.BusinessLogic
                 if(predicate2!=null) 
                     predicate= predicate.AndAlso(predicate2);
 
-
                 var visitor = ReadExtensions.CreateExpression<Tercero>();
-
 
                 if(paginador.PageNumber.HasValue)
                 {

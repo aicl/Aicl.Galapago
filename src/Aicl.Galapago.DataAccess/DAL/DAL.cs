@@ -170,31 +170,34 @@ namespace Aicl.Galapago.DataAccess
             });
         }
 
-        public static T FirstOrDefaultById<T>(DALProxy proxy, object id)
-            where T: new()
+        public static T FirstOrDefaultById<T>(DALProxy proxy, int id)
+            where T: IHasId<int>, new()
         {
             return proxy.Execute((dbCmd)=>{
-                return dbCmd.GetByIdOrDefault<T>(id);
+                return dbCmd.FirstOrDefault<T>(q=>q.Id== id);
             });
         }
 
-        public static T FirstOrDefaultByIdFromCache<T>(DALProxy proxy, object id)
-            where T: new()
+        public static T FirstOrDefaultByIdFromCache<T>(DALProxy proxy, int id)
+            where T: IHasId<int>, new()
         {
-            return proxy.Execute((redisClient, dbCmd)=>{
 
+            return proxy.Execute((redisClient, dbCmd)=>{
+                return dbCmd.FirstOrDefault<T>(q=>q.Id== id);
+                /*
                 var cacheKey = id.GetCacheKey<T>();
             
                 T result = redisClient.Get(cacheKey, () =>
                 {
-                    return dbCmd.GetByIdOrDefault<T>(id);
+                    return dbCmd.FirstOrDefault<T>(q=>q.Id== id);
                 },
                 TimeSpan.FromDays(Definiciones.DiasEnCache));
         
                 return result;
-
+                */
 
             });
+
         }
 
 

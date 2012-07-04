@@ -20,14 +20,19 @@ namespace Aicl.Galapago.DataAccess
 	public static class IHasIdSucursalExtensions
 	{
 				
-		public static void CheckSucursal<T>(this T request, DALProxy proxy, int idUsuario)
+		public static Sucursal CheckSucursal<T>(this T request, DALProxy proxy, int idUsuario)
             where T:IHasIdSucursal, new()
         {
 
-            var usc = DAL.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(proxy,idUsuario);
+            var uscL = DAL.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(proxy,idUsuario);
 
-            if(usc.FirstOrDefault(r=>r.IdSucursal==request.IdSucursal)==default(UsuarioSucursalCentro))
+            var uscR = uscL.FirstOrDefault(r=>r.IdSucursal==request.IdSucursal);
+
+            if( uscR==default(UsuarioSucursalCentro))
                throw HttpError.Unauthorized("Sucursal no autorizada");
+
+            var sucursales= DAL.GetFromCache<Sucursal>(proxy);
+            return sucursales.First(r=>r.Id==uscR.IdSucursal);
 
         }
         
@@ -44,12 +49,13 @@ namespace Aicl.Galapago.DataAccess
 		}
 		
 
-        public static void CheckTercero<T>(this T request, DALProxy proxy)
+        public static Tercero CheckTercero<T>(this T request, DALProxy proxy)
             where T:IHasIdTercero, new()
         {
            
             Tercero tercero = DAL.FirstOrDefaultByIdFromCache<Tercero>(proxy, request.IdTercero); 
             tercero.AssertExists(request.IdTercero);
+            return tercero;
 
         }
 
