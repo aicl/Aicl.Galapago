@@ -90,7 +90,18 @@ Ext.define('App.controller.Egreso',{
 		selections=selections||[];
 		if (selections.length){
 			this.getEgresoNewButton().setDisabled(!this.getEgresoStore().canCreate());
-        	this.getEgresoForm().getForm().loadRecord(selections[0]);
+			
+			var record= selections[0];
+			var rt= this.getRemoteTerceroStore();
+			if(!rt.getById(record.get('IdTercero'))){
+				rt.addLocal({Id:record.get('IdTercero'),
+				Nombre:record.get('NombreTercero'),
+				Documento:record.get('DocumentoTercero'),
+				DigitoVerificacion:record.get('DVTercero'),
+				NombreDocumento:record.get('NombreDocumentoTercero')})
+			}
+        	this.getEgresoForm().getForm().loadRecord(record);
+        	
             this.getEgresoSaveButton().setText('Update');
             this.getEgresoDeleteButton().setDisabled(!this.getEgresoStore().canDestroy());
             this.getEgresoSaveButton().setDisabled(!this.getEgresoStore().canUpdate());

@@ -40,7 +40,11 @@ namespace Aicl.Galapago.DataAccess
                     });
 		}
 		
-		
+		public  List<T> Get<T> () where T:new()
+        {
+            return DbFactory.Exec( dbCmd => dbCmd.Select<T>());
+        }
+
 		public  List<T> Post<T> (T request) where T:new(){
 
 			DbFactory.Exec(	(dbCmd) =>

@@ -59,13 +59,17 @@ namespace Aicl.Galapago.Interface
             session.Roles= (from r in aur.Roles select r.Name).ToList();
             
             authService.SaveSession(session);
-                        
+               
+            var cd = Factory.Get<CodigoDocumento>();
+
             return new AuthenticationResponse(){
                 DisplayName= session.DisplayName.IsNullOrEmpty()? session.UserName: session.DisplayName,
                 Roles= aur.Roles,
                 Permissions= aur.Permissions,
                 Centros= aur.Centros,
-                Sucursales=aur.Sucursales
+                Sucursales=aur.Sucursales,
+                CodigosEgreso=cd.Where(r=>r.Tipo=="E" && r.Activo).OrderBy(r=>r.Nombre).ToList(),
+                CodigosIngreso=cd.Where(r=>r.Tipo=="I" && r.Activo).OrderBy(r=>r.Nombre).ToList()
             };
 
 		}

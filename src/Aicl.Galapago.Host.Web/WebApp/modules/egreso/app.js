@@ -33,7 +33,7 @@ launch: function(){
     var controller =this.getController('Egreso');
     //controller.getEgresoStore().load();
     //controller.getRemoteTerceroStore().load();
-    //controller.refreshButtons();
+    controller.refreshButtons();
 },
     
 controllers: ['Egreso']

@@ -32,87 +32,23 @@ Ext.define('App.view.egreso.Form', {
 		xtype: 'hidden',
 		name: 'Id'
 	},{
-		xtype: 'sucursalautorizadacombo'
+		xtype: 'sucursalautorizadacombo',fieldLabel: 'Sucursal'
 	},{
-		xtype: 'remotetercerocombo'
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdTercero',
-		fieldLabel: 'IdTercero',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'Numero',
-		fieldLabel: 'Numero',
-		allowBlank: false
-	},
-	{
-		name: 'Descripcion',
-		fieldLabel: 'Descripcion',
-		maxLength: 50,
-		enforceMaxLength: true
-	},
-	{
+		xtype:'codigoegresocombo',fieldLabel: 'Tipo Documento'
+	},{
 		xtype: 'datefield',
 		name: 'Fecha',
 		fieldLabel: 'Fecha',
 		allowBlank: false,
-		format: 'd.m.Y'
-	},
-	{
-		name: 'Periodo',
-		fieldLabel: 'Periodo',
-		allowBlank: false,
-		maxLength: 6,
+		format: 'd.m.Y',
+		value:new Date()
+	},{
+		name: 'Descripcion',
+		fieldLabel: 'Descripcion',
+		maxLength: 50,
 		enforceMaxLength: true
-	},
-	{
-		xtype: 'numberfield',
-		name: 'Valor',
-		fieldLabel: 'Valor',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		name: 'Saldo',
-		fieldLabel: 'Saldo',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'DiasCredito',
-		fieldLabel: 'DiasCredito',
-		allowBlank: false
-	},
-	{
-		xtype: 'datefield',
-		name: 'FechaAsentado',
-		fieldLabel: 'FechaAsentado',
-		format: 'd.m.Y'
-	},
-	{
-		xtype: 'datefield',
-		name: 'FechaAnulado',
-		fieldLabel: 'FechaAnulado',
-		format: 'd.m.Y'
-	},
-	{
-		xtype: 'checkboxfield',
-		name: 'Externo',
-		fieldLabel: 'Externo',
-		allowBlank: false
-	},
-	{
-		name: 'CodigoDocumento',
-		fieldLabel: 'CodigoDocumento',
-		allowBlank: false,
-		maxLength: 4,
-		enforceMaxLength: true
+	},{
+		xtype: 'remotetercerocombo',fieldLabel: 'Tercero'
 	},
 	{
 		name: 'Documento',
@@ -120,44 +56,18 @@ Ext.define('App.view.egreso.Form', {
 		allowBlank: false,
 		maxLength: 12,
 		enforceMaxLength: true
+	},{
+		xtype: 'numberfield',
+		allowDecimals: false,
+		name: 'DiasCredito',
+		fieldLabel: 'Dias Credito',
+		allowBlank: false
 	},
 	{
 		xtype: 'numberfield',
 		allowDecimals: false,
 		name: 'IdTerceroReceptor',
-		fieldLabel: 'IdTerceroReceptor'
-	},
-	{
-		name: 'DocumentoTercero',
-		fieldLabel: 'DocumentoTercero'
-	},
-	{
-		name: 'DVTercero',
-		fieldLabel: 'DVTercero'
-	},
-	{
-		name: 'NombreTercero',
-		fieldLabel: 'NombreTercero'
-	},
-	{
-		name: 'NombreDocumentoTercero',
-		fieldLabel: 'NombreDocumentoTercero'
-	},
-	{
-		name: 'DocumentoReceptor',
-		fieldLabel: 'DocumentoReceptor'
-	},
-	{
-		name: 'DVReceptor',
-		fieldLabel: 'DVReceptor'
-	},
-	{
-		name: 'NombreReceptor',
-		fieldLabel: 'NombreReceptor'
-	},
-	{
-		name: 'NombreDocumentoReceptor',
-		fieldLabel: 'NombreDocumentoReceptor'
+		fieldLabel: 'Pagar a'
 	}
 ];
  

@@ -32,7 +32,7 @@ Ext.define('App.view.egreso.List',{
 	{
 		text: 'Numero',
 		dataIndex: 'Numero',
-		sortable: true,
+		width    : 50,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
             	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
@@ -42,25 +42,14 @@ Ext.define('App.view.egreso.List',{
         }
 	},
 	{
-		text: 'Descripcion',
-		dataIndex: 'Descripcion',
-		sortable: true
-	},
-	{
-		text: 'Fecha',
-		dataIndex: 'Fecha',
-		sortable: true,
-		renderer: Ext.util.Format.dateRenderer('d.m.Y')
-	},
-	{
 		text: 'Periodo',
 		dataIndex: 'Periodo',
-		sortable: true
+		width    : 50
 	},
 	{
 		text: 'Valor',
 		dataIndex: 'Valor',
-		sortable: true,
+		width    : 80,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
             	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
@@ -72,7 +61,7 @@ Ext.define('App.view.egreso.List',{
 	{
 		text: 'Saldo',
 		dataIndex: 'Saldo',
-		sortable: true,
+		width    : 80,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
             	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
@@ -82,71 +71,25 @@ Ext.define('App.view.egreso.List',{
         }
 	},
 	{
-		text: 'DiasCredito',
-		dataIndex: 'DiasCredito',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'FechaAsentado',
+		text: 'Asentado',
 		dataIndex: 'FechaAsentado',
-		sortable: true,
+		width    : 80,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	},
 	{
-		text: 'IdSucursal',
-		dataIndex: 'IdSucursal',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'FechaAnulado',
+		text: 'Anulado',
 		dataIndex: 'FechaAnulado',
-		sortable: true,
+		width    : 80,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	},
 	{
 		text: 'Externo',
 		dataIndex: 'Externo',
-		sortable: true,
+		width    : 50,
 		xtype: 'booleancolumn',
 		trueText: 'Si',
 		falseText: 'No',
 		align: 'center'
-	},
-	{
-		text: 'CodigoDocumento',
-		dataIndex: 'CodigoDocumento',
-		sortable: true
-	},
-	{
-		text: 'Documento',
-		dataIndex: 'Documento',
-		sortable: true
-	},
-	{
-		text: 'IdTerceroReceptor',
-		dataIndex: 'IdTerceroReceptor',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
 	},
 	{
 		text: 'DocumentoTercero',
@@ -156,11 +99,6 @@ Ext.define('App.view.egreso.List',{
 	{
 		text: 'DVTercero',
 		dataIndex: 'DVTercero',
-		sortable: true
-	},
-	{
-		text: 'NombreTercero',
-		dataIndex: 'NombreTercero',
 		sortable: true
 	},
 	{
@@ -176,11 +114,6 @@ Ext.define('App.view.egreso.List',{
 	{
 		text: 'DVReceptor',
 		dataIndex: 'DVReceptor',
-		sortable: true
-	},
-	{
-		text: 'NombreReceptor',
-		dataIndex: 'NombreReceptor',
 		sortable: true
 	},
 	{
@@ -207,7 +140,7 @@ Ext.define('App.view.egreso.List',{
             },'-','-', {
             	xtype: 'numberfield', name: 'textBuscarAnio', width: 60, allowBlank: false, value: (new Date()).getFullYear()
             },{
-            	xtype: 'numberfield', name: 'textBuscarMes', width: 40, allowBlank: false, value: (new Date()).getMonth() +1 
+            	xtype: 'numberfield', name: 'textBuscarMes', width: 40, value: (new Date()).getMonth() +1 
             },{
                 xtype:'textfield',  emptyText:'Nombre del Tercero',  name: 'textBuscarTercero'  },
               {

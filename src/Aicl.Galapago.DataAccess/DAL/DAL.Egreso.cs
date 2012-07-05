@@ -23,7 +23,7 @@ namespace Aicl.Galapago.DataAccess
         public static void Create(this Egreso egreso, DALProxy proxy)
         {
             var visitor = ReadExtensions.CreateExpression<Egreso>();
-            visitor.Insert( f=> new { f.Id, f.Descripcion, f.Fecha , f.Periodo, f.IdSucursal,f.Numero,f.CodigoDocumento,f.Documento, f.IdTercero });                  
+            visitor.Insert( f=> new { f.Id, f.Descripcion, f.Fecha , f.Periodo, f.IdSucursal,f.Numero,f.CodigoDocumento,f.Documento, f.IdTercero, f.IdTerceroReceptor, f.DiasCredito });                  
 
             proxy.Execute(dbCmd=>
                 dbCmd.InsertAndAssertId(egreso, visitor) 
@@ -51,7 +51,7 @@ namespace Aicl.Galapago.DataAccess
 
         public static void Update(this Egreso egreso,DALProxy proxy){
             var visitor = ReadExtensions.CreateExpression<Egreso>();
-            visitor.Update( f=> new { f.Descripcion,f.Fecha,f.Periodo,f.Documento,f.IdTercero,f.CodigoDocumento,f.IdTerceroReceptor});                  
+            visitor.Update( f=> new { f.Descripcion,f.Fecha,f.Periodo,f.Documento,f.IdTercero,f.CodigoDocumento,f.IdTerceroReceptor, f.DiasCredito});                  
             visitor.Where(r=>r.Id==egreso.Id);
             proxy.Execute(dbCmd=> dbCmd.Update(egreso, visitor));
         }

@@ -3,8 +3,8 @@ Ext.define('App.store.RemoteTercero',{
 	model: 'App.model.Tercero',
 	constructor: function(config){
 		config=config||{};
-		config.storeId='RemoteTercero';
-		config.pageSize= 12;
+		config.storeId=config.storeId||'RemoteTercero';
+		config.pageSize= config.pageSize|| 12;
     	config.remoteSort=true;
     	config.proxy= Aicl.Util.createRestProxy({
     		url: config.url||(Aicl.Util.getUrlApi()+'/Tercero'),
