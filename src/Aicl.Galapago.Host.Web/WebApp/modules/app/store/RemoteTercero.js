@@ -17,20 +17,3 @@ Ext.define('App.store.RemoteTercero',{
 		
 		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
 });
-
-/*
-Ext.define('App.store.RemoteTercero', {
-	extend: 'Ext.data.Store',
-	model: 'App.model.Tercero',
-    storeId: 'RemoteTercero',
-    proxy: {
-        type: 'ajax',
-        url: Aicl.Util.getUrlApi()+'/Tercero/read',
-        reader: {
-            type: 'json',
-            root: 'Data',
-            totalProperty: 'TotalCount'
-        }
-    }
-});
-*/

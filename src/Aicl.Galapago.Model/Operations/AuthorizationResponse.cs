@@ -14,6 +14,8 @@ namespace Aicl.Galapago.Model.Operations
 			Roles = new List<AuthRole>();
 			Sucursales= new List<SucursalAutorizada>();
 			Centros = new List<CentroAutorizado>();
+            CodigosDocumento = new List<CodigoDocumento>();
+            Rubros = new List<Rubro>();
 		}
 		
 		public ResponseStatus ResponseStatus { get; set; }
@@ -22,6 +24,7 @@ namespace Aicl.Galapago.Model.Operations
 		public List<AuthRole> Roles {get; set;}
 		public List<SucursalAutorizada> Sucursales {get; set;}
 		public List<CentroAutorizado> Centros {get; set;}
-		
+		public List<CodigoDocumento> CodigosDocumento {get;set;}
+        public List<Rubro> Rubros {get; set;}
 	}
 }

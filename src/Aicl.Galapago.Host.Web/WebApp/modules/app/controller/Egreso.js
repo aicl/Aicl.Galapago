@@ -17,6 +17,8 @@ Ext.define('App.controller.Egreso',{
 
     init: function(application) {
     	    	
+    	Ext.create('App.store.RemoteTercero',{storeId:'RemoteReceptor'});
+    	
         this.control({
             'egresolist': { 
                 selectionchange: function( sm,  selections,  eOpts){
@@ -99,8 +101,20 @@ Ext.define('App.controller.Egreso',{
 				Documento:record.get('DocumentoTercero'),
 				DigitoVerificacion:record.get('DVTercero'),
 				NombreDocumento:record.get('NombreDocumentoTercero')})
-			}
+			};
+			
+			var rr =this.getStore('RemoteReceptor');
+			if(!rr.getById(record.get('IdTerceroReceptor'))){
+				rr.addLocal({Id:record.get('IdTerceroReceptor'),
+				Nombre:record.get('NombreReceptor'),
+				Documento:record.get('DocumentoReceptor'),
+				DigitoVerificacion:record.get('DVReceptor'),
+				NombreDocumento:record.get('NombreDocumentoReceptor')})
+			};
+						
         	this.getEgresoForm().getForm().loadRecord(record);
+        	
+        	
         	
             this.getEgresoSaveButton().setText('Update');
             this.getEgresoDeleteButton().setDisabled(!this.getEgresoStore().canDestroy());

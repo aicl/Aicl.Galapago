@@ -16,6 +16,7 @@ namespace Aicl.Galapago.Model.Operations
 			Centros = new List<CentroAutorizado>();
             CodigosEgreso= new List<CodigoDocumento>();
             CodigosIngreso=new List<CodigoDocumento>();
+            Rubros= new List<Rubro>();
 		}
 		
 		public ResponseStatus ResponseStatus { get; set; }
@@ -28,5 +29,6 @@ namespace Aicl.Galapago.Model.Operations
 		public List<CentroAutorizado> Centros {get; set;}
         public List<CodigoDocumento> CodigosEgreso {get;set;}
         public List<CodigoDocumento> CodigosIngreso {get;set;}
+        public List<Rubro> Rubros {get;set;}
 	}
 }

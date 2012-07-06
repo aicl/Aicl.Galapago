@@ -28,7 +28,26 @@ namespace Aicl.Galapago.DataAccess
             });
 
         }
+
+        public static List<T> Get<T>( this DALProxy proxy, Expression<Func<T,bool>> predicate)
+            where T: new()
+        {
+            return proxy.Execute(dbCmd=>{
+                return dbCmd.Select(predicate);
+            });
+
+        }
+
          
+        public static List<T> Get<T>( this DALProxy proxy)
+            where T: new()
+        {
+            return proxy.Execute(dbCmd=>{
+                return dbCmd.Select<T>();
+            });
+
+        }
+
         public static long Count<T>( this DALProxy proxy,
                                     Expression<Func<T,bool>> predicate,
                                     bool excludeJoin=false

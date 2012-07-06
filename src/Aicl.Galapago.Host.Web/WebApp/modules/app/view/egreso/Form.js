@@ -57,17 +57,10 @@ Ext.define('App.view.egreso.Form', {
 		maxLength: 12,
 		enforceMaxLength: true
 	},{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'DiasCredito',
-		fieldLabel: 'Dias Credito',
-		allowBlank: false
+		xtype:'numberfield',allowDecimals: false,name: 'DiasCredito',fieldLabel: 'Dias Credito',allowBlank:false
 	},
 	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdTerceroReceptor',
-		fieldLabel: 'Pagar a'
+		xtype:'remotereceptorcombo', fieldLabel: 'Pagar a'
 	}
 ];
  
@@ -85,7 +78,6 @@ Ext.define('App.view.egreso.Form', {
 Ext.define('remotetercero.ComboBox', {
 	extend:'Ext.ux.form.field.BoxSelect',
 	alias : 'widget.remotetercerocombo',
-    // fieldLabel: 'Job City',
     displayField: 'Nombre',
 	valueField: 'Id',
 	name:'IdTercero',
@@ -96,14 +88,11 @@ Ext.define('remotetercero.ComboBox', {
     multiSelect:false,
     queryMode: 'remote',
     queryParam :'Nombre',
-
     // Value delimiter examples
     delimiter: '|',
 	//value: 'NC|VA|ZZ',
-
     // Click behavior
     triggerOnClick: false,
-
     // Display template modifications
     labelTpl: '{Nombre} ({Documento})',
     listConfig: {
@@ -112,5 +101,28 @@ Ext.define('remotetercero.ComboBox', {
                 '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}: {Documento}</li>',
             '</tpl></ul>'
     )}
-    
 });
+
+Ext.define('remotereceptor.ComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.remotereceptorcombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+	name:'IdTerceroReceptor',
+	store:'RemoteReceptor',
+    forceSelection:true,
+    pageSize: 12,
+    multiSelect:false,
+    queryMode: 'remote',
+    queryParam :'Nombre',
+    triggerOnClick: false,
+    labelTpl: '{Nombre} ({Documento})',
+    listConfig: {
+        tpl: Ext.create('Ext.XTemplate',
+            '<ul><tpl for=".">',
+                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}: {Documento}</li>',
+            '</tpl></ul>'
+    )} 
+});
+
+
