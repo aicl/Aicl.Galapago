@@ -25,7 +25,7 @@ namespace ServiceStack.OrmLite
 			where T: IHasId<System.Int32>, new()
 		{
 			if(visitor==null) dbCmd.Insert<T>(request);
-			else dbCmd.Insert<T>(request,visitor);
+			else dbCmd.InsertOnly<T>(request,visitor);
 		
             dbCmd.AssertId(request);	
 		}

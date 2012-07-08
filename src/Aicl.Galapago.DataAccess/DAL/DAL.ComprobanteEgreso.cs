@@ -98,7 +98,7 @@ namespace Aicl.Galapago.DataAccess
 
         public static void Actualizar(this ComprobanteEgreso documento,DALProxy proxy){
 
-            proxy.Execute(dbCmd=> dbCmd.Update(documento,
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento,
                 f=> new { f.Descripcion,f.Fecha,f.Periodo,f.IdTercero,f.IdTerceroReceptor, f.IdCuentaGiradora},
                 q=>q.Id==documento.Id)
             );
@@ -113,7 +113,7 @@ namespace Aicl.Galapago.DataAccess
 
             proxy.Execute(dbCmd=>{
                 dbCmd.Delete<ComprobanteEgresoItem>(r=>r.IdComprobanteEgreso==comprobanteEgreso.Id);
-                dbCmd.Update(comprobanteEgreso,
+                dbCmd.UpdateOnly(comprobanteEgreso,
                              r=>new {r.FechaAnulado, r.Descripcion,r.Valor},
                              r=> r.Id==comprobanteEgreso.Id );
             });
@@ -136,17 +136,17 @@ namespace Aicl.Galapago.DataAccess
 
         public static void Asentar(this ComprobanteEgreso documento,DALProxy  proxy){
             documento.FechaAsentado=DateTime.Today;
-            proxy.Execute(dbCmd=> dbCmd.Update(documento, f=> f.FechaAsentado, r=>r.Id==documento.Id));
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.FechaAsentado, r=>r.Id==documento.Id));
         }
 
         public static void Reversar(this ComprobanteEgreso documento, DALProxy proxy){
             documento.FechaAsentado=null;
-            proxy.Execute(dbCmd=> dbCmd.Update(documento, f=> f.FechaAsentado, r=>r.Id==documento.Id));
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.FechaAsentado, r=>r.Id==documento.Id));
         }
 
         public static void ActualizarValor(this ComprobanteEgreso documento, DALProxy proxy)
         {
-            proxy.Execute(dbCmd=> dbCmd.Update(documento, f=> f.Valor, r=>r.Id==documento.Id));
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.Valor, r=>r.Id==documento.Id));
         }
 
 
@@ -157,7 +157,7 @@ namespace Aicl.Galapago.DataAccess
 
         public static void ActualizarValor(this ComprobanteEgresoItem documento, DALProxy proxy)
         {
-            proxy.Execute(dbCmd=> dbCmd.Update(documento, f=> f.Valor, r=>r.Id==documento.Id));
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.Valor, r=>r.Id==documento.Id));
         }
 
 

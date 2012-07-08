@@ -53,7 +53,7 @@ namespace Aicl.Galapago.DataAccess
             var visitor = ReadExtensions.CreateExpression<Egreso>();
             visitor.Update( f=> new { f.Descripcion,f.Fecha,f.Periodo,f.Documento,f.IdTercero,f.CodigoDocumento,f.IdTerceroReceptor, f.DiasCredito});                  
             visitor.Where(r=>r.Id==egreso.Id);
-            proxy.Execute(dbCmd=> dbCmd.Update(egreso, visitor));
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(egreso, visitor));
         }
 
         public static void Asentar(this Egreso egreso,DALProxy  proxy){
@@ -61,7 +61,7 @@ namespace Aicl.Galapago.DataAccess
             var visitor = ReadExtensions.CreateExpression<Egreso>();
             visitor.Update( f=> new {  f.FechaAsentado });                  
             visitor.Where(r=>r.Id==egreso.Id);
-            proxy.Execute(dbCmd=> dbCmd.Update(egreso, visitor));
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(egreso, visitor));
         }
 
         public static void Reversar(this Egreso egreso, DALProxy proxy){
@@ -69,7 +69,7 @@ namespace Aicl.Galapago.DataAccess
             var visitor = ReadExtensions.CreateExpression<Egreso>();
             visitor.Update( f=> new {  f.FechaAsentado });                  
             visitor.Where(r=>r.Id==egreso.Id);
-            proxy.Execute(dbCmd=>dbCmd.Update(egreso, visitor));
+            proxy.Execute(dbCmd=>dbCmd.UpdateOnly(egreso, visitor));
         }
 
 
@@ -78,7 +78,7 @@ namespace Aicl.Galapago.DataAccess
             var visitor = ReadExtensions.CreateExpression<Egreso>();
             visitor.Update( f=> new {  f.FechaAnulado });                  
             visitor.Where(r=>r.Id==egreso.Id);
-            proxy.Execute(dbCmd=>  dbCmd.Update(egreso, visitor));
+            proxy.Execute(dbCmd=>  dbCmd.UpdateOnly(egreso, visitor));
         }
 
 
@@ -86,7 +86,7 @@ namespace Aicl.Galapago.DataAccess
             var visitor = ReadExtensions.CreateExpression<Egreso>();
             visitor.Update( f=> new {  f.Valor, f.Saldo });                  
             visitor.Where(r=>r.Id==egreso.Id);
-            proxy.Execute(dbCmd=> dbCmd.Update(egreso, visitor));
+            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(egreso, visitor));
         }
 
 

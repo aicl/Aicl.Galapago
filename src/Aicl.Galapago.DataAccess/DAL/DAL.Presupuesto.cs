@@ -72,7 +72,7 @@ namespace Aicl.Galapago.DataAccess
             expression.Where(r=> r.Id== presupuestoItem.Id);
             expression.Update(r=> new{r.Debitos, r.Creditos});
 
-            proxy.Execute(dbCmd=>dbCmd.Update(presupuestoItem, expression));
+            proxy.Execute(dbCmd=>dbCmd.UpdateOnly(presupuestoItem, expression));
 
         }
 
