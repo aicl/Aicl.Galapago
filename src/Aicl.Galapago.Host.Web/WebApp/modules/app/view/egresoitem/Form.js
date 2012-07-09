@@ -33,18 +33,17 @@ Ext.define('App.view.egresoitem.Form', {
 		name: 'Id'
 	},
 	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdEgreso',
-		fieldLabel: 'IdEgreso',
-		allowBlank: false
+		xtype: 'hidden',
+		name: 'IdEgreso'
 	},
 	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdPresupuestoItem',
-		fieldLabel: 'IdPresupuestoItem',
-		allowBlank: false
+		xtype:'tipoegresoitemcombo',
+		fieldLabel: 'Tipo'
+	},{
+		xtype: 'centroautorizadocombo',fieldLabel: 'Centro'
+	},
+	{
+		xtype: 'rubrocombo',fieldLabel: 'Rubro'
 	},
 	{
 		xtype: 'numberfield',
@@ -57,13 +56,6 @@ Ext.define('App.view.egresoitem.Form', {
 		xtype: 'numberfield',
 		name: 'Valor',
 		fieldLabel: 'Valor',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdCentro',
-		fieldLabel: 'IdCentro',
 		allowBlank: false
 	},
 	{
@@ -106,5 +98,36 @@ Ext.define('App.view.egresoitem.Form', {
 	    }];
  
         this.callParent(arguments);
+    }
+});
+
+Ext.define('TipoEgresoItemModel', {
+    extend: 'Ext.data.Model',
+    idProperty: 'Id',
+    fields: [ {type: 'int', name: 'Id'}, {type: 'string', name: 'Concepto'}]
+});
+
+
+function createTipoEgresoItemStore() {
+    return Ext.create('Ext.data.Store', {
+        autoDestroy: true,
+        model: 'TipoEgresoItemModel',
+        data: [{Id:1,Concepto:'Egreso'},{Id:2,Concepto:'Descuento'},{Id:3,Concepto:'Pago'}]
+    });
+}
+
+Ext.define('tipoegresoitem.ComboBox', {
+	extend:'Ext.form.field.ComboBox',
+	alias : 'widget.tipoegresoitemcombo',
+    displayField: 'Concepto',
+	valueField: 'Id',
+    store: createTipoEgresoItemStore(),
+    queryMode: 'local',
+    typeAhead: true,
+    forceSelection:true,
+    listeners   : {  
+     	beforerender: function(combo){
+       		combo.setValue(1);  
+       	}
     }
 });

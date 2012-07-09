@@ -129,14 +129,14 @@ Ext.define('App.view.egresoitem.List',{
         this.dockedItems=[{
             xtype: 'toolbar',
             items: [{
-                text:'New',
-                tooltip:'add new record',
+                text:'Nuevo',
+                tooltip:'Agregar nuevo item',
                 iconCls:'add',
                 disabled:true,
                 action: 'new'
             },'-',{
                 text:'Delete',
-                tooltip:'delete selected record',
+                tooltip:'Borrar item seleccionado',
                 iconCls:'remove',
                 disabled:true,
                 action: 'delete'

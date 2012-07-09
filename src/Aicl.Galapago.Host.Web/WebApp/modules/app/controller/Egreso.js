@@ -12,7 +12,11 @@ Ext.define('App.controller.Egreso',{
     	{ref: 'textBuscarAnio', 	 selector: 'egresolist textfield[name=textBuscarAnio]' },
     	{ref: 'textBuscarMes', 	 selector: 'egresolist textfield[name=textBuscarMes]' },
     	{ref: 'textBuscarTercero', 	 selector: 'egresolist textfield[name=textBuscarTercero]' },
-    	{ref: 'comboEstadoAsento', 	 selector: 'egresolist estadoasentado' }
+    	{ref: 'estadoAsentoCombo', 	 selector: 'egresolist estadoasentado' },
+    	{ref: 'sucursalAutorizadaCombo', 	 selector: 'egresoform sucursalautorizadacombo' },
+    	{ref: 'codigoEgresoCombo', 	 selector: 'egresoform codigoegresocombo' }
+    	
+    	
     ],
 
     init: function(application) {
@@ -57,7 +61,7 @@ Ext.define('App.controller.Egreso',{
                 	}
                 	var mes = this.getTextBuscarMes().getValue();
                 	                	
-                	var estado= this.getComboEstadoAsento().getValue(); 
+                	var estado= this.getEstadoAsentoCombo().getValue(); 
                 	
                 	var request={
                 		Activo:true,
@@ -67,13 +71,15 @@ Ext.define('App.controller.Egreso',{
                 	};
                 	
                 	var store = this.getEgresoStore();       	  	
-                	//store.load({ params:request }); // se pierden con el paginador...
-                	// el de abajo funciona pero toca uno por uno...
-                	//store.getProxy().setExtraParam('NombreCompania', this.getFindText().getValue());
                 	store.getProxy().extraParams=request;
                 	store.loadPage(1);
                 	
                 }
+            },
+            'egresoform codigoegresocombo':{
+            	select:function(combo, value, options){
+            		console.log('TODO : egresoform codigoegresocombo select', combo, value, options);
+            	}
             }
         });
     },

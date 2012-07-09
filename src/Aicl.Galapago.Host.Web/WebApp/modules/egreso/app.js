@@ -51,14 +51,25 @@ launch: function(){
         
     controller.onselectionchange(
     function( sm,  selections,  eOpts){
+    	console.log('app controllerEgreso.onselection selections', selections);
     	var item = this.getController('EgresoItem');
-    	console.log('controler proyecto,selections:->', selections);
+    	item.getCentroAutorizadoCombo().getStore().removeAll();  	
+    		
     	if (selections.length){
+    		
     		var record= selections[0];
+    		
+    		var codigoEgreso= this.getController('Egreso').
+    			getCodigoEgresoCombo().getStore().getById(record.get('CodigoDocumento'));
+    		    		    		
+    		item.getCentroAutorizadoCombo().
+    			getStore().loadRawData(getCentrosData(record.get('IdSucursal')));
+    		
+    		item.setCodigoEgreso(codigoEgreso);
+    		
         	item.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
         	item.getEgresoItemList().determineScrollbars();
         	item.refreshButtons();
-        	//item.getEgresoItemIdProyectoCombo().setValue( record.getId() );
         }
         else{
         	item.getEgresoItemStore().removeAll();
@@ -71,7 +82,6 @@ launch: function(){
     	var record =  operation.getRecords()[0];                                    
         if (operation.action=='create') {
          	item.refreshButtons();
-        	//item.getEgresoItemIdProyectoCombo().setValue( record.getId() );poner el id en el hijo?
         }    
     }, this);
     

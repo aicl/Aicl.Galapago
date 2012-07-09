@@ -477,13 +477,9 @@ Ext.form.Panel.implement({
 Ext.define('EstadoAsentado', {
     extend: 'Ext.data.Model',
     idProperty: 'Id',
-    fields: [
-        {type: 'int', name: 'Id'},
-        {type: 'string', name: 'Estado'}
-    ]
+    fields: [{type: 'int', name: 'Id'},   {type: 'string', name: 'Estado'}]
 });
 
-// The data for all states
 var estadoAsentadoData = [{Id:1,Estado:'Todos'},{Id:2,Estado:'Asentados'},{Id:3,Estado:'Pendientes'}];
 
 function createEstadoAsentadoStore() {
@@ -514,16 +510,7 @@ Ext.define('estadoasento.ComboBox', {
 Ext.define('SucursalAutorizadaModel',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Id',
-	fields:[{
-		name: 'Id',
-		type: 'int'
-	},{
-		name: 'Nombre',
-		type: 'string'
-	},{
-		name: 'Codigo',
-		type: 'string'
-	}]
+	fields:[{name: 'Id',type: 'int'},{name: 'Nombre',type: 'string'},{name: 'Codigo',type: 'string'}]
 });
 
 
@@ -548,26 +535,45 @@ Ext.define('sucursalautorizada.ComboBox',{
 });
 
 
-Ext.define('CodigoEI',{
+Ext.define('CentroAutorizadoModel',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Id',
-	fields:[{
-		name: 'Id',	type: 'int'
-	},{
-		name: 'Nombre',	type: 'string'
-	},{
-		name: 'Tipo',	type: 'string'
-	},{
-		name:'Activo',	type:'bool'
-	},{
-		name: 'Codigo',	type: 'string'
-	},{
-		name: 'CodigoPresupuesto',	type: 'string'
-	},{
-		name: 'CreditosPermitidos',	type: 'auto'
-	},{
-		name: 'DebitosPermitidos',	type: 'auto'
-	}]
+	fields:[{name: 'Id',type: 'int'},{name: 'Nombre',type: 'string'},
+		{name: 'Codigo',type: 'string'},{name: 'IdSucursal',type: 'int'}]
+});
+
+
+function getCentrosData(idSucursal, idCentro) {
+	var data=[];
+	var centros= Aicl.Util.getCentros();
+	for(var i in centros){
+		if(centros[i].IdSucursal==idSucursal &&
+		centros[i].IdCentro==(idCentro?idCentro:centros[i].IdCentro))
+			data.push(centros[i]) 
+	}
+    return data;
+};
+
+Ext.define('centroautorizado.ComboBox',{
+	extend:'Ext.form.field.ComboBox',
+	alias : 'widget.centroautorizadocombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+    store: Ext.create('Ext.data.Store',{autoDestroy: true,  model: 'CentroAutorizadoModel',data:[]}),
+    queryMode: 'local',
+    typeAhead: true,
+    forceSelection:true,
+    name:'IdCentro'
+});
+
+
+Ext.define('CodigoEI',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Codigo',
+	fields:[{name: 'Id',	type: 'int'},{name: 'Nombre',	type: 'string'},
+			{name: 'Tipo',	type: 'string'},{name:'Activo',	type:'boolean'},
+			{name: 'Codigo',	type: 'string'},{name: 'CodigoPresupuesto',	type: 'string'},
+			{name: 'CreditosPermitidos',	type: 'auto'},{	name: 'DebitosPermitidos',	type: 'auto'}]
 });
 
 function createCodigosEgresoStore(){
@@ -615,41 +621,19 @@ Ext.define('codigoingreso.ComboBox',{
 Ext.define('Rubro',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Id',
-	fields: [{
-		name: 'Id',	type: 'int'
-	},{
-		name: 'IdPresupuesto',	type: 'int'
-	},{
-		name: 'Codigo',	type: 'string'
-	},{
-		name: 'TipoItem', type: 'int'
-	},{
-		name: 'Nombre',	type: 'string'
-	},{
-		name: 'Presupuestado',	type: 'number'
-	},{
-		name: 'Reservado', type: 'number'
-	},{
-		name: 'SaldoAnterior', type: 'number'
-	},{
-		name: 'Debitos', type: 'number'
-	},{
-		name: 'Creditos', type: 'number'
-	},{
-		name: 'UsaTercero',	type: 'boolean'
-	},{
-		name: 'Ejecutado', type: 'number'
-	},{
-		name: 'SaldoActual', type: 'number'
-	},{
-		name: 'IdSucursal',	type: 'int'
-	},{
-		name: 'IdCentro',	type: 'int'
-	}]
+	fields: [{name: 'Id',type: 'int'},{name: 'IdPresupuesto',type: 'int'},
+		{name: 'Codigo',type: 'string'},{name: 'TipoItem', type: 'int'},
+		{name: 'Nombre',type: 'string'},{name: 'Presupuestado',	type: 'number'},
+		{name: 'Reservado', type: 'number'},{name: 'SaldoAnterior', type: 'number'},
+		{name: 'Debitos', type: 'number'},{name: 'Creditos', type: 'number'},
+		{name: 'UsaTercero',	type: 'boolean'},{name: 'Ejecutado', type: 'number'},
+		{name: 'SaldoActual', type: 'number'},{name: 'IdSucursal',	type: 'int'},
+		{name: 'IdCentro',	type: 'int'}]
 });
 
 // codigos : array CreditosPermitidos/Debitos permitidos que esta en CodigosEgreso/CodigosIngreso 
-function createRubrosStore(idSucursal, idCentro, codigos){
+//function createRubrosStore(idSucursal, idCentro, codigos){
+function getRubrosData(idSucursal, idCentro, codigos){
 	codigos=codigos||[];
 	var data=[];
 	var rubros= Aicl.Util.getRubros();
@@ -658,49 +642,32 @@ function createRubrosStore(idSucursal, idCentro, codigos){
 		&& codigos.indexOf(rubros[i].Codigo)>=0)
 			data.push(rubros[i]) 
 	}
+	return data;
+	/*
 	return Ext.create('Ext.data.Store', {
         autoDestroy: true,
         model: 'Rubro',
         data: data
     });
+    */
 };
 
-/*
-Ext.define('RemoteTerceroModel',{
-	extend: 'Ext.data.Model',
-	idProperty: 'Id',
-	fields:[{
-		name: 'Id',
-		type: 'int'
-	},{
-		name: 'Nombre',
-		type: 'string'
-	},{
-		name: 'Codigo',
-		type: 'string'
-	}]
+Ext.define('rubros.ComboBox',{
+	extend:'Ext.form.field.ComboBox',
+	alias : 'widget.rubrocombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+    store: Ext.create('Ext.data.Store', {
+        autoDestroy: true,
+        model: 'Rubro',
+        data: []
+    }),
+    queryMode: 'local',
+    typeAhead: true,
+    forceSelection:true,
+    name:'IdPresupuestoItem'
 });
 
-
-Ext.define('RemoteTerceroStore', {
-	extend: 'Ext.data.Store',
-    model: 'RemoteTerceroModel',
-    storeId: 'RemoteTercero',
-    proxy: {
-        type: 'ajax',
-        url: Aicl.Util.getUrlApi()+'/Tercero/read',
-             
-        reader: {
-            type: 'json',
-            root: 'Data',
-            totalProperty: 'TotalCount'
-        }
-    },
-    constructor: function(config){
-    	config=config||{};
-		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
-});
-*/
 
 // custom combobox 
 
