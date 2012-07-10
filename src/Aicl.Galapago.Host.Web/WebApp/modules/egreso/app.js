@@ -66,12 +66,14 @@ launch: function(){
     			getStore().loadRawData(getCentrosData(record.get('IdSucursal')));
     		
     		item.setCodigoEgreso(codigoEgreso);
+    		item.setIdEgreso(record.getId());
     		
         	item.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
         	item.getEgresoItemList().determineScrollbars();
         	item.refreshButtons();
         }
         else{
+        	item.setIdEgreso(0);
         	item.getEgresoItemStore().removeAll();
         	item.disableAll();
         }

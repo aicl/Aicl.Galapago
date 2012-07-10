@@ -25,11 +25,13 @@ namespace Aicl.Galapago.DataAccess
 		{
 					
             var usc = DAL.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(proxy,idUsuario);
-                
-			if(usc.FirstOrDefault(r=>r.IdSucursal==idSucursal && r.IdCentro==request.IdCentro)
-			   ==default(UsuarioSucursalCentro))
+
+            var r = usc.FirstOrDefault(q=>q.IdSucursal==idSucursal && q.IdCentro==request.IdCentro);
+			if(r ==default(UsuarioSucursalCentro))
 				throw HttpError.Unauthorized(string.Format
 				      ("Centro:'{0}'  no autorizado en la Sucursal:'{1}'",request.IdCentro, idSucursal));
+
+
 		}
 		
 	}

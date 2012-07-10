@@ -33,7 +33,7 @@ namespace Aicl.Galapago.BusinessLogic
             var data = factory.Execute(proxy=>{
                var visitor = ReadExtensions.CreateExpression<EgresoItem>();
                
-               visitor.Where(r=>r.IdEgreso==request.IdEgreso).OrderByDescending(r=>r.TipoPartida);
+               visitor.Where(r=>r.IdEgreso==request.IdEgreso).OrderBy(r=>r.TipoPartida);
 
                return proxy.Get(visitor);
             });
@@ -51,8 +51,10 @@ namespace Aicl.Galapago.BusinessLogic
                                             Factory factory,
                                             IAuthSession authSession)
         {
+            if(request.IdTercero.HasValue && request.IdTercero.Value==default(int)) request.IdTercero=null;
 
             request.ValidateAndThrowHttpError(Operaciones.Create);
+
 
             factory.Execute(proxy=>{
 
@@ -70,7 +72,6 @@ namespace Aicl.Galapago.BusinessLogic
                     CodigoDocumento cd = DAL.GetCodigoDocumento(proxy,egreso.CodigoDocumento);
                     cd.AssertExists(egreso.CodigoDocumento); 
                     cd.AssertEstaActivo();
-                    CheckPresupuestoItem(proxy,request);
 
                     if(request.TipoPartida==1)
                     {
@@ -88,6 +89,7 @@ namespace Aicl.Galapago.BusinessLogic
                     egreso.ActualizarValorSaldo(proxy);
                     request.Create(proxy);
                     proxy.CommitDbTransaction();
+
                 }
             });
 
@@ -106,6 +108,8 @@ namespace Aicl.Galapago.BusinessLogic
                                             Factory factory,
                                             IAuthSession authSession)
         {
+            if(request.IdTercero.HasValue && request.IdTercero.Value==default(int)) request.IdTercero=null;
+
             request.CheckId(Operaciones.Update);
 
             factory.Execute(proxy=>{
@@ -248,6 +252,17 @@ namespace Aicl.Galapago.BusinessLogic
             eiv.ValidateAndThrowHttpError(ei, EgresoItemAlCrear.Regla1);
 
             pi.CheckUsuarioGiradora(proxy, idUsuario, request.IdTercero);
+
+
+            request.CodigoItem= pi.Codigo;
+            request.NombreItem= pi.Nombre;
+            request.NombreCentro=centro.Nombre;
+            if(tercero!=default(Tercero))
+            {
+                request.NombreTercero=tercero.Nombre;
+                request.DocumentoTercero=tercero.Documento;
+                request.DVTercero= tercero.DigitoVerificacion;
+            }
 
             return pi;
         }

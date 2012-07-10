@@ -61,9 +61,10 @@ namespace Aicl.Galapago.Model.Types
                     WithMessage(string.Format("Centro de Costo no Coincide (Egresoitem-presupuesto)")).
                     WithErrorCode("CentroErroneo");
 
-                RuleFor(x=>x.NewItem.IdTercero).Must(idTercero=>idTercero.HasValue).When(x=>x.Pi.UsaTercero).
+                RuleFor(x=>x.NewItem.IdTercero).Must(idTercero=>idTercero.HasValue && idTercero.Value!=default(int)).
+                    When(x=>x.Pi.UsaTercero).
                     WithMessage("Se debe Indicar el Tercero para este item)").
-                        WithErrorCode("FaltaTercero");
+                    WithErrorCode("FaltaTercero");
 
                 //RuleFor(x => x.Pi).SetValidator(new PresupuestoItemDetalleActivoValidador()); does not work!
 

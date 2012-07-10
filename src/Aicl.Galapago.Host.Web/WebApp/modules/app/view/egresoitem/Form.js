@@ -29,64 +29,28 @@ Ext.define('App.view.egresoitem.Form', {
     initComponent: function() {
         this.items = [
 	{
-		xtype: 'hidden',
-		name: 'Id'
+		xtype: 'hidden',name: 'Id'
 	},
 	{
-		xtype: 'hidden',
-		name: 'IdEgreso'
+		xtype: 'hidden',name: 'IdEgreso'
+	},{
+		xtype: 'hidden',name: 'TipoPartida'
 	},
 	{
-		xtype:'tipoegresoitemcombo',
-		fieldLabel: 'Tipo'
+		xtype:'tipoegresoitemcombo',fieldLabel: 'Tipo', name:'TipoEgresoItem', submitValue:false
 	},{
 		xtype: 'centroautorizadocombo',fieldLabel: 'Centro'
 	},
 	{
 		xtype: 'rubrocombo',fieldLabel: 'Rubro'
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'TipoPartida',
-		fieldLabel: 'TipoPartida',
-		allowBlank: false
+	},{
+		xtype: 'remoteterceroitemcombo',fieldLabel: 'Tercero'
 	},
 	{
 		xtype: 'numberfield',
 		name: 'Valor',
 		fieldLabel: 'Valor',
 		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdTercero',
-		fieldLabel: 'IdTercero'
-	},
-	{
-		name: 'CodigoItem',
-		fieldLabel: 'CodigoItem'
-	},
-	{
-		name: 'NombreItem',
-		fieldLabel: 'NombreItem'
-	},
-	{
-		name: 'NombreCentro',
-		fieldLabel: 'NombreCentro'
-	},
-	{
-		name: 'NombreTercero',
-		fieldLabel: 'NombreTercero'
-	},
-	{
-		name: 'DocumentoTercero',
-		fieldLabel: 'DocumentoTercero'
-	},
-	{
-		name: 'DVTercero',
-		fieldLabel: 'DVTercero'
 	}
 ];
  
@@ -130,4 +94,26 @@ Ext.define('tipoegresoitem.ComboBox', {
        		combo.setValue(1);  
        	}
     }
+});
+
+Ext.define('remoteterceroitem.ComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.remoteterceroitemcombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+	name:'IdTercero',
+	store:'RemoteTerceroItem',
+    forceSelection:true,
+    pageSize: 12,
+    multiSelect:false,
+    queryMode: 'remote',
+    queryParam :'Nombre',
+    triggerOnClick: false,
+    labelTpl: '{Nombre} ({Documento})',
+    listConfig: {
+        tpl: Ext.create('Ext.XTemplate',
+            '<ul><tpl for=".">',
+                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}: {Documento}</li>',
+            '</tpl></ul>'
+    )} 
 });

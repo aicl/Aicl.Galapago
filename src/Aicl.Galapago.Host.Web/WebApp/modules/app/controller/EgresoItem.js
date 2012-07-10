@@ -11,13 +11,13 @@ Ext.define('App.controller.EgresoItem',{
     	{ref: 'egresoItemSaveButton', 	 selector: 'egresoitemform button[action=save]' },
     	{ref: 'centroAutorizadoCombo',    	 selector: 'egresoitemform centroautorizadocombo'},
     	{ref: 'rubroCombo',    	 selector: 'egresoitemform rubrocombo' },
-    	{ref: 'tipoEgresoItemCombo',    	 selector: 'egresoitemform tipoegresoitemcombo' }
-    	
-    	
+    	{ref: 'tipoEgresoItemCombo',    	 selector: 'egresoitemform tipoegresoitemcombo' }	
     ],
 
     init: function(application) {
     	    	
+    	Ext.create('App.store.RemoteTercero',{storeId:'RemoteTerceroItem'});
+    	
         this.control({
             'egresoitemlist': { 
                 selectionchange: function( sm,  selections,  eOpts){
@@ -41,7 +41,7 @@ Ext.define('App.controller.EgresoItem',{
             
             'egresoitemform button[action=save]':{            	
             	click:function(button, event, options){
-            		var model = this.getEgresoItemStore();
+            		this.getEgresoItemForm().getForm().setValues({'IdEgreso':this.idEgreso});
             		var record = this.getEgresoItemForm().getForm().getFieldValues(true);
             		this.getEgresoItemStore().save(record);
             	}
@@ -50,22 +50,25 @@ Ext.define('App.controller.EgresoItem',{
             	select:function(combo, value, options){
             		var data = value[0].data;
             		this.getCentroAutorizadoCombo().getStore().clearFilter(true);
-            		if(data.Id==1)
+            		if(data.Id==1){
+            			this.getEgresoItemForm().getForm().setValues({'TipoPartida':1});
             			this.getCentroAutorizadoCombo().getStore().
             				filter([{filterFn: function(item) { return item.getId() > 1; }}])
-            		else
+            		}
+            		else{
+            			this.getEgresoItemForm().getForm().setValues({'TipoPartida':2});
             			this.getCentroAutorizadoCombo().getStore().
             				filter([{filterFn: function(item) { return item.getId() == 1; }}])
+            		}
             		
             		var record= this.getCentroAutorizadoCombo().getStore().getAt(0);
             		if(record) this.getCentroAutorizadoCombo().setValue(record.get('Id'));
             		else this.getCentroAutorizadoCombo().setValue(0); 
-            		this.getCentroAutorizadoCombo().fireEvent('select', combo, [record]);
+            		this.getCentroAutorizadoCombo().fireEvent('select', this.getCentroAutorizadoCombo(), [record]);
             	}
             },
             'egresoitemform centroautorizadocombo':{
             	select:function(combo, value, options){
-            		console.log('egresoitemform centroautorizadocombo select....',value, this.codigoEgreso);
             		var rc = value[0];
             		var permitidos=(this.getTipoEgresoItemCombo().getValue()==1)?'DebitosPermitidos':'CreditosPermitidos';
             		var codigos=this.codigoEgreso.get(permitidos);
@@ -84,14 +87,24 @@ Ext.define('App.controller.EgresoItem',{
             		
             		var rubroData=getRubrosData(rc.get('IdSucursal'), rc.get('Id'), cd);
             		this.getRubroCombo().getStore().loadRawData(rubroData);
+            		
+            		console.log('egresoitemform centroautorizadocombo select', this.getEgresoItemForm().getForm().getValues());
+            	}
+            },
+            'egresoitemform rubrocombo':{
+            	select:function(combo, value, options){
+            		var rc = value[0];
+            		
             	}
             }
+            	
         });
     },
     
     onLaunch: function(application){
     	
     	this.codigoEgreso= {};
+    	this.idEgreso=0;
     	
     	this.getEgresoItemStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];                                    
@@ -103,10 +116,35 @@ Ext.define('App.controller.EgresoItem',{
     },
         	
 	refreshButtons: function(selections){	
-		selections=selections||[];
 		this.getEgresoItemNewButton().setDisabled(!this.getEgresoItemStore().canCreate());
+		selections=selections||[];
+				
 		if (selections.length){
-        	this.getEgresoItemForm().getForm().loadRecord(selections[0]);
+			var record= selections[0];
+			
+			var rt= this.getStore('RemoteTerceroItem');
+			if(!rt.getById(record.get('IdTercero'))){
+				rt.addLocal({Id:record.get('IdTercero'),
+				Nombre:record.get('NombreTercero'),
+				Documento:record.get('DocumentoTercero'),
+				DigitoVerificacion:record.get('DVTercero')})
+			};
+			
+			var teiValue;
+			if(record.get('TipoPartida')==1){
+				teiValue=1;
+			}
+			else{
+				if(record.get('CodigoItem').substring(0,1)=='9') teiValue=3;
+				else teiValue=2; 
+			}
+			
+			this.getTipoEgresoItemCombo().setValue(teiValue);
+			
+			this.getTipoEgresoItemCombo().fireEvent('select', this.getTipoEgresoItemCombo(),
+				[this.getTipoEgresoItemCombo().findRecordByValue(teiValue)]);
+			
+        	this.getEgresoItemForm().getForm().loadRecord(record);
             this.getEgresoItemSaveButton().setText('Update');
             this.getEgresoItemDeleteButton().setDisabled(!this.getEgresoItemStore().canDestroy());
             this.getEgresoItemSaveButton().setDisabled(!this.getEgresoItemStore().canUpdate());
@@ -158,6 +196,12 @@ Ext.define('App.controller.EgresoItem',{
 	// ce del modelo CodigoEI
 	setCodigoEgreso:function(ce){
 		this.codigoEgreso=ce;
+	},
+	
+	setIdEgreso:function(idEgreso){
+		this.idEgreso=idEgreso;
 	}
+	
+	
 	
 });
