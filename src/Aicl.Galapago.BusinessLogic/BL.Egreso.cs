@@ -400,12 +400,6 @@ namespace Aicl.Galapago.BusinessLogic
 
             }
 
-            if(! request.CodigoDocumento.IsNullOrEmpty() && request.CodigoDocumento!=data.CodigoDocumento)
-            {
-                data.CodigoDocumento=request.CodigoDocumento;
-                data.CheckCodigoDocumento(proxy);
-            }
-
             if(!request.Documento.IsNullOrEmpty() && request.Documento!=data.Documento)
                 data.Documento=request.Documento;
 

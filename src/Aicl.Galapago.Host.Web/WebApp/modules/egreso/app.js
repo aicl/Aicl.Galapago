@@ -56,21 +56,7 @@ launch: function(){
     	item.getCentroAutorizadoCombo().getStore().removeAll();  	
     		
     	if (selections.length){
-    		
-    		var record= selections[0];
-    		
-    		var codigoEgreso= this.getController('Egreso').
-    			getCodigoEgresoCombo().getStore().getById(record.get('CodigoDocumento'));
-    		    		    		
-    		item.getCentroAutorizadoCombo().
-    			getStore().loadRawData(getCentrosData(record.get('IdSucursal')));
-    		
-    		item.setCodigoEgreso(codigoEgreso);
-    		item.setIdEgreso(record.getId());
-    		
-        	item.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
-        	item.getEgresoItemList().determineScrollbars();
-        	item.refreshButtons();
+    		this.cargarItems(selections[0],item);   		
         }
         else{
         	item.setIdEgreso(0);
@@ -83,12 +69,27 @@ launch: function(){
     	var item = this.getController('EgresoItem');
     	var record =  operation.getRecords()[0];                                    
         if (operation.action=='create') {
-         	item.refreshButtons();
+        	this.cargarItems(record,item);
         }    
     }, this);
     
 },
     
-controllers: ['Egreso','EgresoItem']
+controllers: ['Egreso','EgresoItem'],
+
+cargarItems:function(record, item){
+
+	var codigoEgreso= this.getController('Egreso').getCodigoEgresoCombo().getStore().getById(record.get('CodigoDocumento'));
+    		    		    		
+    item.getCentroAutorizadoCombo().getStore().loadRawData(getCentrosData(record.get('IdSucursal')));
+    		
+    item.setCodigoEgreso(codigoEgreso);
+    item.setIdEgreso(record.getId());
+    		
+    item.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
+    item.getEgresoItemList().determineScrollbars();
+    item.refreshButtons();
+	
+}
     
 });

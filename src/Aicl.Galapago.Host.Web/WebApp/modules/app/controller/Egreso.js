@@ -7,8 +7,11 @@ Ext.define('App.controller.Egreso',{
     	{ref: 'egresoList',    	 selector: 'egresolist' },
     	{ref: 'egresoDeleteButton', selector: 'egresolist button[action=delete]' },
     	{ref: 'egresoNewButton',    selector: 'egresolist button[action=new]' },
+    	{ref: 'egresoAsentarButton',selector: 'egresolist button[action=asentar]' },
     	{ref: 'egresoForm',    	 selector: 'egresoform' }, 
     	{ref: 'egresoSaveButton', 	 selector: 'egresoform button[action=save]' },
+    	
+    	
     	{ref: 'textBuscarAnio', 	 selector: 'egresolist textfield[name=textBuscarAnio]' },
     	{ref: 'textBuscarMes', 	 selector: 'egresolist textfield[name=textBuscarMes]' },
     	{ref: 'textBuscarTercero', 	 selector: 'egresolist textfield[name=textBuscarTercero]' },
@@ -26,6 +29,7 @@ Ext.define('App.controller.Egreso',{
         this.control({
             'egresolist': { 
                 selectionchange: function( sm,  selections,  eOpts){
+                	console.log('egresolist selectionchange sm', sm);
                 	this.refreshButtons(selections);
                 }
             },
@@ -34,7 +38,8 @@ Ext.define('App.controller.Egreso',{
                 click: function(button, event, options){
                 	var grid = this.getEgresoList();
                 	var record = grid.getSelectionModel().getSelection()[0];
-        			this.getEgresoStore().remove(record);
+        			//this.getEgresoStore().remove(record);
+                	alert ('anular registro');
                 }
             },
             
@@ -78,7 +83,7 @@ Ext.define('App.controller.Egreso',{
             },
             'egresoform codigoegresocombo':{
             	select:function(combo, value, options){
-            		console.log('TODO : egresoform codigoegresocombo select', combo, value, options);
+            		//console.log('TODO : egresoform codigoegresocombo select', combo, value, options);
             	}
             }
         });
@@ -94,10 +99,12 @@ Ext.define('App.controller.Egreso',{
     	}, this);
     },
         	
-	refreshButtons: function(selections){	
+	refreshButtons: function(selections){
+		this.getEgresoNewButton().setDisabled(!this.getEgresoStore().canCreate());
 		selections=selections||[];
 		if (selections.length){
-			this.getEgresoNewButton().setDisabled(!this.getEgresoStore().canCreate());
+			this.getSucursalAutorizadaCombo().setReadOnly(true);
+			this.getCodigoEgresoCombo().setReadOnly(true);
 			
 			var record= selections[0];
 			var rt= this.getRemoteTerceroStore();
@@ -117,21 +124,43 @@ Ext.define('App.controller.Egreso',{
 				DigitoVerificacion:record.get('DVReceptor'),
 				NombreDocumento:record.get('NombreDocumentoReceptor')})
 			};
-						
+			
+			if(record.get('FechaAsentado') ){
+				this.getEgresoAsentarButton().setDisabled(false);
+				this.getEgresoDeleteButton().setDisabled(true);
+				this.getEgresoAsentarButton().setIconCls('desasentar');
+			}
+			else{
+				if(record.get('FechaAnulado')){
+					this.getEgresoAsentarButton().setDisabled(true);
+					this.getEgresoDeleteButton().setDisabled(true);
+				}
+				else{
+					this.getEgresoAsentarButton().setDisabled(false);
+					this.getEgresoDeleteButton().setDisabled(false);
+					this.getEgresoAsentarButton().setIconCls('asentar');
+				}
+			}
+				
+				
         	this.getEgresoForm().getForm().loadRecord(record);
-        	
-        	
-        	
             this.getEgresoSaveButton().setText('Update');
-            this.getEgresoDeleteButton().setDisabled(!this.getEgresoStore().canDestroy());
+            //this.getEgresoDeleteButton().setDisabled(!this.getEgresoStore().canDestroy());
             this.getEgresoSaveButton().setDisabled(!this.getEgresoStore().canUpdate());
         }
         else{
-        	this.getEgresoForm().getForm().reset();            
+			
+			this.getCodigoEgresoCombo().setReadOnly(false);
+			this.getSucursalAutorizadaCombo().setReadOnly(false);
+			
+        	this.getEgresoForm().getForm().reset();   
+        	
         	this.getEgresoSaveButton().setText('Add');
         	this.getEgresoDeleteButton().setDisabled(true);
-        	this.getEgresoNewButton().setDisabled(true);
         	this.getEgresoSaveButton().setDisabled(!this.getEgresoStore().canCreate());
+        	        	
+        	var suc = this.getSucursalAutorizadaCombo().getStore().getAt(0);
+        	if (suc) this.getSucursalAutorizadaCombo().setValue(suc.getId());
         	this.getEgresoForm().setFocus();
         };
         this.enableAll();

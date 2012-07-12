@@ -126,14 +126,19 @@ Ext.define('App.view.egreso.List',{
         this.dockedItems=[{
             xtype: 'toolbar',
             items: [{
-                text:'New',
-                tooltip:'add new record',
+                //text:'Nuevo',
+                tooltip:'Agregar nuevo Documento',
                 iconCls:'add',
                 disabled:true,
                 action: 'new'
             },{
-                text:'Delete',
-                tooltip:'delete selected record',
+                tooltip:'Asentar el documento seleccionado',
+                iconCls:'asentar',
+                disabled:true,
+                action: 'asentar'
+            },{
+                //text:'Anular',
+                tooltip:'Anular el documento seleccionado',
                 iconCls:'remove',
                 disabled:true,
                 action: 'delete'

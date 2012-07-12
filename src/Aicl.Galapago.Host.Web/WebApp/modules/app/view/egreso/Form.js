@@ -65,7 +65,7 @@ Ext.define('App.view.egreso.Form', {
 ];
  
         this.buttons = [{ 
-            text:'Add',
+            text:'Agregar',
             formBind: false,
             disabled:true,
             action:'save'      

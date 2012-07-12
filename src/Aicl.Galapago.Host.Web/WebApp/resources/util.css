@@ -136,6 +136,14 @@ pre.code{
 	background-image:url(icons/silk/up.png) !important;
 }
 
+.asentar{
+	background-image:url(icons/silk/arrow_right.png) !important;
+}
+
+.desasentar{
+	background-image:url(icons/silk/arrow_undo.png) !important;
+}
+
 #module{
 	margin-left:auto;
 	margin-right:auto;

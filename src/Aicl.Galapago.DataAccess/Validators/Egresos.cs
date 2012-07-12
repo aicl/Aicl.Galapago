@@ -70,9 +70,6 @@ namespace Aicl.Galapago.DataAccess
                 WithMessage("Tercero Receptor Modificado").WithErrorCode("TerceroModificado");
 
             };
-      
-
-
 
             RuleSet(Operaciones.Asentar, () => common() );
             RuleSet(Operaciones.Reversar, () => common() );
@@ -95,6 +92,11 @@ namespace Aicl.Galapago.DataAccess
                 RuleFor(x=>x.Nuevo).Must((x,nuevo)=>x.Viejo.Numero==nuevo.Numero).
                     When(x=> x.Nuevo.Numero!=default(int)).
                     WithMessage("Numero modificado").WithErrorCode("NumeroModificado");
+
+
+                RuleFor(x=>x.Nuevo).Must((x,nuevo)=>x.Viejo.CodigoDocumento==nuevo.CodigoDocumento).
+                    When(x=> !x.Nuevo.CodigoDocumento.IsNullOrEmpty()).
+                    WithMessage("Tipo Documento Modificado").WithErrorCode("TipoDocumentoModificado");
 
             });
 
