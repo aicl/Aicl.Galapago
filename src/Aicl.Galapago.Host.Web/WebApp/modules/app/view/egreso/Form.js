@@ -28,6 +28,16 @@ Ext.define('App.view.egreso.Form', {
      
     initComponent: function() {
         this.items = [
+	{ 
+		xtype: 'toolbar',
+	 	items: [{
+      		text:'Agregar',
+      		iconCls:'aceptar',
+        	formBind: false,
+        	disabled:true,
+        	action:'save'
+        }]
+	},
 	{
 		xtype: 'hidden',
 		name: 'Id'
@@ -63,14 +73,7 @@ Ext.define('App.view.egreso.Form', {
 		xtype:'remotereceptorcombo', fieldLabel: 'Pagar a'
 	}
 ];
- 
-        this.buttons = [{ 
-            text:'Agregar',
-            formBind: false,
-            disabled:true,
-            action:'save'      
-	    }];
- 
+  
         this.callParent(arguments);
     }
 });

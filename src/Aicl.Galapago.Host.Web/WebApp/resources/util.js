@@ -501,6 +501,18 @@ Ext.data.Store.implement({
      */
 	asentar:function(field){
 		
+		var me= this;
+		this.patch(field, 'asentar',
+		{
+			callback:function(result, success){
+				var record;
+				if (success) 
+					record =me.updateLocal(result.Data[0]);
+				else
+					record= Ext.create( me.model.getName(),{});
+				me.fireEvent('asentado', me, record, success);
+			}
+		});
 	},
 	
 	/**
@@ -508,7 +520,21 @@ Ext.data.Store.implement({
      * @param {Ext.data.Model} field
      */
 	reversar:function(field){
-		
+		var me= this;
+		this.patch(field, 'reversar',
+		{
+			callback:function(result, success){
+				var record;
+				if (success){
+					var data= result.Data[0];
+					data.FechaAsentado=null;
+					record= me.updateLocal(data);
+				}
+				else
+					record= Ext.create( me.model.getName(),{});
+				me.fireEvent('reversado', me, record, success);
+			}
+		});
 	},
 	
 	/**
@@ -516,14 +542,17 @@ Ext.data.Store.implement({
      * @param {Ext.data.Model} field
      */
 	
-	anular:function(field, config){
-		config=config||{};
+	anular:function(field){
+		
 		var me= this;
 		this.patch(field, 'anular',
 		{
 			callback:function(result, success){
-				console.log('anular result success', arguments);
-				if (success) var record =me.updateLocal(result.Data[0]);
+				var record;
+				if (success) 
+					record =me.updateLocal(result.Data[0]);
+				else
+					record= Ext.create( me.model.getName(),{});
 				me.fireEvent('anulado', me, record, success);
 			}
 		});

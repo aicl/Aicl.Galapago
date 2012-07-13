@@ -41,6 +41,17 @@ Ext.define('App.controller.Egreso',{
                 }
             },
             
+            'egresolist button[action=asentar]': {
+                click: function(button, event, options){
+                	var grid = this.getEgresoList();
+                	var record = grid.getSelectionModel().getSelection()[0];
+        			if(record.get('FechaAsentado'))
+        				this.getEgresoStore().reversar(record);
+        			else
+        				this.getEgresoStore().asentar(record);
+                }
+            },
+            
             'egresolist button[action=new]': {
             	click:function(button, event, options){
             		this.getEgresoList().getSelectionModel().deselectAll();
@@ -89,8 +100,6 @@ Ext.define('App.controller.Egreso',{
     
     onLaunch: function(application){
     	
-    	//var me = this;
-    	
     	this.getEgresoStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];                                    
             if (operation.action != 'destroy') {
@@ -100,10 +109,18 @@ Ext.define('App.controller.Egreso',{
     	}, this);
     	
     	this.getEgresoStore().on('anulado', function(store, record, success){
-
     		if(success) this.refreshButtons([record]);
-    		   	
     	}, this);
+    	
+    	this.getEgresoStore().on('asentado', function(store, record, success){
+    		if(success) this.refreshButtons([record]);
+    	}, this);
+    	
+    	this.getEgresoStore().on('reversado', function(store, record, success){
+    		if(success) this.refreshButtons([record]);
+    	}, this);
+    	
+    	
     },
         	
 	refreshButtons: function(selections){
@@ -165,7 +182,7 @@ Ext.define('App.controller.Egreso',{
 			
         	this.getEgresoForm().getForm().reset();   
         	
-        	this.getEgresoSaveButton().setText('Add');
+        	this.getEgresoSaveButton().setText('Agregar');
         	this.getEgresoDeleteButton().setDisabled(true);
         	this.getEgresoSaveButton().setDisabled(!this.getEgresoStore().canCreate());
         	        	
@@ -217,7 +234,7 @@ Ext.define('App.controller.Egreso',{
 		this.getEgresoStore().on('reversado', fn, scope);
 	},
 	onanulado:function(fn, scope){
-		this.getEgresoStore().on('anulado', fn, scope);
+		this.getEgresoStore().on('asentado', fn, scope);
 	}
 	
 });

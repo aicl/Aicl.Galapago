@@ -144,6 +144,10 @@ pre.code{
 	background-image:url(icons/silk/arrow_undo.png) !important;
 }
 
+.aceptar{
+	background-image:url(icons/fam/accept.png) !important;
+}
+
 #module{
 	margin-left:auto;
 	margin-right:auto;

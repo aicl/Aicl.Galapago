@@ -28,6 +28,16 @@ Ext.define('App.view.egresoitem.Form', {
      
     initComponent: function() {
         this.items = [
+     { 
+		xtype: 'toolbar',
+	 	items: [{
+      		text:'Agregar',
+      		iconCls:'aceptar',
+        	formBind: false,
+        	disabled:true,
+        	action:'save'
+        }]
+	},
 	{
 		xtype: 'hidden',name: 'Id'
 	},
@@ -52,14 +62,16 @@ Ext.define('App.view.egresoitem.Form', {
 		fieldLabel: 'Valor',
 		allowBlank: false
 	}
+	
 ];
  
-        this.buttons = [{ 
+        /*this.buttons = [{ 
             text:'Add',
             formBind: false,
             disabled:true,
             action:'save'      
 	    }];
+	    */
  
         this.callParent(arguments);
     }

@@ -5,6 +5,8 @@ Ext.define('App.controller.EgresoItem',{
     views:  ['egresoitem.List','egresoitem.Form' ],
     refs:[
     	{ref: 'egresoItemList',    	 selector: 'egresoitemlist' },
+    	{ref: 'egresoItemListToolbar',    	 selector: 'egresoitemlist toolbar' },
+    	{ref: 'egresoItemFormToolbar',    	 selector: 'egresoitemform toolbar' },
     	{ref: 'egresoItemDeleteButton', selector: 'egresoitemlist button[action=delete]' },
     	{ref: 'egresoItemNewButton',    selector: 'egresoitemlist button[action=new]' },
     	{ref: 'egresoItemForm',    	 selector: 'egresoitemform' }, 
@@ -145,13 +147,13 @@ Ext.define('App.controller.EgresoItem',{
 				[this.getTipoEgresoItemCombo().findRecordByValue(teiValue)]);
 			
         	this.getEgresoItemForm().getForm().loadRecord(record);
-            this.getEgresoItemSaveButton().setText('Update');
+            this.getEgresoItemSaveButton().setText('Actualizar');
             this.getEgresoItemDeleteButton().setDisabled(!this.getEgresoItemStore().canDestroy());
             this.getEgresoItemSaveButton().setDisabled(!this.getEgresoItemStore().canUpdate());
         }
         else{
         	this.getEgresoItemForm().getForm().reset();            
-        	this.getEgresoItemSaveButton().setText('Add');
+        	this.getEgresoItemSaveButton().setText('Agregar');
         	this.getEgresoItemDeleteButton().setDisabled(true);
         	this.getEgresoItemSaveButton().setDisabled(!this.getEgresoItemStore().canCreate());
         	this.getEgresoItemForm().setFocus();
@@ -183,6 +185,16 @@ Ext.define('App.controller.EgresoItem',{
 	enableAll: function(){
 		this.getEgresoItemList().setDisabled(false);
 		this.getEgresoItemForm().setDisabled(false);
+	},
+	
+	disableAllToolbars:function(){
+		this.getEgresoItemListToolbar().setDisabled(true);
+		this.getEgresoItemFormToolbar().setDisabled(true);
+	},
+	
+	enableAllToolbars:function(){
+		this.getEgresoItemListToolbar().setDisabled(false);
+		this.getEgresoItemFormToolbar().setDisabled(false);
 	},
 	
 	onselectionchange:function(fn, scope){

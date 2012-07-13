@@ -74,9 +74,19 @@ launch: function(){
     
     controller.onanulado(function(store, record, success ){
     	var item = this.getController('EgresoItem');
-    	if(success) item.disableAll();    
+    	if(success) item.disableAllToolbars();    
     }, this);
     
+    controller.onasentado(function(store, record, success ){
+    	var item = this.getController('EgresoItem');
+    	if(success) item.disableAllToolbars();    
+    }, this);
+    
+    
+    controller.onreversado(function(store, record, success ){
+    	var item = this.getController('EgresoItem');
+    	if(success) item.enableAllToolbars();    
+    }, this);
     
 },
     
@@ -96,11 +106,11 @@ cargarItems:function(record, item){
     	item.getEgresoItemList().determineScrollbars();
     }
 
-    if(record.get('FechaAnulado') || record.get('FechaAsentado')){
-    	item.disableAll();
-    	return ;
-    }
-    
+    if(record.get('FechaAnulado') || record.get('FechaAsentado'))
+    	item.disableAllToolbars();
+    else
+        item.enableAllToolbars();
+        
     item.refreshButtons();
 	
 }
