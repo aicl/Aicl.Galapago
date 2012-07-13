@@ -29,7 +29,6 @@ Ext.define('App.controller.Egreso',{
         this.control({
             'egresolist': { 
                 selectionchange: function( sm,  selections,  eOpts){
-                	console.log('egresolist selectionchange sm', sm);
                 	this.refreshButtons(selections);
                 }
             },
@@ -38,8 +37,7 @@ Ext.define('App.controller.Egreso',{
                 click: function(button, event, options){
                 	var grid = this.getEgresoList();
                 	var record = grid.getSelectionModel().getSelection()[0];
-        			//this.getEgresoStore().remove(record);
-                	alert ('anular registro');
+        			this.getEgresoStore().anular(record);
                 }
             },
             
@@ -90,12 +88,21 @@ Ext.define('App.controller.Egreso',{
     },
     
     onLaunch: function(application){
+    	
+    	//var me = this;
+    	
     	this.getEgresoStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];                                    
             if (operation.action != 'destroy') {
                this.getEgresoList().getSelectionModel().select(record,true,true);
                this.refreshButtons([record]);
             }
+    	}, this);
+    	
+    	this.getEgresoStore().on('anulado', function(store, record, success){
+
+    		if(success) this.refreshButtons([record]);
+    		   	
     	}, this);
     },
         	
@@ -125,15 +132,18 @@ Ext.define('App.controller.Egreso',{
 				NombreDocumento:record.get('NombreDocumentoReceptor')})
 			};
 			
+			var canUpdate=true;
 			if(record.get('FechaAsentado') ){
 				this.getEgresoAsentarButton().setDisabled(false);
 				this.getEgresoDeleteButton().setDisabled(true);
 				this.getEgresoAsentarButton().setIconCls('desasentar');
+				canUpdate=false;
 			}
 			else{
 				if(record.get('FechaAnulado')){
 					this.getEgresoAsentarButton().setDisabled(true);
 					this.getEgresoDeleteButton().setDisabled(true);
+					canUpdate=false;
 				}
 				else{
 					this.getEgresoAsentarButton().setDisabled(false);
@@ -144,9 +154,9 @@ Ext.define('App.controller.Egreso',{
 				
 				
         	this.getEgresoForm().getForm().loadRecord(record);
-            this.getEgresoSaveButton().setText('Update');
+            this.getEgresoSaveButton().setText('Actualizar');
             //this.getEgresoDeleteButton().setDisabled(!this.getEgresoStore().canDestroy());
-            this.getEgresoSaveButton().setDisabled(!this.getEgresoStore().canUpdate());
+            this.getEgresoSaveButton().setDisabled(!(this.getEgresoStore().canUpdate() && canUpdate));
         }
         else{
 			
@@ -198,6 +208,16 @@ Ext.define('App.controller.Egreso',{
 	
 	onwrite:function(fn, scope){
 		this.getEgresoStore().on('write', fn, scope);
+	},
+	
+	onasentado:function(fn, scope){
+		this.getEgresoStore().on('anulado', fn, scope);
+	},
+	onreversado:function(fn, scope){
+		this.getEgresoStore().on('reversado', fn, scope);
+	},
+	onanulado:function(fn, scope){
+		this.getEgresoStore().on('anulado', fn, scope);
 	}
 	
 });

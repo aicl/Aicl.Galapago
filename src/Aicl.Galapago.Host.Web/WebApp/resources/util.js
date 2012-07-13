@@ -158,6 +158,7 @@
 			config.api.read=config.api.read|| (config.url+'/read');
 			config.api.update=config.api.update|| (config.url+'/update');
 			config.api.destroy=config.api.destroy|| (config.url+'/destroy');
+			config.api.patch=config.api.patch|| (config.url+'/patch');
 			
 			return this.createProxy(config);
 			
@@ -388,6 +389,13 @@
 
 Ext.define('Aicl.data.Store',{
 	extend: 'Ext.data.Store',
+	 initComponent:function() {
+        // call parent init component
+        Aicl.data.Store.superclass.initComponent.apply(this, arguments);
+         // add custom events
+        this.addEvents('asentado', 'reversado','anulado');
+    },
+	
     constructor: function(config){    	    	
     	
     	config.proxy= config.proxy || Aicl.Util.createRestProxy( {
@@ -442,11 +450,83 @@ Ext.data.Store.implement({
 		}			
 	},
 	
+	//record={somefield:'value', othefield:'value'}
 	addLocal:function(record){
 		var nr = Ext.create( this.model.getName(),record );
-		this.suspendAutoSync()
+		this.suspendAutoSync();
 		this.add(nr);
 		this.resumeAutoSync();
+	},
+	
+	/**
+     * asienta el registro
+     * @param record={Id:idValue, somefield:'value', othefield:'value'}
+     * @return model 
+     */
+	updateLocal:function(record){
+			var keys = Ext.create( this.model.getName(),{}).fields.keys;
+			var sr = this.getById(parseInt( record.Id) );
+			this.suspendAutoSync();
+			sr.beginEdit();
+			for( var r in record){
+				if( keys.indexOf(r)>0 )
+					sr.set(r, record[r])
+			}
+			sr.endEdit();
+			this.commitChanges();
+			this.resumeAutoSync();
+			return sr;
+	},
+	
+	/**
+     * patch field
+     * @param  field (model), action(string), config:{success, failure, callback}
+     */
+	
+	patch:function(field, action, config){
+		config=config||{};
+		Aicl.Util.executeRestRequest({
+				url : this.getProxy().api.patch+'/'+field.getId()+'/'+action,
+				method : 'PATCH',
+				success : config.success,
+				failure : config.failure,
+				callback: config.callback
+			});
+	},
+	
+	/**
+     * asienta el registro
+     * @param {Ext.data.Model} field
+     * @return {void} 
+     */
+	asentar:function(field){
+		
+	},
+	
+	/**
+     * reversa el registro
+     * @param {Ext.data.Model} field
+     */
+	reversar:function(field){
+		
+	},
+	
+	/**
+     * anula el registro. Desata el evento 'anulado'
+     * @param {Ext.data.Model} field
+     */
+	
+	anular:function(field, config){
+		config=config||{};
+		var me= this;
+		this.patch(field, 'anular',
+		{
+			callback:function(result, success){
+				console.log('anular result success', arguments);
+				if (success) var record =me.updateLocal(result.Data[0]);
+				me.fireEvent('anulado', me, record, success);
+			}
+		});
 	},
 	
 	canCreate:function(){

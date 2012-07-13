@@ -51,16 +51,15 @@ launch: function(){
         
     controller.onselectionchange(
     function( sm,  selections,  eOpts){
-    	console.log('app controllerEgreso.onselection selections', selections);
     	var item = this.getController('EgresoItem');
-    	item.getCentroAutorizadoCombo().getStore().removeAll();  	
+    	item.getCentroAutorizadoCombo().getStore().removeAll();
+    	item.getEgresoItemStore().removeAll();
     		
     	if (selections.length){
     		this.cargarItems(selections[0],item);   		
         }
         else{
         	item.setIdEgreso(0);
-        	item.getEgresoItemStore().removeAll();
         	item.disableAll();
         }
     }, this);
@@ -72,6 +71,12 @@ launch: function(){
         	this.cargarItems(record,item);
         }    
     }, this);
+    
+    controller.onanulado(function(store, record, success ){
+    	var item = this.getController('EgresoItem');
+    	if(success) item.disableAll();    
+    }, this);
+    
     
 },
     
@@ -85,9 +90,17 @@ cargarItems:function(record, item){
     		
     item.setCodigoEgreso(codigoEgreso);
     item.setIdEgreso(record.getId());
-    		
-    item.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
-    item.getEgresoItemList().determineScrollbars();
+    
+    if(record.get('Valor')!=0){
+    	item.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
+    	item.getEgresoItemList().determineScrollbars();
+    }
+
+    if(record.get('FechaAnulado') || record.get('FechaAsentado')){
+    	item.disableAll();
+    	return ;
+    }
+    
     item.refreshButtons();
 	
 }
