@@ -83,6 +83,22 @@ Ext.define('App.view.egreso.List',{
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	},
 	{
+		text: 'Tercero',
+		dataIndex: 'NombreTercero',
+		renderer: function(value, metadata, record, store){
+			return record.get('NombreTercero')+ ' || ' + record.get('DocumentoTercero')+'-'+record.get('DVTercero');
+		}
+	},
+	{
+		text: 'Pagar a',
+		dataIndex: 'NombreReceptor',
+		renderer: function(value, metadata, record, store){
+			return record.get('NombreReceptor') || record.get('NombreTercero') +
+			' || ' + record.get('DocumentoReceptor') || record.get('DocumentoTercero')+
+			'-'+record.get('DVReceptor')|| record.get('DVTercero');
+		}
+	},
+	{
 		text: 'Externo',
 		dataIndex: 'Externo',
 		width    : 50,
@@ -90,36 +106,6 @@ Ext.define('App.view.egreso.List',{
 		trueText: 'Si',
 		falseText: 'No',
 		align: 'center'
-	},
-	{
-		text: 'DocumentoTercero',
-		dataIndex: 'DocumentoTercero',
-		sortable: true
-	},
-	{
-		text: 'DVTercero',
-		dataIndex: 'DVTercero',
-		sortable: true
-	},
-	{
-		text: 'NombreDocumentoTercero',
-		dataIndex: 'NombreDocumentoTercero',
-		sortable: true
-	},
-	{
-		text: 'DocumentoReceptor',
-		dataIndex: 'DocumentoReceptor',
-		sortable: true
-	},
-	{
-		text: 'DVReceptor',
-		dataIndex: 'DVReceptor',
-		sortable: true
-	},
-	{
-		text: 'NombreDocumentoReceptor',
-		dataIndex: 'NombreDocumentoReceptor',
-		sortable: true
 	}
 ];
  

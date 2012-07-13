@@ -45,73 +45,82 @@ launch: function(){
     });
     
     var controller =this.getController('Egreso');
-    controller.refreshButtons();
+    var itemController= this.getController('EgresoItem');
     
-    this.getController('EgresoItem').disableAll();
+    controller.refreshButtons();
+    itemController.disableAll();
         
     controller.onselectionchange(
     function( sm,  selections,  eOpts){
-    	var item = this.getController('EgresoItem');
-    	item.getCentroAutorizadoCombo().getStore().removeAll();
-    	item.getEgresoItemStore().removeAll();
+    	itemController.getCentroAutorizadoCombo().getStore().removeAll();
+    	itemController.getEgresoItemStore().removeAll();
     		
     	if (selections.length){
-    		this.cargarItems(selections[0],item);   		
+    		this.cargarItems(selections[0],itemController);   		
         }
         else{
-        	item.setIdEgreso(0);
-        	item.disableAll();
+        	itemController.setIdEgreso(0);
+        	itemController.disableAll();
         }
     }, this);
     
-    controller.onwrite(function(store, operation, eOpts ){
-    	var item = this.getController('EgresoItem');
+    controller.onwrite(function(store, operation, eOpts){
     	var record =  operation.getRecords()[0];                                    
         if (operation.action=='create') {
-        	this.cargarItems(record,item);
+        	this.cargarItems(record,itemController);
         }    
     }, this);
     
     controller.onanulado(function(store, record, success ){
-    	var item = this.getController('EgresoItem');
-    	if(success) item.disableAllToolbars();    
+    	if(success) itemController.disableAllToolbars();    
     }, this);
     
     controller.onasentado(function(store, record, success ){
-    	var item = this.getController('EgresoItem');
-    	if(success) item.disableAllToolbars();    
+    	if(success) itemController.disableAllToolbars();    
     }, this);
     
-    
     controller.onreversado(function(store, record, success ){
-    	var item = this.getController('EgresoItem');
-    	if(success) item.enableAllToolbars();    
+    	if(success) itemController.enableAllToolbars();    
+    }, this);
+    
+    itemController.onwrite(function(store, operation, eOpts){
+    	
+    	var totalD=0, totalC=0;
+    	store.each(function(rec){
+    		if(rec.get('TipoPartida')==1) 
+    			totalD=totalD+rec.get('Valor');
+    		else
+    			totalC=totalC+rec.get('Valor');
+    	});
+    	var record = controller.getEgresoList().getSelectionModel().getSelection()[0];
+    	controller.getEgresoStore().updateLocal({Id: record.getId(), Valor:totalD, Saldo:totalD-totalC});
+    
     }, this);
     
 },
     
 controllers: ['Egreso','EgresoItem'],
 
-cargarItems:function(record, item){
+cargarItems:function(record, itemController){
 
 	var codigoEgreso= this.getController('Egreso').getCodigoEgresoCombo().getStore().getById(record.get('CodigoDocumento'));
     		    		    		
-    item.getCentroAutorizadoCombo().getStore().loadRawData(getCentrosData(record.get('IdSucursal')));
+    itemController.getCentroAutorizadoCombo().getStore().loadRawData(getCentrosData(record.get('IdSucursal')));
     		
-    item.setCodigoEgreso(codigoEgreso);
-    item.setIdEgreso(record.getId());
+    itemController.setCodigoEgreso(codigoEgreso);
+    itemController.setIdEgreso(record.getId());
     
     if(record.get('Valor')!=0){
-    	item.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
-    	item.getEgresoItemList().determineScrollbars();
+    	itemController.getEgresoItemStore().load({params:{IdEgreso: record.getId()}});
+    	itemController.getEgresoItemList().determineScrollbars();
     }
 
     if(record.get('FechaAnulado') || record.get('FechaAsentado'))
-    	item.disableAllToolbars();
+    	itemController.disableAllToolbars();
     else
-        item.enableAllToolbars();
+        itemController.enableAllToolbars();
         
-    item.refreshButtons();
+    itemController.refreshButtons();
 	
 }
     

@@ -13,7 +13,8 @@ Ext.define('App.controller.EgresoItem',{
     	{ref: 'egresoItemSaveButton', 	 selector: 'egresoitemform button[action=save]' },
     	{ref: 'centroAutorizadoCombo',    	 selector: 'egresoitemform centroautorizadocombo'},
     	{ref: 'rubroCombo',    	 selector: 'egresoitemform rubrocombo' },
-    	{ref: 'tipoEgresoItemCombo',    	 selector: 'egresoitemform tipoegresoitemcombo' }	
+    	{ref: 'tipoEgresoItemCombo',    	 selector: 'egresoitemform tipoegresoitemcombo' },	
+    	{ref: 'terceroCombo',    	 selector: 'egresoitemform remoteterceroitemcombo' }
     ],
 
     init: function(application) {
@@ -89,14 +90,13 @@ Ext.define('App.controller.EgresoItem',{
             		
             		var rubroData=getRubrosData(rc.get('IdSucursal'), rc.get('Id'), cd);
             		this.getRubroCombo().getStore().loadRawData(rubroData);
-            		
-            		console.log('egresoitemform centroautorizadocombo select', this.getEgresoItemForm().getForm().getValues());
             	}
             },
             'egresoitemform rubrocombo':{
             	select:function(combo, value, options){
-            		var rc = value[0];
-            		
+            		console.log('egresoitemform rubrocombo select', value[0])
+
+            		this.getTerceroCombo().setDisabled(!value[0].get('UsaTercero'));
             	}
             }
             	
@@ -120,7 +120,9 @@ Ext.define('App.controller.EgresoItem',{
 	refreshButtons: function(selections){	
 		this.getEgresoItemNewButton().setDisabled(!this.getEgresoItemStore().canCreate());
 		selections=selections||[];
-				
+		
+		var habilitarTerceroCombo;
+		
 		if (selections.length){
 			var record= selections[0];
 			
@@ -150,6 +152,13 @@ Ext.define('App.controller.EgresoItem',{
             this.getEgresoItemSaveButton().setText('Actualizar');
             this.getEgresoItemDeleteButton().setDisabled(!this.getEgresoItemStore().canDestroy());
             this.getEgresoItemSaveButton().setDisabled(!this.getEgresoItemStore().canUpdate());
+            
+            var rubro =this.getRubroCombo().getStore().getById(this.getRubroCombo().getValue());
+            if(rubro.get('UsaTercero'))
+            	habilitarTerceroCombo=true;
+            else
+            	habilitarTerceroCombo=false;
+            
         }
         else{
         	this.getEgresoItemForm().getForm().reset();            
@@ -157,7 +166,9 @@ Ext.define('App.controller.EgresoItem',{
         	this.getEgresoItemDeleteButton().setDisabled(true);
         	this.getEgresoItemSaveButton().setDisabled(!this.getEgresoItemStore().canCreate());
         	this.getEgresoItemForm().setFocus();
+        	habilitarTerceroCombo=false;
         };
+        this.getTerceroCombo().setDisabled(!habilitarTerceroCombo);
         this.enableAll();
 	},
 	

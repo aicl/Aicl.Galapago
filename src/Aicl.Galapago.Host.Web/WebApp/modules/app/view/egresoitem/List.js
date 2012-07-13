@@ -22,46 +22,28 @@ Ext.define('App.view.egresoitem.List',{
         
         this.columns=[
 	{
-		text: 'IdEgreso',
-		dataIndex: 'IdEgreso',
-		flex: 1,
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
+		text: 'Codigo',
+		dataIndex: 'CodigoItem'
 	},
 	{
-		text: 'IdPresupuestoItem',
-		dataIndex: 'IdPresupuestoItem',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
+		text: 'Rubro',
+		dataIndex: 'NombreItem'
 	},
 	{
 		text: 'TipoPartida',
 		dataIndex: 'TipoPartida',
-		sortable: true,
+		align: 'center',
 		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+           	if(value==1){
+            	return '<div class="x-cell-positive" style="text-align:center">D</div>';
         	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+            	return '<div class="x-cell-negative" style="text-align:center">C</div>';
         	}
         }
 	},
 	{
 		text: 'Valor',
 		dataIndex: 'Valor',
-		sortable: true,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
             	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
@@ -71,65 +53,23 @@ Ext.define('App.view.egresoitem.List',{
         }
 	},
 	{
-		text: 'IdCentro',
-		dataIndex: 'IdCentro',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
+		text: 'Centro',
+		dataIndex: 'NombreCentro'
 	},
 	{
-		text: 'IdTercero',
-		dataIndex: 'IdTercero',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'CodigoItem',
-		dataIndex: 'CodigoItem',
-		sortable: true
-	},
-	{
-		text: 'NombreItem',
-		dataIndex: 'NombreItem',
-		sortable: true
-	},
-	{
-		text: 'NombreCentro',
-		dataIndex: 'NombreCentro',
-		sortable: true
-	},
-	{
-		text: 'NombreTercero',
+		text: 'A favor de',
 		dataIndex: 'NombreTercero',
-		sortable: true
-	},
-	{
-		text: 'DocumentoTercero',
-		dataIndex: 'DocumentoTercero',
-		sortable: true
-	},
-	{
-		text: 'DVTercero',
-		dataIndex: 'DVTercero',
-		sortable: true
+		renderer: function(value, metadata, record, store){
+			var tercero=record.get('NombreTercero');
+			return (!tercero)?'': tercero + ' || ' + record.get('DocumentoTercero')+'-'+record.get('DVTercero');
+		}
+		
 	}
 ];
  
         this.dockedItems=[{
             xtype: 'toolbar',
             items: [{
-                //text:'Nuevo',
                 tooltip:'Agregar nuevo item',
                 iconCls:'add',
                 disabled:true,

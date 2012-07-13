@@ -12,7 +12,7 @@ Ext.define('App.view.egreso.Form', {
         config.autoScroll= config.autoScroll==undefined? true: config.autoScroll,
 		config.fieldDefaults = config.fieldDefaults || {
             msgTarget: 'side',
-            labelWidth: 120,
+            labelWidth: 100,
 			labelAlign: 'right'
         };
         config.defaultType = config.defaultType|| 'textfield';
