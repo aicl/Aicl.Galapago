@@ -15,12 +15,12 @@ using ServiceStack.ServiceHost;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
 using Aicl.Galapago.DataAccess;
+
 namespace Aicl.Galapago.BusinessLogic
 {
-    public static class PresupuestoItemExtensiones
+    public static  partial class BL
     {
 
-        
         public static void AssertExists(this PresupuestoItem request, int idPresupuesto, string codigo)
         {
             if( request== default(PresupuestoItem))

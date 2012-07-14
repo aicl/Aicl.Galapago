@@ -7,7 +7,6 @@ using ServiceStack.DesignPatterns.Model;
 namespace Aicl.Galapago.Model.Types
 {
 	[Alias("EGRESO")]
-
     [JoinTo(typeof(Sucursal),"IdSucursal", "Id", Order=0)]
     [JoinTo(typeof(Tercero),"IdTercero","Id", Order=1)]
     [JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", Order=2)]

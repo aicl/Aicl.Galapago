@@ -3,6 +3,7 @@ using System.Data;
 using System.Text;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Collections.Generic;
 using ServiceStack.OrmLite;
 using ServiceStack.Redis;
@@ -16,13 +17,66 @@ using ServiceStack.ServiceHost;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
 using Aicl.Galapago.DataAccess;
+using Mono.Linq.Expressions;
 
 namespace Aicl.Galapago.BusinessLogic
 {
-    public static class ComprobanteEgresoExtensiones
+    public static partial class BL
     {
-        // TODO:   No permitir Valor < 0 ??? confirmar .... seria una devolucion ?
+        #region Get
+        public static Response<ComprobanteEgreso> Get(this ComprobanteEgreso request,
+                                           Factory factory,
+                                           IAuthSession authSession,
+                                           Paginador paginador )
+        {
+            long? totalCount=null;
 
+            var data = factory.Execute(proxy=>{
+
+                Expression<Func<ComprobanteEgreso, bool>> predicate;
+                if (request.Periodo.Length==6)
+                    predicate= q=>q.Periodo==request.Periodo;
+                else
+                    predicate= q=>q.Periodo.StartsWith(request.Periodo) ;
+
+                if(!request.NombreTercero.IsNullOrEmpty())
+                    predicate= predicate.AndAlso(q=>q.NombreTercero.Contains(request.NombreTercero));
+
+                if(!request.NombreSucursal.IsNullOrEmpty())
+                    predicate= predicate.AndAlso(q=>q.NombreSucursal.Contains(request.NombreSucursal));
+
+                if(request.FechaAsentado.HasValue)
+                {
+                    if(request.FechaAsentado==default(DateTime))
+                        predicate= predicate.AndAlso(q=>q.FechaAsentado==null);
+                    else
+                        predicate= predicate.AndAlso(q=>q.FechaAsentado!=null);
+                }
+
+                var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
+
+                if(paginador.PageNumber.HasValue)
+                {
+                    totalCount= proxy.Count(predicate);
+                    int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.PageSize;
+                    visitor.Limit(paginador.PageNumber.Value*rows, rows);
+                }
+                                
+                visitor.Where(predicate).OrderByDescending(r=>r.Numero);
+                
+                return proxy.Get(visitor);
+            });
+
+                        
+            return new Response<ComprobanteEgreso>(){
+                Data=data,
+                TotalCount=totalCount
+            };
+
+        }
+        #endregion Get
+
+        // TODO:   No permitir Valor < 0 ??? confirmar .... seria una devolucion ?
         #region Post        
         public static Response<ComprobanteEgreso> Post(this ComprobanteEgreso request,
                                             Factory factory,
@@ -208,6 +262,7 @@ namespace Aicl.Galapago.BusinessLogic
                     {
                         var pi= DAL.GetPresupuestoItem(proxy,request.IdCuentaGiradora);
                         pi.AssertExists(request.IdCuentaGiradora);
+
                         pi.UpdatePresupuesto(proxy, request.IdSucursal,
                                              Definiciones.IdCentroGeneral,request.Periodo,
                                              (request.Valor>0?(short)2:(short)1),

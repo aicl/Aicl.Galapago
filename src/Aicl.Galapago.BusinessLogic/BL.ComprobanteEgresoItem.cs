@@ -20,7 +20,7 @@ using Aicl.Galapago.DataAccess;
 
 namespace Aicl.Galapago.BusinessLogic
 {
-    public static class ComprobanteEgresoItemExtensiones
+    public static partial class  BL
     {
         #region Post        
         public static Response<ComprobanteEgresoItem> Post(this ComprobanteEgresoItem request,

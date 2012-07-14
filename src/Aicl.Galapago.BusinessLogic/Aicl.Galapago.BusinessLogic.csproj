@@ -56,17 +56,17 @@
     <Compile Include="CodigoDocumentoExtensiones.cs" />
     <Compile Include="CuentaExtensiones.cs" />
     <Compile Include="PresupuestoExtensiones.cs" />
-    <Compile Include="PresupuestoItemExtensiones.cs" />
     <Compile Include="EgresoItemExtensiones.cs" />
-    <Compile Include="ComprobanteEgresoExtensiones.cs" />
     <Compile Include="UsuarioGiradoraExtensiones.cs" />
-    <Compile Include="ComprobanteEgresoItemExtensiones.cs" />
-    <Compile Include="ComprobanteEgresoRetencionExtensiones.cs" />
     <Compile Include="BL.cs" />
     <Compile Include="Paginador.cs" />
     <Compile Include="BL.Tercero.cs" />
     <Compile Include="BL.Egreso.cs" />
     <Compile Include="BL.Authorization.cs" />
+    <Compile Include="BL.ComprobanteEgreso.cs" />
+    <Compile Include="BL.PresupuestoItem.cs" />
+    <Compile Include="BL.ComprobanteEgresoItem.cs" />
+    <Compile Include="BL.ComprobanteEgresoRetencion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
