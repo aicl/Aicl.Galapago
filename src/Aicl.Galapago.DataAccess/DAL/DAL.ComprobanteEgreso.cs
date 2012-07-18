@@ -24,11 +24,7 @@ namespace Aicl.Galapago.DataAccess
             visitor.Insert( f=> new { f.Id, f.Descripcion, f.Fecha,
                 f.Periodo, f.IdSucursal,f.Numero,f.IdTercero,f.IdTerceroReceptor,
                 f.IdCuentaGiradora });                  
-
-            proxy.Execute(dbCmd=>
-                dbCmd.InsertAndAssertId(comprobante, visitor) 
-            );
-
+            proxy.Create(comprobante, visitor);
         }
 
        
@@ -50,58 +46,51 @@ namespace Aicl.Galapago.DataAccess
                 FechaAsentado= fechaAsentado.HasValue?fechaAsentado.Value:fechaAsentado, //UTC ?
                 Externo= externo.HasValue?externo.Value:false
 
-            };
-            proxy.Execute(dbCmd=>{
-                ce.Numero=DAL.GetNextConsecutivo(proxy,idSucursal, Definiciones.ComprobranteEgreso).Numero;
-                dbCmd.InsertAndAssertId(ce);
-            });
+            };   
+            ce.Numero=proxy.GetNextConsecutivo(idSucursal, Definiciones.ComprobranteEgreso).Numero;
+            proxy.Create(ce);
             return ce;
         }
 
 
         public static ComprobanteEgresoItem CreateItem(this ComprobanteEgreso comprobanteEgreso,
-                                                         DALProxy proxy,
-                                                         int idEgreso, decimal valor)
+		                                               DALProxy proxy,
+                                                       int idEgreso, decimal valor)
         {
-           
             ComprobanteEgresoItem cei= new ComprobanteEgresoItem(){
                 IdEgreso= idEgreso,
                 Valor= valor,
                 IdComprobanteEgreso= comprobanteEgreso.Id
 
             };
-            proxy.Execute(dbCmd=>dbCmd.Insert(cei));
+            proxy.Create(cei);
             return cei;
         }
 
 
         public static List<ComprobanteEgresoItem> GetItems(this ComprobanteEgreso documento,DALProxy proxy)
         {
-            return proxy.Execute(dbCmd=>{return dbCmd.Select<ComprobanteEgresoItem>(q=> q.IdComprobanteEgreso==documento.Id);});
+            return proxy.Get<ComprobanteEgresoItem>(q=> q.IdComprobanteEgreso==documento.Id);
         }
 
 
-
-        public static ComprobanteEgreso GetComprobanteEgreso(DALProxy proxy, int idComprobanteEgreso){
-            return proxy.Execute(dbCmd=>{
-                return dbCmd.GetByIdOrDefault<ComprobanteEgreso>(idComprobanteEgreso);
-            });
+        public static ComprobanteEgreso GetComprobanteEgreso(DALProxy proxy, int idComprobanteEgreso)
+		{
+            return proxy.FirstOrDefaultById<ComprobanteEgreso>(idComprobanteEgreso);
         }
 
 
         public static List<ComprobanteEgresoRetencion> GetRetenciones(this ComprobanteEgresoItem item, DALProxy proxy)
         {
-            return proxy.Execute(DbCmd=>{
-                return DbCmd.Select<ComprobanteEgresoRetencion>(q=>q.IdComprobanteEgresoItem==item.Id);});
-        
+            return proxy.Get<ComprobanteEgresoRetencion>(q=>q.IdComprobanteEgresoItem==item.Id);
         }
 
         public static void Actualizar(this ComprobanteEgreso documento,DALProxy proxy){
 
-            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento,
-                f=> new { f.Descripcion,f.Fecha,f.Periodo,f.IdTercero,f.IdTerceroReceptor, f.IdCuentaGiradora},
-                q=>q.Id==documento.Id)
-            );
+			var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
+            visitor.Update( f=> new { f.Descripcion,f.Fecha,f.Periodo,f.IdTercero,f.IdTerceroReceptor, f.IdCuentaGiradora});                  
+            visitor.Where(q=>q.Id==documento.Id);
+			proxy.Update(documento,visitor);
         }
 
 
@@ -112,18 +101,20 @@ namespace Aicl.Galapago.DataAccess
             comprobanteEgreso.Valor=0;
 
             proxy.Execute(dbCmd=>{
-                dbCmd.Delete<ComprobanteEgresoItem>(r=>r.IdComprobanteEgreso==comprobanteEgreso.Id);
-                dbCmd.UpdateOnly(comprobanteEgreso,
-                             r=>new {r.FechaAnulado, r.Descripcion,r.Valor},
-                             r=> r.Id==comprobanteEgreso.Id );
+                proxy.Delete<ComprobanteEgresoItem>(r=>r.IdComprobanteEgreso==comprobanteEgreso.Id);
+
+				var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
+            	visitor.Update(r=> new {r.FechaAnulado, r.Descripcion,r.Valor});                  
+            	visitor.Where(r=> r.Id==comprobanteEgreso.Id );
+
+                proxy.Update(comprobanteEgreso,visitor);
             });
 
         }
 
         public static void AsignarConsecutivo(this ComprobanteEgreso comprobanteEgreso, DALProxy proxy)
         {
-            comprobanteEgreso.Numero= DAL.GetNextConsecutivo(proxy,
-                                                  comprobanteEgreso.IdSucursal,
+            comprobanteEgreso.Numero= proxy.GetNextConsecutivo(comprobanteEgreso.IdSucursal,
                                                   Definiciones.ComprobranteEgreso).Numero;
         }
 
@@ -134,55 +125,52 @@ namespace Aicl.Galapago.DataAccess
         }
 
 
-        public static void Asentar(this ComprobanteEgreso documento,DALProxy  proxy){
+        public static void Asentar(this ComprobanteEgreso documento,DALProxy  proxy)
+		{
             documento.FechaAsentado=DateTime.Today;
-            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.FechaAsentado, r=>r.Id==documento.Id));
+			var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
+            visitor.Update(f=> f.FechaAsentado);                  
+            visitor.Where(r=>r.Id==documento.Id);
+            proxy.Update(documento, visitor);
         }
 
-        public static void Reversar(this ComprobanteEgreso documento, DALProxy proxy){
+        public static void Reversar(this ComprobanteEgreso documento, DALProxy proxy)
+		{
             documento.FechaAsentado=null;
-            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.FechaAsentado, r=>r.Id==documento.Id));
+			var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
+            visitor.Update(f=> f.FechaAnulado);                  
+            visitor.Where(r=>r.Id==documento.Id);
+			proxy.Update(documento, visitor);
         }
 
         public static void ActualizarValor(this ComprobanteEgreso documento, DALProxy proxy)
         {
-            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.Valor, r=>r.Id==documento.Id));
+			var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
+            visitor.Update(f=> f.Valor);                  
+            visitor.Where(r=>r.Id==documento.Id);
+            proxy.Update(documento, visitor);
         }
 
 
-        public static void Create(this ComprobanteEgresoItem documento, DALProxy proxy)
-        {
-            proxy.Execute(dbCmd=> dbCmd.InsertAndAssertId(documento));
-        }
-
+        
         public static void ActualizarValor(this ComprobanteEgresoItem documento, DALProxy proxy)
         {
-            proxy.Execute(dbCmd=> dbCmd.UpdateOnly(documento, f=> f.Valor, r=>r.Id==documento.Id));
+			var visitor = ReadExtensions.CreateExpression<ComprobanteEgresoItem>();
+            visitor.Update(f=> f.Valor);                  
+            visitor.Where(r=>r.Id==documento.Id);
+            proxy.Update(documento, visitor);
         }
 
 
         public static void Borrar(this ComprobanteEgresoItem item, DALProxy proxy)
         {
-            proxy.Execute(dbCmd=>{
-                dbCmd.Delete(item);
-                dbCmd.Delete<ComprobanteEgresoRetencion>(x=>
-                                                         x.IdComprobanteEgresoItem==item.Id &&
-                                                         x.IdComprobanteEgreso==item.IdComprobanteEgreso);
-            });
+			proxy.Delete<ComprobanteEgresoItem>(q=>q.Id==item.Id);
+            proxy.Delete<ComprobanteEgresoRetencion>(x=>
+			                                         x.IdComprobanteEgresoItem==item.Id &&
+                                                     x.IdComprobanteEgreso==item.IdComprobanteEgreso);
 
         }
 
-
-        public static void Create(this ComprobanteEgresoRetencion documento, DALProxy proxy)
-        {
-            proxy.Execute(dbCmd=> dbCmd.InsertAndAssertId(documento));
-        }
-
-
-        public static void Borrar(this ComprobanteEgresoRetencion documento, DALProxy proxy)
-        {
-            proxy.Execute(dbCmd=> dbCmd.Delete(documento));
-        }
 
     }
 }

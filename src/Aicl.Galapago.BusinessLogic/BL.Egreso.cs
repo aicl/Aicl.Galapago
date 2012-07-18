@@ -56,15 +56,17 @@ namespace Aicl.Galapago.BusinessLogic
                 }
 
                 var visitor = ReadExtensions.CreateExpression<Egreso>();
-
+				visitor.Where(predicate);
                 if(paginador.PageNumber.HasValue)
                 {
-                    totalCount= proxy.Count(predicate);
+					visitor.Select(r=> Sql.Count(r.Id));
+					totalCount= proxy.Count(visitor);
+					visitor.Select();
                     int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.PageSize;
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                                 
-                visitor.Where(predicate).OrderByDescending(r=>r.Numero);
+                visitor.OrderByDescending(r=>r.Numero);
                 
                 return proxy.Get(visitor);
             });
@@ -245,7 +247,7 @@ namespace Aicl.Galapago.BusinessLogic
                         var  prs= DAL.GetPresupuestoActivo(proxy,request.IdSucursal,Definiciones.IdCentroGeneral);
                         prs.AssertExistsActivo(request.IdSucursal, Definiciones.IdCentroGeneral);
                         //urn:PresupuestoItem:IdPresupuesto:{0}:Codigo:{1}"
-                        CodigoDocumento cd = DAL.GetCodigoDocumento(proxy, request.CodigoDocumento);
+                        CodigoDocumento cd = proxy.GetCodigoDocumento(request.CodigoDocumento);
                         cd.AssertExists(request.CodigoDocumento);
                         cd.AssertEstaActivo();
                         using(proxy.AcquireLock(prs.GetLockKey(cd.CodigoPresupuesto), Definiciones.LockSeconds))
@@ -458,7 +460,7 @@ namespace Aicl.Galapago.BusinessLogic
 
         private static Tercero CheckTerceroReceptor(this Egreso request, DALProxy proxy)
         {
-            Tercero t = DAL.FirstOrDefaultByIdFromCache<Tercero>(proxy, request.IdTerceroReceptor.Value);
+            Tercero t = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTerceroReceptor.Value);
 
             t.AssertExists(request.IdTerceroReceptor.Value);
             return t;

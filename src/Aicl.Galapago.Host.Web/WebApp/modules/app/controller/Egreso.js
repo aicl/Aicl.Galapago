@@ -81,7 +81,8 @@ Ext.define('App.controller.Egreso',{
                 		Activo:true,
                 		Periodo: anio+ (mes? Ext.String.leftPad(mes, 2, '0'):''),
                 		NombreTercero: this.getTextBuscarTercero().getValue(),
-                		Asentado: (estado=='1')?null: (estado==2)?true:false
+                		Asentado: (estado=='1')?null: (estado==2)?true:false,
+						format:'json'
                 	};
                 	
                 	var store = this.getEgresoStore();       	  	

@@ -27,8 +27,6 @@ namespace Aicl.Galapago.BusinessLogic
                                             Factory factory,
                                             IAuthSession authSession)
         {
-
-         
             request.ValidateAndThrowHttpError(Operaciones.Create);
 
             factory.Execute(proxy=>{
@@ -50,7 +48,7 @@ namespace Aicl.Galapago.BusinessLogic
 
                     proxy.BeginDbTransaction();
                     ce.ActualizarValor(proxy);
-                    request.Create(proxy);
+                    proxy.Create(request);
                     proxy.CommitDbTransaction();
 
                 }
@@ -77,7 +75,7 @@ namespace Aicl.Galapago.BusinessLogic
             factory.Execute(proxy=>{
                 using (proxy.AcquireLock(request.IdComprobanteEgreso.GetLockKey<ComprobanteEgreso>(), Definiciones.LockSeconds))
                 {
-                    ComprobanteEgresoItem oldData = DAL.FirstOrDefaultById<ComprobanteEgresoItem>(proxy, request.Id);
+                    ComprobanteEgresoItem oldData = proxy.FirstOrDefaultById<ComprobanteEgresoItem>(request.Id);
                     oldData.AssertExists(request.Id);
 
                     ComprobanteEgreso ce = DAL.GetComprobanteEgreso(proxy, oldData.IdComprobanteEgreso);
@@ -124,7 +122,7 @@ namespace Aicl.Galapago.BusinessLogic
             factory.Execute(proxy=>{
                 using (proxy.AcquireLock(request.IdComprobanteEgreso.GetLockKey<ComprobanteEgreso>(), Definiciones.LockSeconds))
                 {
-                    ComprobanteEgresoItem oldData = DAL.FirstOrDefaultById<ComprobanteEgresoItem>(proxy, request.Id);
+                    ComprobanteEgresoItem oldData = proxy.FirstOrDefaultById<ComprobanteEgresoItem>(request.Id);
                     oldData.AssertExists(request.Id);
 
                     ComprobanteEgreso ce = DAL.GetComprobanteEgreso(proxy, oldData.IdComprobanteEgreso);

@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Data;
 using System.Linq;
@@ -215,9 +216,10 @@ namespace Aicl.Galapago.DataAccess
                 return result;
                 */
 
-            });
+/*            });
 
         }
+
 
 
         public static string ObtenerPeriodo(this DateTime date){

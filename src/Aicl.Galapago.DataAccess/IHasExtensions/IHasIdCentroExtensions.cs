@@ -24,7 +24,7 @@ namespace Aicl.Galapago.DataAccess
 			where T:IHasIdCentro, new()
 		{
 					
-            var usc = DAL.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(proxy,idUsuario);
+            var usc = proxy.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(idUsuario);
 
             var r = usc.FirstOrDefault(q=>q.IdSucursal==idSucursal && q.IdCentro==request.IdCentro);
 			if(r ==default(UsuarioSucursalCentro))

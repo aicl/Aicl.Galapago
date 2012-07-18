@@ -23,31 +23,24 @@ namespace Aicl.Galapago.DataAccess
             var visitor= ReadExtensions.CreateExpression<MayorPresupuesto>();
             if(idTercero.HasValue) visitor.Where(r=>r.IdPresupuestoItem== idPresupuestoItem && r.IdTercero ==idTercero.Value);
             else visitor.Where(r=>r.IdPresupuestoItem== idPresupuestoItem && r.IdTercero==null);
-
-            return proxy.Execute(dbCmd=>{
-                return dbCmd.FirstOrDefault(periodo.Substring(0,4), visitor);
-            });
+            return proxy.FirstOrDefault(periodo.Substring(0,4), visitor);
         }
 
 
         public static void Update(this MayorPresupuesto item, DALProxy proxy, string periodo, short tipoPartida, decimal valor)
         {
-
             item.UpdateSaldos(periodo, tipoPartida==1?valor:0, tipoPartida==2? valor:0);
-
             SqlExpressionVisitor<MayorPresupuesto> expression = ReadExtensions.CreateExpression<MayorPresupuesto>();
-            //expression.Where(r=>r.Id==item.Id);
-            proxy.Execute(dbCmd=>dbCmd.Update<MayorPresupuesto>(item,periodo.Substring(0,4),expression));
+            expression.Where(r=>r.Id==item.Id);
+            proxy.Update<MayorPresupuesto>(item,periodo.Substring(0,4),expression);
         }
 
 
         public static void Insert(this MayorPresupuesto item, DALProxy proxy, string periodo, short tipoPartida, decimal valor)
         {
             item.UpdateSaldos(periodo, tipoPartida==1?valor:0, tipoPartida==2? valor:0);
-            proxy.Execute(dbCmd=>dbCmd.Insert<MayorPresupuesto>(item,periodo.Substring(0,4)));
+            proxy.Create<MayorPresupuesto>(item,periodo.Substring(0,4));
         }
-
-
     }
 }
 

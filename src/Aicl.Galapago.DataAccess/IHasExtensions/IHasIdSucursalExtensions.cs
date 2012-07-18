@@ -24,14 +24,14 @@ namespace Aicl.Galapago.DataAccess
             where T:IHasIdSucursal, new()
         {
 
-            var uscL = DAL.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(proxy,idUsuario);
+            var uscL = proxy.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(idUsuario);
 
             var uscR = uscL.FirstOrDefault(r=>r.IdSucursal==request.IdSucursal);
 
             if( uscR==default(UsuarioSucursalCentro))
                throw HttpError.Unauthorized("Sucursal no autorizada");
 
-            var sucursales= DAL.GetFromCache<Sucursal>(proxy);
+            var sucursales= proxy.GetFromCache<Sucursal>();
             return sucursales.First(r=>r.Id==uscR.IdSucursal);
 
         }
@@ -41,7 +41,7 @@ namespace Aicl.Galapago.DataAccess
 			where T:IHasIdSucursal, IHasPeriodo, new()
 		{
 			
-            PeriodoSucursal ps = DAL.GetPeriodoSucursal(proxy, request.Periodo,request.IdSucursal); 
+            PeriodoSucursal ps = proxy.GetPeriodoSucursal(request.Periodo,request.IdSucursal); 
 
 			if (ps.Bloqueado)
 				throw HttpError.Unauthorized(string.Format("Periodo {0} Cerrado para la Sucursal {1}",
@@ -53,7 +53,7 @@ namespace Aicl.Galapago.DataAccess
             where T:IHasIdTercero, new()
         {
            
-            Tercero tercero = DAL.FirstOrDefaultByIdFromCache<Tercero>(proxy, request.IdTercero); 
+            Tercero tercero = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTercero); 
             tercero.AssertExists(request.IdTercero);
             return tercero;
 

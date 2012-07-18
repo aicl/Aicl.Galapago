@@ -69,7 +69,7 @@ namespace Aicl.Galapago.BusinessLogic
                     egreso.CheckPeriodo(proxy);
                     request.CheckCentro(proxy, egreso.IdSucursal,int.Parse(authSession.UserAuthId));
 
-                    CodigoDocumento cd = DAL.GetCodigoDocumento(proxy,egreso.CodigoDocumento);
+                    CodigoDocumento cd = proxy.GetCodigoDocumento(egreso.CodigoDocumento);
                     cd.AssertExists(egreso.CodigoDocumento); 
                     cd.AssertEstaActivo();
 
@@ -115,7 +115,7 @@ namespace Aicl.Galapago.BusinessLogic
             factory.Execute(proxy=>{
                 using (proxy.AcquireLock(request.IdEgreso.GetLockKey<Egreso>(), Definiciones.LockSeconds))
                 {
-                    EgresoItem oldData = DAL.FirstOrDefaultById<EgresoItem>(proxy, request.Id);
+                    EgresoItem oldData = proxy.FirstOrDefaultById<EgresoItem>(request.Id);
                     oldData.AssertExists(request.Id);
 
                     Egreso egreso=  DAL.GetEgresoById(proxy, oldData.IdEgreso);
@@ -124,7 +124,7 @@ namespace Aicl.Galapago.BusinessLogic
                     CheckOldAndNew(egreso,request,oldData, proxy, int.Parse(authSession.UserAuthId));
                     PresupuestoItem pi= Check1(proxy, request, int.Parse(authSession.UserAuthId));
 
-                    CodigoDocumento cd = DAL.GetCodigoDocumento(proxy,egreso.CodigoDocumento);
+                    CodigoDocumento cd = proxy.GetCodigoDocumento(egreso.CodigoDocumento);
                     cd.AssertExists(egreso.CodigoDocumento);
                     cd.AssertEstaActivo();
 
@@ -181,7 +181,7 @@ namespace Aicl.Galapago.BusinessLogic
             factory.Execute(proxy=>{
                 using (proxy.AcquireLock(request.IdEgreso.GetLockKey<Egreso>(), Definiciones.LockSeconds))
                 {
-                    EgresoItem oldData = DAL.FirstOrDefaultById<EgresoItem>(proxy, request.Id);
+                    EgresoItem oldData = proxy.FirstOrDefaultById<EgresoItem>(request.Id);
                     oldData.AssertExists(request.Id);
 
                     Egreso egreso=  DAL.GetEgresoById(proxy, oldData.IdEgreso);
@@ -231,13 +231,13 @@ namespace Aicl.Galapago.BusinessLogic
             Presupuesto pr =DAL.GetPresupuestoById(proxy,pi.IdPresupuesto);
             pr.AssertExists(pi.IdPresupuesto);
 
-            Centro centro= DAL.FirstOrDefaultById<Centro>(proxy, request.IdCentro);
+            Centro centro= proxy.FirstOrDefaultById<Centro>(request.IdCentro);
             centro.AssertExists(request.IdCentro);
 
             Tercero tercero= default(Tercero);
             if(!pi.UsaTercero) request.IdTercero=null;
             if(request.IdTercero.HasValue)
-                tercero= DAL.FirstOrDefaultById<Tercero>(proxy, request.IdTercero.Value);
+                tercero=proxy.FirstOrDefaultById<Tercero>(request.IdTercero.Value);
 
 
             EgresoItemAlCrear ei = new EgresoItemAlCrear(){

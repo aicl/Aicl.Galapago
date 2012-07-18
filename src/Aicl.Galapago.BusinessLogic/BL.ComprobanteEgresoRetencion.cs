@@ -41,7 +41,7 @@ namespace Aicl.Galapago.BusinessLogic
                     ce.AssertExists(request.IdComprobanteEgreso);
                     ce.CheckPeriodo(proxy);
                                          
-                    ComprobanteEgresoItem cei= DAL.FirstOrDefaultById<ComprobanteEgresoItem>(proxy, request.IdComprobanteEgresoItem);
+                    ComprobanteEgresoItem cei= proxy.FirstOrDefaultById<ComprobanteEgresoItem>(request.IdComprobanteEgresoItem);
                     cei.AssertExists(request.IdComprobanteEgresoItem);
 
                     Egreso egreso= DAL.GetEgresoById(proxy,cei.IdEgreso);
@@ -54,7 +54,7 @@ namespace Aicl.Galapago.BusinessLogic
                     ce.Valor-= request.Valor;
                     proxy.BeginDbTransaction();
                     ce.ActualizarValor(proxy);
-                    request.Create(proxy);
+                    proxy.Create(request);
                     proxy.CommitDbTransaction();
 
                 }
@@ -82,10 +82,10 @@ namespace Aicl.Galapago.BusinessLogic
                 using (proxy.AcquireLock(request.IdComprobanteEgreso.GetLockKey<ComprobanteEgreso>(), Definiciones.LockSeconds))
                 {
                     ComprobanteEgresoRetencion oldData = 
-                        DAL.FirstOrDefaultById<ComprobanteEgresoRetencion>(proxy, request.Id);
+                        proxy.FirstOrDefaultById<ComprobanteEgresoRetencion>(request.Id);
                     oldData.AssertExists(request.Id);
 
-                    ComprobanteEgresoItem cei= DAL.FirstOrDefaultById<ComprobanteEgresoItem>(proxy, oldData.IdComprobanteEgresoItem);
+                    ComprobanteEgresoItem cei= proxy.FirstOrDefaultById<ComprobanteEgresoItem>(oldData.IdComprobanteEgresoItem);
                     cei.AssertExists(request.IdComprobanteEgresoItem);
 
                     ComprobanteEgreso ce = DAL.GetComprobanteEgreso(proxy, oldData.IdComprobanteEgreso);
@@ -104,7 +104,7 @@ namespace Aicl.Galapago.BusinessLogic
                     ce.Valor+=oldData.Valor;
                     proxy.BeginDbTransaction();
                     ce.ActualizarValor(proxy);
-                    request.Borrar(proxy);
+                    proxy.Delete<ComprobanteEgresoRetencion>(q=>q.Id==request.Id);
                     proxy.CommitDbTransaction();
                 }
             });

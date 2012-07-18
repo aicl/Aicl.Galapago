@@ -67,6 +67,7 @@
     <Compile Include="BL.PresupuestoItem.cs" />
     <Compile Include="BL.ComprobanteEgresoItem.cs" />
     <Compile Include="BL.ComprobanteEgresoRetencion.cs" />
+    <Compile Include="Extensions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

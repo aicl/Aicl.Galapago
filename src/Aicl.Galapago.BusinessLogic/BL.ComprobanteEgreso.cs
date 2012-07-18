@@ -54,15 +54,17 @@ namespace Aicl.Galapago.BusinessLogic
                 }
 
                 var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
-
+				visitor.Where(predicate);
                 if(paginador.PageNumber.HasValue)
                 {
-                    totalCount= proxy.Count(predicate);
+					visitor.Select(r=> Sql.Count(r.Id));
+                    totalCount= proxy.Count(visitor);
+					visitor.Select();
                     int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.PageSize;
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                                 
-                visitor.Where(predicate).OrderByDescending(r=>r.Numero);
+                visitor.OrderByDescending(r=>r.Numero);
                 
                 return proxy.Get(visitor);
             });
@@ -224,7 +226,7 @@ namespace Aicl.Galapago.BusinessLogic
                             var  prs= DAL.GetPresupuestoActivo(proxy,request.IdSucursal,Definiciones.IdCentroGeneral);
                             prs.AssertExistsActivo(request.IdSucursal, Definiciones.IdCentroGeneral);
 
-                            CodigoDocumento cd = DAL.GetCodigoDocumento(proxy, egreso.CodigoDocumento);
+                            CodigoDocumento cd = proxy.GetCodigoDocumento(egreso.CodigoDocumento);
                             cd.AssertExists(egreso.CodigoDocumento);
                             cd.AssertEstaActivo();
 
@@ -361,7 +363,7 @@ namespace Aicl.Galapago.BusinessLogic
 
         private static void CheckTerceroReceptor(this ComprobanteEgreso request, DALProxy proxy)
         {
-                Tercero t = DAL.FirstOrDefaultByIdFromCache<Tercero>(proxy, request.IdTerceroReceptor);
+                Tercero t = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTerceroReceptor);
 
                 t.AssertExists(request.IdTerceroReceptor);
 

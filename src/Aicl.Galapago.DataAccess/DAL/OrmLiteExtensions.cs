@@ -30,7 +30,7 @@ namespace ServiceStack.OrmLite
             dbCmd.AssertId(request);	
 		}
 
-        private static void AssertId<T>(this IDbCommand dbCmd,T request) 
+        internal static void AssertId<T>(this IDbCommand dbCmd,T request) 
             where T: IHasId<System.Int32>, new()
         {
 
@@ -43,7 +43,25 @@ namespace ServiceStack.OrmLite
             }
             
         }
-        				
+
+		internal static List<T>  Get<T>(this IDbCommand dbCmd, IRedisClient redisClient)
+            where T: new()
+        {
+            return dbCmd.Get<T>(redisClient, string.Format("urn:{0}", typeof(T).Name), null);
+        }
+
+        internal static List<T>  Get<T>(this IDbCommand dbCmd, IRedisClient redisClient, string cacheKey, SqlExpressionVisitor<T> visitor)
+            where T: new()
+        {
+            
+            return redisClient.Get(cacheKey, () =>
+            {
+                return visitor==null?  dbCmd.Select<T>():dbCmd.Select<T>(visitor) ;
+            },
+            TimeSpan.FromDays(Definiciones.DiasEnCache));
+        }
+
+        /*				
         internal static T FirstOrDefault<T>(this IDbCommand dbCmd, string tableName, SqlExpressionVisitor<T> visitor)
             where T: new()
         {
@@ -74,25 +92,9 @@ namespace ServiceStack.OrmLite
             sql = sql +( !expression.WhereExpression.IsNullOrEmpty()?  expression.WhereExpression:"" );     
             return dbCmd.ExecuteSql( sql);  
         }
+        */
+
         
-
-        internal static List<T>  Get<T>(this IDbCommand dbCmd, IRedisClient redisClient)
-            where T: new()
-        {
-            return dbCmd.Get<T>(redisClient, string.Format("urn:{0}", typeof(T).Name), null);
-        }
-
-        internal static List<T>  Get<T>(this IDbCommand dbCmd, IRedisClient redisClient, string cacheKey, SqlExpressionVisitor<T> visitor)
-            where T: new()
-        {
-            
-            return redisClient.Get(cacheKey, () =>
-            {
-                return visitor==null?  dbCmd.Select<T>():dbCmd.Select<T>(visitor) ;
-            },
-            TimeSpan.FromDays(Definiciones.DiasEnCache));
-        }
-
 
 		/*
 		public static void Create<T,TKey>(this IDbCommand dbCmd, T obj,

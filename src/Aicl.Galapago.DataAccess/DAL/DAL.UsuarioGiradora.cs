@@ -20,16 +20,14 @@ namespace Aicl.Galapago.DataAccess
     {
         public static UsuarioGiradora GetUsuarioGiradora(DALProxy proxy, int idUsuario, int idPresupuestoItem, int?idTercero)
         {
-            return proxy.Execute(dbCmd=>{
-                if(idTercero.HasValue)
-                    return dbCmd.FirstOrDefault<UsuarioGiradora>(x=>x.IdUsuario== idUsuario 
+            if(idTercero.HasValue)
+                    return proxy.FirstOrDefault<UsuarioGiradora>(x=>x.IdUsuario== idUsuario 
                                                                  &&  x.IdPresupuestoItem== idPresupuestoItem
                                                                  && x.IdTercero==idTercero.Value);
                 else
-                    return dbCmd.FirstOrDefault<UsuarioGiradora>(x=>x.IdUsuario== idUsuario 
+                    return proxy.FirstOrDefault<UsuarioGiradora>(x=>x.IdUsuario== idUsuario 
                                                                  &&  x.IdPresupuestoItem== idPresupuestoItem
                                                                  );
-            });
         }
     }
 }

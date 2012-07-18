@@ -55,14 +55,14 @@ namespace Aicl.Galapago.BusinessLogic
 
             factory.Execute(proxy=>
             {
-                aur= DAL.GetByIdUsuarioFromCache<AuthRoleUser>(proxy, request.UserId);
-                rol= DAL.GetFromCache<AuthRole>(proxy);
-                per= DAL.GetFromCache<AuthPermission >(proxy);
-                rol_per= DAL.GetFromCache<AuthRolePermission >(proxy);
-                usc= DAL.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(proxy,request.UserId);
-                sucursales= DAL.GetFromCache<Sucursal>( proxy);
-                centros= DAL.GetFromCache<Centro>(proxy);
-                cd= DAL.Get<CodigoDocumento>(proxy);
+                aur= proxy.GetByIdUsuarioFromCache<AuthRoleUser>(request.UserId);
+                rol= proxy.GetFromCache<AuthRole>();
+                per= proxy.GetFromCache<AuthPermission>();
+                rol_per= proxy.GetFromCache<AuthRolePermission>();
+                usc= proxy.GetByIdUsuarioFromCache<UsuarioSucursalCentro>(request.UserId);
+                sucursales= proxy.GetFromCache<Sucursal>();
+                centros= proxy.GetFromCache<Centro>();
+                cd= proxy.Get<CodigoDocumento>();
 
                 foreach( var r in aur)
                 {

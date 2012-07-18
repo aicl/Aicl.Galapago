@@ -105,15 +105,18 @@ namespace Aicl.Galapago.BusinessLogic
                     predicate= predicate.AndAlso(predicate2);
 
                 var visitor = ReadExtensions.CreateExpression<Tercero>();
+				visitor.Where(predicate);
 
                 if(paginador.PageNumber.HasValue)
                 {
-                    totalCount= proxy.Count(predicate);
+					visitor.Select(r=> Sql.Count(r.Id));
+                    totalCount= proxy.Count(visitor);
+					visitor.Select();
                     int rows= paginador.PageSize.HasValue? paginador.PageSize.Value:BL.PageSize;
                     visitor.Limit(paginador.PageNumber.Value*rows, rows);
                 }
                                 
-                visitor.Where(predicate).OrderBy(r=>r.Nombre);
+                visitor.OrderBy(r=>r.Nombre);
                 
                 return proxy.Get(visitor);
             });

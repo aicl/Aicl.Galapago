@@ -22,7 +22,7 @@ namespace Aicl.Galapago.BusinessLogic
             where T:IHasCodigoDocumento, new()
         {
            
-            var cd= DAL.GetCodigoDocumento(proxy, request.CodigoDocumento);
+            var cd= proxy.GetCodigoDocumento( request.CodigoDocumento);
 
             cd.AssertExists(request.CodigoDocumento);
             cd.AssertEstaActivo();
