@@ -127,6 +127,8 @@
     <Compile Include="Validations\ComprobanteEgresoRetencionValidador.cs" />
     <Compile Include="Types\TipoDocumento.cs" />
     <Compile Include="Types\Rubro.cs" />
+    <Compile Include="Types\SaldoTercero.cs" />
+    <Compile Include="Attributes\SaldoTercero.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

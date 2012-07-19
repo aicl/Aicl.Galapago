@@ -75,9 +75,33 @@ namespace Aicl.Galapago.BusinessLogic
                 {
                     pm.Update(proxy,periodo,tipoPartida, valor);
                 }
-    
-                presupuestoItem.UpdateDbCr(proxy, tipoPartida, valor);   
             }
+
+			if(presupuestoItem.UsaTercero)
+			{
+				using(proxy.AcquireLock(SaldoTercero.GetLockKey(presupuestoItem.Id, idTercero.Value),Definiciones.LockSeconds))
+            	{
+					SaldoTercero st = proxy.FirstOrDefault<SaldoTercero>(q=> q.IdPresupuestoItem==presupuestoItem.Id &&
+					                                          q.IdTercero== idTercero.Value);
+					if(st==default(SaldoTercero))
+					{
+						st= new SaldoTercero{
+							IdPresupuestoItem=presupuestoItem.Id,
+							IdSucursal=idSucursal,
+							IdTercero=idTercero.Value
+						};
+					}
+
+					st.UpdateDbCr(tipoPartida==1?valor:0, tipoPartida==2?valor:0);
+
+					if(st.Id==default(int))
+						proxy.Create(st);
+					else
+						proxy.Update(st);
+				}
+			}
+
+			presupuestoItem.UpdateDbCr(proxy, tipoPartida, valor);   
         }
     }
 }
