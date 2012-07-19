@@ -27,14 +27,12 @@ namespace Aicl.Galapago.BusinessLogic
                                            Factory factory,
                                            IHttpRequest httpRequest)
         {
+            return factory.Execute(proxy=>{
 
-            var paginador= new Paginador(httpRequest);
-            var queryString= httpRequest.QueryString;
+				var paginador= new Paginador(httpRequest);
+            	var queryString= httpRequest.QueryString;
 
-            long? totalCount=null;
-
-            var data = factory.Execute(proxy=>{
-
+            	long? totalCount=null;
 
                 Expression<Func<Tercero, bool>> predicate;
 
@@ -118,14 +116,15 @@ namespace Aicl.Galapago.BusinessLogic
                                 
                 visitor.OrderBy(r=>r.Nombre);
                 
-                return proxy.Get(visitor);
+				return new Response<Tercero>(){
+                	Data=proxy.Get(visitor),
+                	TotalCount=totalCount
+            	};
+
             });
 
                         
-            return new Response<Tercero>(){
-                Data=data,
-                TotalCount=totalCount
-            };
+            
 
         }
         #endregion Get

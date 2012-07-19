@@ -16,8 +16,7 @@ using Aicl.Galapago.DataAccess;
 namespace Aicl.Galapago.Interface
 {
 	public class AppRestService<T>:RestServiceBase<T> where T:new()
-	{
-				
+	{			
 		public Factory Factory{ get; set;}
 		
 		public override object OnGet (T request)
@@ -69,20 +68,6 @@ namespace Aicl.Galapago.Interface
 				return HttpResponse.ErrorResult<Response<T>>(e, "DeleteError");
 			}
 		}
-		
-		/*
-		public object GetById(object id) 
-		{
-			try{
-				return new Response<T>(){
-					Data=Factory.GetById<T>(id) 	
-				};
-			}
-			catch(Exception e ){
-				return HttpResponse.ErrorResult<Response<T>>(e, "GetByIdError");
-			}
-		}
-        */      
 	
 	}
 }

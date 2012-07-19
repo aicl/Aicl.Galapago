@@ -18,22 +18,45 @@ namespace Aicl.Galapago.Interface
     [Permission(ApplyTo.Delete, "ComprobanteEgresoRetencion.destroy")]
     public class ComprobanteEgresoRetencionService:AppRestService<ComprobanteEgresoRetencion>
     {
+
+		public override object OnGet (ComprobanteEgresoRetencion request)
+        {
+			try{
+				return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgresoRetencion>>(e,"GetErrorComprobanteEgresoRetencion");
+			}
+        }
+
         public override object OnPost (ComprobanteEgresoRetencion request)
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Post(Factory, httpRequest.GetSession());
+			try{
+            	return request.Post(Factory, httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgresoRetencion>>(e,"PostErrorComprobanteEgresoRetencion");
+			}
         }
 
 
         public override object OnPut (ComprobanteEgresoRetencion request)
         {
-            throw new HttpError("Operacion Update no implementada");
+            return HttpResponse.
+				ErrorResult<Response<ComprobanteEgresoRetencion>>("Put NoImplementado para ComprobanteEgresoRetencion",
+				                                                  "PutErrorComprobanteEgresoRetencion");
         }
 
         public override object OnDelete (ComprobanteEgresoRetencion request)
         {
-            var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Delete(Factory,httpRequest.GetSession());
+            var httpRequest = RequestContext.Get<IHttpRequest>();
+			try{
+            	return request.Delete(Factory,httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgresoRetencion>>(e,"DeleteErrorComprobanteEgresoRetencion");
+			}
         }
 
     }

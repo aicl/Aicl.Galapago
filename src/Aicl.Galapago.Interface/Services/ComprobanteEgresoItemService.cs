@@ -17,23 +17,49 @@ namespace Aicl.Galapago.Interface
 	[Permission(ApplyTo.Delete, "ComprobanteEgresoItem.destroy")]
 	public class ComprobanteEgresoItemService:AppRestService<ComprobanteEgresoItem>
 	{
+
+		public override object OnGet (ComprobanteEgresoItem request)
+        {
+			try{
+				return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgresoItem>>(e,"GetErrorComprobanteEgresoItem");
+			}
+        }
+
         public override object OnPost (ComprobanteEgresoItem request)
         {
-            var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Post(Factory, httpRequest.GetSession());
+            var httpRequest = RequestContext.Get<IHttpRequest>();
+			try{
+            	return request.Post(Factory, httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgresoItem>>(e,"PostErrorComprobanteEgresoItem");
+			}
         }
 
 
         public override object OnPut (ComprobanteEgresoItem request)
         {
-            var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Put(Factory,httpRequest.GetSession());
+            var httpRequest = RequestContext.Get<IHttpRequest>();
+			try{
+            	return request.Put(Factory,httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgresoItem>>(e,"PutErrorComprobanteEgresoItem");
+			}
         }
 
         public override object OnDelete (ComprobanteEgresoItem request)
         {
-            var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Delete(Factory,httpRequest.GetSession());
+            var httpRequest = RequestContext.Get<IHttpRequest>();
+			try{
+            	return request.Delete(Factory,httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgresoItem>>(e,"DeleteErrorComprobanteEgresoItem");
+			}
         }
 
 	}

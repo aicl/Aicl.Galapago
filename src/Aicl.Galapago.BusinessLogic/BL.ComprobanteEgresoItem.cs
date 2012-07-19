@@ -22,6 +22,20 @@ namespace Aicl.Galapago.BusinessLogic
 {
     public static partial class  BL
     {
+		#region Get
+		public static Response<ComprobanteEgresoItem> Get(this ComprobanteEgresoItem request,
+		                                              Factory factory,
+		                                              IHttpRequest httpRequest)
+        {
+			return factory.Execute(proxy=>
+			{
+				return new Response<ComprobanteEgresoItem>(){
+                	Data=proxy.Get<ComprobanteEgresoItem>(q=> q.IdComprobanteEgreso==request.IdComprobanteEgreso),   	
+            	};
+			});
+		}
+		#endregion Get
+
         #region Post        
         public static Response<ComprobanteEgresoItem> Post(this ComprobanteEgresoItem request,
                                             Factory factory,
@@ -110,7 +124,6 @@ namespace Aicl.Galapago.BusinessLogic
         #endregion Put
 
 
-
         #region Delete
         public static Response<ComprobanteEgresoItem> Delete(this ComprobanteEgresoItem request,
                                             Factory factory,
@@ -197,9 +210,6 @@ namespace Aicl.Galapago.BusinessLogic
                 data.Valor=request.Valor;
 
             request.PopulateWith(data);
-
-
-
         }
 
     }

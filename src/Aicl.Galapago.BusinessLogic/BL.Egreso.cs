@@ -27,33 +27,45 @@ namespace Aicl.Galapago.BusinessLogic
 
         #region Get
         public static Response<Egreso> Get(this Egreso request,
-                                           Factory factory,
-                                           IAuthSession authSession,
-                                           Paginador paginador )
+		                                              Factory factory,
+		                                              IHttpRequest httpRequest)
         {
-            long? totalCount=null;
+            return factory.Execute(proxy=>{
 
-            var data = factory.Execute(proxy=>{
+				long? totalCount=null;
+
+				var paginador= new Paginador(httpRequest);
+            	var queryString= httpRequest.QueryString;
 
                 Expression<Func<Egreso, bool>> predicate;
-                if (request.Periodo.Length==6)
-                    predicate= q=>q.Periodo==request.Periodo;
+
+                var periodo= queryString["Periodo"];
+				if(periodo.IsNullOrEmpty()) periodo= DateTime.Today.ObtenerPeriodo();
+                if (periodo.Length==6)
+                    predicate= q=>q.Periodo==periodo;
                 else
-                    predicate= q=>q.Periodo.StartsWith(request.Periodo) ;
+                    predicate= q=>q.Periodo.StartsWith(periodo) ;
 
-                if(!request.NombreTercero.IsNullOrEmpty())
-                    predicate= predicate.AndAlso(q=>q.NombreTercero.Contains(request.NombreTercero));
+                var nombre= queryString["NombreTercero"];
+                if(!nombre.IsNullOrEmpty())
+                    predicate= predicate.AndAlso(q=>q.NombreTercero.Contains(nombre));
 
-                if(!request.NombreSucursal.IsNullOrEmpty())
-                    predicate= predicate.AndAlso(q=>q.NombreSucursal.Contains(request.NombreSucursal));
+				var sucursal= queryString["NombreSucursal"];
+                if(!sucursal.IsNullOrEmpty())
+                    predicate= predicate.AndAlso(q=>q.NombreSucursal.Contains(sucursal));
 
-                if(request.FechaAsentado.HasValue)
-                {
-                    if(request.FechaAsentado==default(DateTime))
-                        predicate= predicate.AndAlso(q=>q.FechaAsentado==null);
-                    else
-                        predicate= predicate.AndAlso(q=>q.FechaAsentado!=null);
-                }
+				string asentado= queryString["Asentado"];
+            	if(!asentado.IsNullOrEmpty())
+           		{
+                	bool tomarSoloAsentado;
+	                if( bool.TryParse(asentado,out tomarSoloAsentado))
+	                {
+						if(tomarSoloAsentado)
+							predicate= predicate.AndAlso(q=>q.FechaAsentado!=null);
+						else
+							predicate= predicate.AndAlso(q=>q.FechaAsentado==null);
+	                }
+	            }
 
                 var visitor = ReadExtensions.CreateExpression<Egreso>();
 				visitor.Where(predicate);
@@ -68,15 +80,12 @@ namespace Aicl.Galapago.BusinessLogic
                                 
                 visitor.OrderByDescending(r=>r.Numero);
                 
-                return proxy.Get(visitor);
+				return new Response<Egreso>(){
+                	Data=proxy.Get(visitor),
+                	TotalCount=totalCount
+            	};
             });
-
-                        
-            return new Response<Egreso>(){
-                Data=data,
-                TotalCount=totalCount
-            };
-
+  
         }
         #endregion Get
 

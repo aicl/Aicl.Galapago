@@ -22,6 +22,21 @@ namespace Aicl.Galapago.BusinessLogic
 {
     public static partial class BL
     {
+
+		#region Get
+		public static Response<ComprobanteEgresoRetencion> Get(this ComprobanteEgresoRetencion request,
+		                                              Factory factory,
+		                                              IHttpRequest httpRequest)
+        {
+			return factory.Execute(proxy=>
+			{
+				return new Response<ComprobanteEgresoRetencion>(){
+                	Data=proxy.Get<ComprobanteEgresoRetencion>(q=> q.IdComprobanteEgreso ==request.IdComprobanteEgreso),   	
+            	};
+			});
+		}
+		#endregion Get
+
         #region Post        
         public static Response<ComprobanteEgresoRetencion> Post(this ComprobanteEgresoRetencion request,
                                             Factory factory,

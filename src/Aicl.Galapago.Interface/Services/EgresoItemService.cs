@@ -20,27 +20,45 @@ namespace Aicl.Galapago.Interface
 
         public override object OnGet (EgresoItem request)
         {
-            var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Get(Factory, httpRequest.GetSession());
+			try{
+				return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<EgresoItem>>(e,"GetErrorEgresoItem");
+			}
         }
 
         public override object OnPost (EgresoItem request)
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Post(Factory, httpRequest.GetSession());
+			try{
+            	return request.Post(Factory, httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<EgresoItem>>(e,"PostErrorEgresoItem");
+			}
         }
-
 
         public override object OnPut (EgresoItem request)
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Put(Factory,httpRequest.GetSession());
+			try{
+            	return request.Put(Factory,httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<EgresoItem>>(e,"PutErrorEgresoItem");
+			}
         }
 
         public override object OnDelete (EgresoItem request)
         {
-            var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Delete(Factory,httpRequest.GetSession());
+            var httpRequest = RequestContext.Get<IHttpRequest>();
+			try{
+            	return request.Delete(Factory,httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<EgresoItem>>(e,"DeleteErrorEgresoItem");
+			}
         }
 
 	}

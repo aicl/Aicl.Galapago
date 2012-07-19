@@ -20,7 +20,12 @@ namespace Aicl.Galapago.Interface
 	{
         public override object OnGet (Tercero request)
         {
-            return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+			try{
+            	return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<Tercero>>(e,"GetErrorTercero");
+			}
         }
 	}
 }

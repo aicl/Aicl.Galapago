@@ -20,29 +20,24 @@ using Aicl.Galapago.DataAccess;
 
 namespace Aicl.Galapago.BusinessLogic
 {
-    public static class EgresoItemExtensiones
+    public static partial class BL
     {
 
         #region Get
         public static Response<EgresoItem> Get(this EgresoItem request,
                                             Factory factory,
-                                            IAuthSession authSession)
+                                            IHttpRequest httpRequest)
         {
+            return factory.Execute(proxy=>{
+            
+				var visitor = ReadExtensions.CreateExpression<EgresoItem>();
+                 
+				visitor.Where(r=>r.IdEgreso==request.IdEgreso).OrderBy(r=>r.TipoPartida);
 
-
-            var data = factory.Execute(proxy=>{
-               var visitor = ReadExtensions.CreateExpression<EgresoItem>();
-               
-               visitor.Where(r=>r.IdEgreso==request.IdEgreso).OrderBy(r=>r.TipoPartida);
-
-               return proxy.Get(visitor);
+				return new Response<EgresoItem>(){
+	                Data= proxy.Get(visitor)
+	            };
             });
-
-                        
-            return new Response<EgresoItem>(){
-                Data=data
-            };
-
         }
         #endregion Get
 

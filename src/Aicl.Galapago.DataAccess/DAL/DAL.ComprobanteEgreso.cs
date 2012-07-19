@@ -35,10 +35,14 @@ namespace Aicl.Galapago.DataAccess
                                             int? idTerceroReceptor=null, DateTime? fechaAsentado=null,
                                             bool? externo=false)
         {
+			var today= DateTime.Today;
+			var periodo= today.Year.ToString() + today.Month.ToString().PadLeft(2,'0');
+
             ComprobanteEgreso ce = new ComprobanteEgreso(){
                 IdSucursal=idSucursal,
                 IdCuentaGiradora= idCuentaGiradora,
-                Fecha=DateTime.Today,
+                Fecha=today,
+				Periodo= periodo,
                 IdTercero=idTercero,
                 Valor=valor,
                 Descripcion=descripcion,

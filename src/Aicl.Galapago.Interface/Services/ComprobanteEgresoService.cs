@@ -17,22 +17,36 @@ namespace Aicl.Galapago.Interface
 	[Permission(ApplyTo.Delete, "ComprobanteEgreso.destroy")]
 	public class ComprobanteEgresoService:AppRestService<ComprobanteEgreso>
 	{
+		public override object OnGet (ComprobanteEgreso request)
+        {
+			try{
+				return request.Get(Factory, RequestContext.Get<IHttpRequest>());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgreso>>(e,"GetErrorComprobanteEgreso");
+			}
+        }
+
         public override object OnPost (ComprobanteEgreso request)
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Post(Factory, httpRequest.GetSession());
-        }
-        
-        
-        public override object OnGet (ComprobanteEgreso request)
-        {
-            return OnPost(request);
-        }
+			try{
+            	return request.Post(Factory, httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgreso>>(e,"PostErrorComprobanteEgreso");
+			}
+        }       
 
         public override object OnPut (ComprobanteEgreso request)
         {
-            var httpRequest = RequestContext.Get<IHttpRequest>();       
-            return request.Put(Factory,httpRequest.GetSession());
+            var httpRequest = RequestContext.Get<IHttpRequest>();
+			try{
+            	return request.Put(Factory,httpRequest.GetSession());
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgreso>>(e,"PutErrorComprobanteEgreso");
+			}
         }
 
 
@@ -40,7 +54,12 @@ namespace Aicl.Galapago.Interface
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       
             var action= httpRequest.PathInfo.Substring(httpRequest.PathInfo.LastIndexOf("/")+1);
-            return request.Patch(Factory, httpRequest.GetSession(), action);
+			try{
+            	return request.Patch(Factory, httpRequest.GetSession(), action);
+			}
+			catch(Exception e){
+				return HttpResponse.ErrorResult<Response<ComprobanteEgreso>>(e,"PatchErrorComprobanteEgreso");
+			}
         }
 
 	}

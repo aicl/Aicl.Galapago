@@ -31,7 +31,7 @@ namespace Aicl.Galapago.DataAccess
         {
             item.UpdateSaldos(periodo, tipoPartida==1?valor:0, tipoPartida==2? valor:0);
             SqlExpressionVisitor<MayorPresupuesto> expression = ReadExtensions.CreateExpression<MayorPresupuesto>();
-            expression.Where(r=>r.Id==item.Id);
+            //expression.Where(r=>r.Id==item.Id);
             proxy.Update<MayorPresupuesto>(item,periodo.Substring(0,4),expression);
         }
 
