@@ -5,9 +5,10 @@ Ext.define('App.controller.ComprobanteEgreso',{
     views:  ['comprobanteegreso.Panel' ],
     refs:[
     	{ref: 'comprobanteEgresoList',    	 selector: 'comprobanteegresolist' },
+    	{ref: 'comprobanteEgresoForm',    	 selector: 'comprobanteegresoform' },
+    	
     	{ref: 'comprobanteEgresoDeleteButton', selector: 'comprobanteegresopanel button[action=delete]' },
-    	{ref: 'comprobanteEgresoNewButton',    selector: 'comprobanteegresopanel button[action=new]' },
-    	{ref: 'comprobanteEgresoForm',    	 selector: 'comprobanteegresoform' }, 
+    	{ref: 'comprobanteEgresoNewButton',    selector: 'comprobanteegresopanel button[action=new]' }, 
     	{ref: 'comprobanteEgresoSaveButton', 	 selector: 'comprobanteegresopanel button[action=save]' }
     ],
 

@@ -601,7 +601,7 @@ function createEstadoAsentadoStore() {
 
 Ext.define('estadoasento.ComboBox', {
 	extend:'Ext.form.field.ComboBox',
-	alias : 'widget.estadoasentado',
+	alias : 'widget.estadoasentadocombo',
     displayField: 'Estado',
 	valueField: 'Id',
     store: createEstadoAsentadoStore(),

@@ -31,13 +31,13 @@ Ext.define('App.view.comprobanteegreso.Panel',{
             disabled:true,
             action: 'delete'
         },'-', {
-            xtype: 'numberfield', name: 'textBuscarAnio', width: 60, allowBlank: false, value: (new Date()).getFullYear()
+            xtype: 'numberfield', name: 'buscarAnioText', width: 60, allowBlank: false, value: (new Date()).getFullYear()
         },{
-          	xtype: 'numberfield', name: 'textBuscarMes', width: 40, value: (new Date()).getMonth() +1 
+          	xtype: 'numberfield', name: 'buscarMesText', width: 40, value: (new Date()).getMonth() +1 
         },{
-            xtype:'textfield',  emptyText:'Nombre del Tercero',  name: 'textBuscarTercero'
+            xtype:'textfield',  emptyText:'Nombre del Tercero',  name: 'buscarTerceroText'
         },{
-         	xtype:'estadoasentado', name:'comboBuscarEstadoAsentado'
+         	xtype:'estadoasentadocombo', name:'buscarEstadoAsentadoCombo'
         },{
            tooltip:'Buscar por los criterios indicados..', iconCls:'find',  action: 'buscarEgresos'
         }]		
