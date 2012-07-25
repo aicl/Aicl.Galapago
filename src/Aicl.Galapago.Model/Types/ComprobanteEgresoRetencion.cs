@@ -6,7 +6,7 @@ using ServiceStack.DesignPatterns.Model;
 
 namespace Aicl.Galapago.Model.Types
 {
-    [Alias("COMPROBANTE_EGRESO_RET")]
+    [Alias("COMPROBANTE_EGRESO_RT")]
     public partial class ComprobanteEgresoRetencion:IHasId<int>
     {
         public ComprobanteEgresoRetencion ()
@@ -14,7 +14,7 @@ namespace Aicl.Galapago.Model.Types
         }
 
         [Alias("ID")]
-        [Sequence("COMPROBANTE_EGRESO_RET_GEN")]
+        [Sequence("COMPROBANTE_EGRESO_RT_ID_GEN")]
         [PrimaryKey]
         [AutoIncrement]
         public System.Int32 Id { get; set;} 

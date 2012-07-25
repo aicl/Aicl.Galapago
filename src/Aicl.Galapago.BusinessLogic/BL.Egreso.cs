@@ -46,6 +46,25 @@ namespace Aicl.Galapago.BusinessLogic
                 else
                     predicate= q=>q.Periodo.StartsWith(periodo) ;
 
+
+				var p =queryString["IdSucursal"];
+				if(!p.IsNullOrEmpty())
+				{
+					int idSucursal;
+					if(int.TryParse(p,out idSucursal) && idSucursal!=default(int))
+						predicate= predicate.AndAlso(q=>q.IdSucursal==idSucursal);
+
+				}
+
+				p=queryString["IdTercero"];
+				if(!p.IsNullOrEmpty())
+				{
+					int idTercero;
+					if(int.TryParse(p,out idTercero) && idTercero!=default(int))
+						predicate= predicate.AndAlso(q=>q.IdTercero==idTercero);
+
+				}
+
                 var nombre= queryString["NombreTercero"];
                 if(!nombre.IsNullOrEmpty())
                     predicate= predicate.AndAlso(q=>q.NombreTercero.Contains(nombre));
@@ -54,16 +73,28 @@ namespace Aicl.Galapago.BusinessLogic
                 if(!sucursal.IsNullOrEmpty())
                     predicate= predicate.AndAlso(q=>q.NombreSucursal.Contains(sucursal));
 
-				string asentado= queryString["Asentado"];
-            	if(!asentado.IsNullOrEmpty())
+				p= queryString["Asentado"];
+            	if(!p.IsNullOrEmpty())
            		{
-                	bool tomarSoloAsentado;
-	                if( bool.TryParse(asentado,out tomarSoloAsentado))
+                	bool asentado;
+	                if( bool.TryParse(p,out asentado))
 	                {
-						if(tomarSoloAsentado)
+						if(asentado)
 							predicate= predicate.AndAlso(q=>q.FechaAsentado!=null);
 						else
 							predicate= predicate.AndAlso(q=>q.FechaAsentado==null);
+	                }
+	            }
+
+
+				p= queryString["ConSaldo"];
+            	if(!p.IsNullOrEmpty())
+           		{
+                	bool saldo;
+	                if( bool.TryParse(p,out saldo))
+	                {
+						if (saldo) predicate= predicate.AndAlso(q=>q.Saldo!=0);
+						else predicate= predicate.AndAlso(q=>q.Saldo==0);
 	                }
 	            }
 
@@ -103,7 +134,6 @@ namespace Aicl.Galapago.BusinessLogic
             factory.Execute(proxy=>{
 
                 var sucursal=request.CheckSucursal(proxy,idUsuario);
-
 
                 var tercero=request.CheckTercero(proxy);
                 Tercero tr= default(Tercero);

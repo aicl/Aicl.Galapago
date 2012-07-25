@@ -63,7 +63,7 @@ namespace Aicl.Galapago.DataAccess
         {
             ComprobanteEgresoItem cei= new ComprobanteEgresoItem(){
                 IdEgreso= idEgreso,
-                Valor= valor,
+                Abono= valor,
                 IdComprobanteEgreso= comprobanteEgreso.Id
 
             };
@@ -160,7 +160,7 @@ namespace Aicl.Galapago.DataAccess
         public static void ActualizarValor(this ComprobanteEgresoItem documento, DALProxy proxy)
         {
 			var visitor = ReadExtensions.CreateExpression<ComprobanteEgresoItem>();
-            visitor.Update(f=> f.Valor);                  
+            visitor.Update(f=> f.Abono);                  
             visitor.Where(r=>r.Id==documento.Id);
             proxy.Update(documento, visitor);
         }

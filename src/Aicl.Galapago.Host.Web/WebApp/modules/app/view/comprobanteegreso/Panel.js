@@ -39,7 +39,7 @@ Ext.define('App.view.comprobanteegreso.Panel',{
         },{
          	xtype:'estadoasentadocombo', name:'buscarEstadoAsentadoCombo'
         },{
-           tooltip:'Buscar por los criterios indicados..', iconCls:'find',  action: 'buscarEgresos'
+           tooltip:'Buscar por los criterios indicados..', iconCls:'find',  action: 'buscarComprobantes'
         }]		
     },{
     	xtype:'comprobanteegresolist'
@@ -61,6 +61,7 @@ Ext.define('App.view.comprobanteegreso.TabPanel',{
     	layout:{type: 'table',columns: 2},
     	items:[{
     		xtype: 'toolbar',
+    		 name:'itemToolbar',
            	colspan:2,
            	items:[{
                	tooltip:'Agregar Cuenta',
@@ -127,6 +128,14 @@ Ext.define('App.view.comprobanteegreso.List',{
     	config.viewConfig = config.viewConfig || {
         	stripeRows: true
 	    };
+	    
+	    config.bbar= Ext.create('Ext.PagingToolbar', {
+            store: config.store,
+            displayInfo: true,
+            displayMsg: 'Egresos del {0} al {1} de {2}',
+            emptyMsg: "No hay Egresos para Mostrar"
+        });
+        
         config.margin=config.margin|| '2 2 2 2';	
     	if (arguments.length==0 )
     		this.callParent([config]);
@@ -193,18 +202,6 @@ Ext.define('App.view.comprobanteegreso.List',{
 	{
 		text: 'IdTercero',
 		dataIndex: 'IdTercero',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdSucursal',
-		dataIndex: 'IdSucursal',
 		sortable: true,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
@@ -334,7 +331,7 @@ Ext.define('App.view.comprobanteegreso.Form', {
         config.autoScroll= config.autoScroll==undefined? true: config.autoScroll,
 		config.fieldDefaults = config.fieldDefaults || {
             msgTarget: 'side',
-            labelWidth: 120,
+            labelWidth: 80,
 			labelAlign: 'right'
         };
         config.defaultType = config.defaultType|| 'textfield';
@@ -355,25 +352,14 @@ Ext.define('App.view.comprobanteegreso.Form', {
 		name: 'Id'
 	},
 	{
+		xtype: 'sucursalautorizadacombo',fieldLabel: 'Sucursal'
+	},
+	{
 		xtype: 'datefield',
 		name: 'Fecha',
 		fieldLabel: 'Fecha',
 		allowBlank: false,
 		format: 'd.m.Y'
-	},
-	{
-		name: 'Periodo',
-		fieldLabel: 'Periodo',
-		allowBlank: false,
-		maxLength: 6,
-		enforceMaxLength: true
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'Numero',
-		fieldLabel: 'Numero',
-		allowBlank: false
 	},
 	{
 		name: 'Descripcion',
@@ -383,106 +369,15 @@ Ext.define('App.view.comprobanteegreso.Form', {
 		enforceMaxLength: true
 	},
 	{
-		xtype: 'numberfield',
-		name: 'Valor',
-		fieldLabel: 'Valor',
-		allowBlank: false
+		xtype: 'remotesaldotercerocombo',fieldLabel: 'Tercero' 
 	},
 	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdCuentaGiradora',
-		fieldLabel: 'IdCuentaGiradora',
-		allowBlank: false
+		xtype: 'rubrocombo',fieldLabel: 'Cuenta', name:'IdCuentaGiradora'
 	},
 	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdTercero',
-		fieldLabel: 'IdTercero',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdSucursal',
-		fieldLabel: 'IdSucursal',
-		allowBlank: false
-	},
-	{
-		xtype: 'datefield',
-		name: 'FechaAsentado',
-		fieldLabel: 'FechaAsentado',
-		format: 'd.m.Y'
-	},
-	{
-		xtype: 'datefield',
-		name: 'FechaAnulado',
-		fieldLabel: 'FechaAnulado',
-		format: 'd.m.Y'
-	},
-	{
-		xtype: 'checkboxfield',
-		name: 'Externo',
-		fieldLabel: 'Externo'
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdTerceroReceptor',
-		fieldLabel: 'IdTerceroReceptor',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdTerceroGiradora',
-		fieldLabel: 'IdTerceroGiradora'
-	},
-	{
-		name: 'NombreSucursal',
-		fieldLabel: 'NombreSucursal'
-	},
-	{
-		name: 'DocumentoTercero',
-		fieldLabel: 'DocumentoTercero'
-	},
-	{
-		name: 'DVTercero',
-		fieldLabel: 'DVTercero'
-	},
-	{
-		name: 'NombreTercero',
-		fieldLabel: 'NombreTercero'
-	},
-	{
-		name: 'NombreDocumentoTercero',
-		fieldLabel: 'NombreDocumentoTercero'
-	},
-	{
-		name: 'DocumentoReceptor',
-		fieldLabel: 'DocumentoReceptor'
-	},
-	{
-		name: 'DVReceptor',
-		fieldLabel: 'DVReceptor'
-	},
-	{
-		name: 'NombreReceptor',
-		fieldLabel: 'NombreReceptor'
-	},
-	{
-		name: 'NombreDocumentoReceptor',
-		fieldLabel: 'NombreDocumentoReceptor'
-	},
-	{
-		name: 'CodigoItem',
-		fieldLabel: 'CodigoItem'
-	},
-	{
-		name: 'NombreItem',
-		fieldLabel: 'NombreItem'
+		xtype:'remotereceptorcombo', fieldLabel: 'Pagar a'
 	}
+	
 ];
          this.callParent(arguments);
     }
@@ -512,6 +407,10 @@ Ext.define('App.view.comprobanteegresoitem.List',{
     initComponent: function() {
         
         this.columns=[
+    {
+    	text:'Documento',
+    	dataIndex:'Documento'
+    },
 	{
 		text: 'IdComprobanteEgreso',
 		dataIndex: 'IdComprobanteEgreso',
@@ -538,6 +437,30 @@ Ext.define('App.view.comprobanteegresoitem.List',{
         }
 	},
 	{
+		text: 'Abono',
+		dataIndex: 'Abono',
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
+        	}
+        }
+	},
+	{
+		text: 'Numero',
+		dataIndex: 'Numero',
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+        	}
+        }
+	},
+	{
 		text: 'Valor',
 		dataIndex: 'Valor',
 		sortable: true,
@@ -548,8 +471,63 @@ Ext.define('App.view.comprobanteegresoitem.List',{
             	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
         	}
         }
+	},
+	{
+		text: 'Saldo',
+		dataIndex: 'Saldo',
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
+        	}
+        }
+	},
+	{
+		text: 'DiasCredito',
+		dataIndex: 'DiasCredito',
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+        	}
+        }
+	},
+	{
+		text: 'IdSucursal',
+		dataIndex: 'IdSucursal',
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+        	}
+        }
+	},
+	{
+		text: 'IdTercero',
+		dataIndex: 'IdTercero',
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+        	}
+        }
+	},
+	{
+		text: 'Fecha',
+		dataIndex: 'Fecha',
+		sortable: true,
+		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	}
 ];
+
         this.callParent(arguments);
     }
 });
@@ -569,7 +547,7 @@ Ext.define('App.view.comprobanteegresoitem.Form', {
         config.autoScroll= config.autoScroll==undefined? true: config.autoScroll,
 		config.fieldDefaults = config.fieldDefaults || {
             msgTarget: 'side',
-            labelWidth: 120,
+            labelWidth: 80,
 			labelAlign: 'right'
         };
         config.defaultType = config.defaultType|| 'textfield';
@@ -590,26 +568,21 @@ Ext.define('App.view.comprobanteegresoitem.Form', {
 		name: 'Id'
 	},
 	{
-		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdComprobanteEgreso',
-		fieldLabel: 'IdComprobanteEgreso',
-		allowBlank: false
+		xtype: 'hidden',
+		name: 'IdComprobanteEgreso'
+	},
+	{
+		xtype: 'egresocombo',
+		fieldLabel: 'Documento'
 	},
 	{
 		xtype: 'numberfield',
-		allowDecimals: false,
-		name: 'IdEgreso',
-		fieldLabel: 'IdEgreso',
-		allowBlank: false
-	},
-	{
-		xtype: 'numberfield',
-		name: 'Valor',
-		fieldLabel: 'Valor',
+		name: 'Abono',
+		fieldLabel: 'Abono',
 		allowBlank: false
 	}
 ];
+
         this.callParent(arguments);
     }
 });
@@ -706,7 +679,7 @@ Ext.define('App.view.comprobanteegresoretencion.Form', {
         config.autoScroll= config.autoScroll==undefined? true: config.autoScroll,
 		config.fieldDefaults = config.fieldDefaults || {
             msgTarget: 'side',
-            labelWidth: 120,
+            labelWidth: 80,
 			labelAlign: 'right'
         };
         config.defaultType = config.defaultType|| 'textfield';
@@ -756,4 +729,98 @@ Ext.define('App.view.comprobanteegresoretencion.Form', {
 ];
         this.callParent(arguments);
     }
+});
+
+//combos
+
+Ext.define('remotesaldotercero.ComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.remotesaldotercerocombo',
+    displayField: 'Nombre',
+	valueField: 'IdTercero',
+	name:'IdTercero',
+    store: 'RemoteSaldoTercero',
+    forceSelection:true,
+    pageSize: 12,
+    multiSelect:false,
+    queryMode: 'remote',
+    queryParam :'Nombre',
+    triggerOnClick: false,
+    labelTpl: '{Nombre} ({Documento})',
+    listConfig: {
+    	loadingText: 'buscando...',
+        emptyText: 'sin informacion.',
+       /* tpl: Ext.create('Ext.XTemplate',
+            '<ul><tpl for=".">',
+                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}: {Documento}</li>',
+            '</tpl></ul>'
+        )
+     */
+    	getInnerTpl: function() {	
+        	return   '<ul><li role="option" class="search-item" >' +
+                        '<h3><span>{Documento}-{DigitoVerificacion}</span>{Nombre}</h3>' +
+                    '</li></ul>'	
+    	}
+    }
+});
+
+
+Ext.define('remotereceptor.ComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.remotereceptorcombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+	name:'IdTerceroReceptor',
+	store:'RemoteTercero',
+    forceSelection:true,
+    pageSize: 12,
+    multiSelect:false,
+    queryMode: 'remote',
+    queryParam :'Nombre',
+    triggerOnClick: false,
+    labelTpl: '{Nombre} ({Documento})',
+    listConfig: {
+    	loadingText: 'buscando...',
+        emptyText: 'sin informacion.',
+        getInnerTpl: function() {	
+        	return   '<ul><li role="option" class="search-item" >' +
+                        '<h3><span>{Documento}-{DigitoVerificacion}</span>{Nombre}</h3>' +
+                    '</li></ul>'	
+        }
+        /*tpl: Ext.create('Ext.XTemplate',
+            '<ul><tpl for=".">',
+            //'<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}: {Documento}</li>',
+           	'<li role="option" class="search-item" >' +
+            	'<h3><span>{Documento}<br /></span>{DigitoVerificacion}</h3>' +
+                '{Nombre}' +
+             '</li>',
+            '</tpl></ul>'
+        )*/   
+    } 
+    	
+});
+
+Ext.define('egreso.ComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.egresocombo',
+    displayField: 'Documento',
+	valueField: 'Id',
+	name:'IdEgreso',
+	store:'Egreso',
+    forceSelection:true,
+    pageSize: 12,
+    multiSelect:false,
+    queryMode: 'local',
+    queryParam :'Documento',
+    triggerOnClick: false,
+    labelTpl: 'Nro: {Documento} - Saldo: {Saldo}',
+    listConfig: {
+    	loadingText: 'buscando...',
+        emptyText: 'sin informacion.',
+        getInnerTpl: function() {	
+        	return   '<ul><li role="option" class="search-item" >' +
+                        '<h3><span>{Valor}-{Saldo}</span>{Documento}</h3>' +
+                    '</li></ul>'	
+        }   
+    } 
 });

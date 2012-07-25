@@ -747,7 +747,8 @@ function getRubrosData(idSucursal, idCentro, codigos){
 	var data=[];
 	var rubros= Aicl.Util.getRubros();
 	for(var i in rubros){
-		if(rubros[i].IdSucursal==idSucursal && rubros[i].IdCentro==idCentro 
+		if(rubros[i].IdSucursal==idSucursal 
+		&& rubros[i].IdCentro==(idCentro?idCentro:rubros[i].IdCentro) 
 		&& codigos.indexOf(rubros[i].Codigo)>=0)
 			data.push(rubros[i]) 
 	}
@@ -760,6 +761,25 @@ function getRubrosData(idSucursal, idCentro, codigos){
     });
     */
 };
+
+function getCuentasGiradoras(idSucursal){
+	var data=[];
+	var rubros= Aicl.Util.getRubros();
+	for(var i in rubros){
+		if(rubros[i].IdSucursal==idSucursal
+		&& rubros[i].Codigo.substring(0,1)=='9') 
+			data.push(rubros[i]) 
+	}
+	return data;
+	/*
+	return Ext.create('Ext.data.Store', {
+        autoDestroy: true,
+        model: 'Rubro',
+        data: data
+    });
+    */
+};
+
 
 Ext.define('rubros.ComboBox',{
 	extend:'Ext.form.field.ComboBox',
@@ -776,6 +796,7 @@ Ext.define('rubros.ComboBox',{
     forceSelection:true,
     name:'IdPresupuestoItem'
 });
+
 
 
 // custom combobox 

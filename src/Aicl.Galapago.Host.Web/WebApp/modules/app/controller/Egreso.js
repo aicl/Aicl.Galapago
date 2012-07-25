@@ -218,7 +218,6 @@ Ext.define('App.controller.Egreso',{
         this.getEgresoSaveButton().setDisabled(!this.getEgresoStore().canUpdate());
     	
     	this.getEgresoStore().on('write', function(store, operation, eOpts ){
-    		console.log('egreosStore on write', arguments);
     		var record =  operation.getRecords()[0];
     		
     		if (operation.action=='create') {
@@ -228,13 +227,31 @@ Ext.define('App.controller.Egreso',{
             if (operation.action != 'destroy') {
                this.getEgresoList().getSelectionModel().select(record,true,true);
                this.refreshButtons([record]);
-            }
-            
+            }            
+    	}, this);
+    	  		
+    	this.getEgresoStore().on('anulado', function(store, record, success){
+    		if(success){
+    			this.refreshButtons([record]);
+    			this.getEgresoItemToolbar().setDisabled(true);
+    		}
     	}, this);
     	
+    	this.getEgresoStore().on('asentado', function(store, record, success){
+    		if(success){
+    			this.refreshButtons([record]);
+    			this.getEgresoItemToolbar().setDisabled(true);
+    		}
+    	}, this);
     	
-    	this.getEgresoItemStore().on('write', function(store, operation, eOpts ){
-    		
+    	this.getEgresoStore().on('reversado', function(store, record, success){
+    		if(success){
+    			this.refreshButtons([record]);
+    			this.getEgresoItemToolbar().setDisabled(false);
+    		}
+    	}, this);
+    	
+    	this.getEgresoItemStore().on('write', function(store, operation, eOpts ){    		
     		var totalD=0, totalC=0;
     		store.each(function(rec){
     			if(rec.get('TipoPartida')==1) 
@@ -243,34 +260,11 @@ Ext.define('App.controller.Egreso',{
     				totalC=totalC+rec.get('Valor');
     		});
     		var parent = this.getEgresoList().getSelectionModel().getSelection()[0];
-    		this.getEgresoStore().updateLocal({Id: parent.getId(), Valor:totalD, Saldo:totalD-totalC});    		    		
-            
+    		this.getEgresoStore().updateLocal({Id: parent.getId(), Valor:totalD, Saldo:totalD-totalC});
     	}, this);
+
     	
-    	this.getEgresoStore().on('anulado', function(store, record, success){
-    		console.log('egreosStore on anulado', arguments);
-    		if(success){
-    			this.refreshButtons([record]);
-    			this.getEgresoItemToolbar().setDisabled(true);
-    		}
-    	}, this);
-    	
-    	this.getEgresoStore().on('asentado', function(store, record, success){
-    		console.log('egreosStore on asentado', arguments);
-    		if(success){
-    			this.refreshButtons([record]);
-    			this.getEgresoItemToolbar().setDisabled(true);
-    		}
-    	}, this);
-    	
-    	this.getEgresoStore().on('reversado', function(store, record, success){
-    		console.log('egreosStore on reversado', arguments);
-    		if(success){
-    			this.refreshButtons([record]);
-    			this.getEgresoItemToolbar().setDisabled(false);
-    		}
-    	}, this);
-    	    	
+    	this.refreshButtons();    	
     },
         	
 	refreshButtons: function(selections){
@@ -301,7 +295,7 @@ Ext.define('App.controller.Egreso',{
 			
 			var canUpdate=true;
 			if(record.get('FechaAsentado') ){
-				this.getEgresoAsentarButton().setDisabled(false);
+				this.getEgresoAsentarButton().setDisabled(false || record.get('Externo'));
 				this.getEgresoDeleteButton().setDisabled(true);
 				this.getEgresoAsentarButton().setIconCls('desasentar');
 				canUpdate=false;
@@ -347,16 +341,6 @@ Ext.define('App.controller.Egreso',{
 	
 	onwrite:function(fn, scope){
 		this.getEgresoStore().on('write', fn, scope);
-	},
-	
-	onasentado:function(fn, scope){
-		this.getEgresoStore().on('anulado', fn, scope);
-	},
-	onreversado:function(fn, scope){
-		this.getEgresoStore().on('reversado', fn, scope);
-	},
-	onanulado:function(fn, scope){
-		this.getEgresoStore().on('asentado', fn, scope);
 	},
 	
 	cargarItems:function(record){

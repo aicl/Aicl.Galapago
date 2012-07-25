@@ -20,7 +20,7 @@ namespace Aicl.Galapago.Model.Types
                 RuleFor(x => x.IdComprobanteEgreso).Must(x=>x!=default(int)).
                     WithMessage("Debe Indicar el IdComprobanteEgreso").WithErrorCode("SinIdComprobanteEgreso");
 
-                RuleFor(x => x.Valor).Must(x=>x!=0).
+                RuleFor(x => x.Abono).Must(x=>x!=0).
                     WithMessage("Debe Indicar Valor a Pagar").WithErrorCode("SinValor");
 
             });

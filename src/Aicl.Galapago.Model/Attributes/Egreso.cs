@@ -10,7 +10,7 @@ namespace Aicl.Galapago.Model.Types
     [RestService("/Egreso/patch/{Id}/asentar","patch")]
     [RestService("/Egreso/patch/{Id}/reversar","patch")]
     [RestService("/Egreso/patch/{Id}/anular","patch")]
-	[RestService("/Egreso/destroy/{Id}","delete")]
+	//[RestService("/Egreso/destroy/{Id}","delete")]
 	public partial class Egreso
 	{
 	}

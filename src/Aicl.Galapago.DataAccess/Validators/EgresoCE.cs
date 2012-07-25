@@ -25,13 +25,13 @@ namespace Aicl.Galapago.DataAccess
         {
             RuleSet(Operaciones.InsertarEgresoEnCE, () =>{
 
-                RuleFor(x=>x.Cei).Must(x=>x.Valor!=0).
+                RuleFor(x=>x.Cei).Must(x=>x.Abono!=0).
                     WithMessage("Valor a Pagar debe ser diferente de cero").WithErrorCode("ValorPagarCero");
 
                 RuleFor(x=>x.Egreso).Must((e,x)=>x.Saldo!=0).
                     WithMessage("Egreso sin Saldo").WithErrorCode("SinSaldo");
 
-                RuleFor(x=>x.Cei).Must((e,x)=> Math.Abs(x.Valor)<= Math.Abs(e.Egreso.Saldo)).
+                RuleFor(x=>x.Cei).Must((e,x)=> Math.Abs(x.Abono)<= Math.Abs(e.Egreso.Saldo)).
                     WithMessage("Valor a Pagar > Saldo del egreso").WithErrorCode("ValorMayorSaldo");
 
                 RuleFor(x=>x.Egreso).Must((e,x)=>x.IdTercero==e.Ce.IdTercero).
@@ -54,7 +54,7 @@ namespace Aicl.Galapago.DataAccess
                     WithMessage("ComprobanteEgreso  esta Anulado.No se pueden agregar mas egresos").
                         WithErrorCode("ComprobanteEgresoAnulado");
 
-                RuleFor(x=>x.Cei).Must((e,x)=> x.Valor>0).
+                RuleFor(x=>x.Cei).Must((e,x)=> x.Abono>0).
                     When(e=>e.Egreso.CodigoDocumento==Definiciones.ProveedorFV ||
                          e.Egreso.CodigoDocumento==Definiciones.ProveedorCC).
                         WithMessage("El valor para Factura o Cuenta de Cobro debe ser Mayor a Cero").
@@ -76,7 +76,7 @@ namespace Aicl.Galapago.DataAccess
                     WithMessage("No se puede modificar el Egreso").
                         WithErrorCode("IdEgresoModificado");
 
-                RuleFor(x=>x.Cei).Must(x=>x.Valor!=0).
+                RuleFor(x=>x.Cei).Must(x=>x.Abono!=0).
                     WithMessage("Valor a Pagar debe ser diferente de cero").WithErrorCode("ValorPagarCero");
 
                 RuleFor(x=>x.Egreso).Must((e,x)=>x.Saldo!=0).
@@ -96,7 +96,7 @@ namespace Aicl.Galapago.DataAccess
                     WithMessage("ComprobanteEgreso  esta Anulado.No se pueden actualizar el egreso").
                         WithErrorCode("ComprobanteEgresoAnulado");
 
-                RuleFor(x=>x.Cei).Must((e,x)=> x.Valor>0).
+                RuleFor(x=>x.Cei).Must((e,x)=> x.Abono>0).
                     When(e=>e.Egreso.CodigoDocumento==Definiciones.ProveedorFV ||
                          e.Egreso.CodigoDocumento==Definiciones.ProveedorCC).
                         WithMessage("El valor para Factura o Cuenta de Cobro debe ser Mayor a Cero").
@@ -137,7 +137,7 @@ namespace Aicl.Galapago.DataAccess
                 RuleFor(x=>x.Egreso).Must( x=> !x.FechaAnulado.HasValue ).
                     WithMessage("Egreso esta Anulado").WithErrorCode("EgresoAnulado");
 
-                RuleFor(x=>x.Cei).Must((e,x)=> Math.Abs(x.Valor)<=Math.Abs(e.Egreso.Saldo)).
+                RuleFor(x=>x.Cei).Must((e,x)=> Math.Abs(x.Abono)<=Math.Abs(e.Egreso.Saldo)).
                     WithMessage("El Valor  es mayor al Saldo Disponible").WithErrorCode("ValorMayorSaldo");
 
             });

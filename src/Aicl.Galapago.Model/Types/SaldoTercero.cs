@@ -10,6 +10,10 @@ using ServiceStack.DesignPatterns.Model;
 namespace Aicl.Galapago.Model.Types
 {
     [Alias("SALDO_TERCERO")]
+	[JoinTo(typeof(Sucursal),"IdSucursal", "Id", Order=0)]
+    [JoinTo(typeof(Tercero),"IdTercero","Id", Order=1)]
+    [JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", Order=2)]
+    [JoinTo(typeof(PresupuestoItem),"IdPresupuestoItem","Id", Order=3)]
     public partial class SaldoTercero:IHasId<System.Int32>{
 
         public SaldoTercero(){}
@@ -40,7 +44,36 @@ namespace Aicl.Galapago.Model.Types
         [Alias("CREDITOS")]
         [DecimalLength(15,2)]
         public System.Decimal Creditos { get; set;} 
-		        
+
+		#region Sucursal
+        [BelongsTo(typeof(Sucursal),"Nombre")]
+        public string NombreSucursal{ get;set;}
+        #endregion Sucursal
+
+        #region Tercero
+        [BelongsTo(typeof(Tercero))]
+        public string Documento {get;set;}
+
+        [BelongsTo(typeof(Tercero))]
+        public string DigitoVerificacion {get;set;}
+
+        [BelongsTo(typeof(Tercero))]
+        public string Nombre {get;set;}
+        #endregion Tercero
+
+        #region TipoDocumento Tercero
+        [BelongsTo(typeof(TipoDocumento),"Nombre")]
+        public string NombreDocumento {get;set;}
+        #endregion TipoDocumento Tercero
+
+        #region CuentaGiradora
+        [BelongsTo(typeof(PresupuestoItem),"Codigo")]
+        public System.String CodigoItem { get; set;} 
+
+        [BelongsTo(typeof(PresupuestoItem),"Nombre")]
+        public System.String NombreItem { get; set;} 
+        #endregion CuentaGiradora
+
 
         public void UpdateDbCr( decimal debitos, decimal creditos)
         {

@@ -95,17 +95,26 @@ namespace Aicl.Galapago.BusinessLogic
                                             Factory factory,
                                             IAuthSession authSession)
         {
+			if(request.IdTerceroReceptor==default(int)){
+				request.IdTerceroReceptor= request.IdTercero;
+			}
+
             request.ValidateAndThrowHttpError(Operaciones.Create);
             var idUsuario = int.Parse(authSession.UserAuthId);
             request.Periodo= request.Fecha.ObtenerPeriodo();
 
             factory.Execute(proxy=>{
 
-                request.CheckSucursal(proxy,idUsuario);
-                request.CheckTercero(proxy);
-                request.CheckTerceroReceptor(proxy);
+                var sucursal= request.CheckSucursal(proxy,idUsuario);
+                var tercero =request.CheckTercero(proxy);
+				Tercero tr = default(Tercero);
+				if( request.IdTercero!=request.IdTerceroReceptor)
+                	tr= request.CheckTerceroReceptor(proxy);
+				else
+					tr=tercero;
+
                 request.CheckPeriodo(proxy);
-                request.CheckUsuarioGiradora(proxy,int.Parse(authSession.UserAuthId)); 
+                var pi = request.CheckUsuarioGiradora(proxy,int.Parse(authSession.UserAuthId)); 
 
                 using (proxy.AcquireLock(request.GetLockKeyConsecutivo(), Definiciones.LockSeconds))
                 {
@@ -114,6 +123,22 @@ namespace Aicl.Galapago.BusinessLogic
                     request.Create(proxy);
                     proxy.CommitDbTransaction();
                 }
+
+				request.NombreSucursal=sucursal.Nombre;
+
+                request.NombreTercero=tercero.Nombre;
+                request.DocumentoTercero= tercero.Documento;
+                request.NombreDocumentoTercero= tercero.NombreDocumento;
+                request.DVTercero= tercero.DigitoVerificacion;
+
+                request.DocumentoReceptor= tr.Documento;
+                request.NombreDocumentoReceptor= tr.NombreDocumento;
+                request.NombreReceptor=tr.Nombre;
+                request.DVReceptor= tr.DigitoVerificacion;
+
+				request.CodigoItem= pi.Codigo;
+				request.NombreItem = pi.Nombre;
+
             });
         
             List<ComprobanteEgreso> data = new List<ComprobanteEgreso>();
@@ -230,7 +255,7 @@ namespace Aicl.Galapago.BusinessLogic
                             EgresoCEValidator ecv= new EgresoCEValidator();
                             ecv.ValidateAndThrowHttpError(ece, Operaciones.ActualizarValorEgresoAlAsentarCE);
 
-                            egreso.Saldo= egreso.Saldo-cei.Valor;
+                            egreso.Saldo= egreso.Saldo-cei.Abono;
                             egreso.ActualizarValorSaldo(proxy);
 
                             var  prs= DAL.GetPresupuestoActivo(proxy,request.IdSucursal,Definiciones.IdCentroGeneral);
@@ -247,8 +272,8 @@ namespace Aicl.Galapago.BusinessLogic
                                 pi.AssertExists(prs.Id,cd.CodigoPresupuesto );
                                 pi.UpdatePresupuesto(proxy,request.IdSucursal,Definiciones.IdCentroGeneral,
                                                      request.Periodo,
-                                                     (cei.Valor>0?(short)1:(short)2),
-                                                     Math.Abs(cei.Valor)*factor,request.IdTercero);
+                                                     (cei.Abono>0?(short)1:(short)2),
+                                                     Math.Abs(cei.Abono)*factor,request.IdTercero);
                             }
 
                             var retList = cei.GetRetenciones(proxy);
@@ -336,7 +361,11 @@ namespace Aicl.Galapago.BusinessLogic
             if(request.IdTerceroReceptor!=default(int) && request.IdTerceroReceptor!=data.IdTerceroReceptor )
             {
                 data.IdTerceroReceptor=request.IdTerceroReceptor;
-                data.CheckTerceroReceptor(proxy);
+                var tr= data.CheckTerceroReceptor(proxy);
+				data.DocumentoReceptor= tr.Documento;
+                data.NombreDocumentoReceptor= tr.NombreDocumento;
+                data.NombreReceptor=tr.Nombre;
+                data.DVReceptor= tr.DigitoVerificacion;
             }
 
             if(!request.Descripcion.IsNullOrEmpty() && request.Descripcion!=data.Descripcion)
@@ -351,7 +380,7 @@ namespace Aicl.Galapago.BusinessLogic
             }
 
 
-            if(request.IdTerceroGiradora.HasValue &&
+            if((request.IdTerceroGiradora.HasValue && request.IdTerceroGiradora.Value!=default(int)) &&
                ( !data.IdTerceroGiradora.HasValue || 
                     (data.IdTerceroGiradora.HasValue && request.IdTerceroGiradora.Value!=data.IdTerceroGiradora.Value)))
             {
@@ -359,7 +388,11 @@ namespace Aicl.Galapago.BusinessLogic
                 checkcg=true;
             }
 
-            if(checkcg) data.CheckUsuarioGiradora(proxy, idUsuario);
+            if(checkcg){
+				var pi = data.CheckUsuarioGiradora(proxy, idUsuario);
+				data.CodigoItem= pi.Codigo;
+				data.NombreItem = pi.Nombre;
+			}
 
             request.PopulateWith(data);
         }
@@ -371,11 +404,13 @@ namespace Aicl.Galapago.BusinessLogic
         }
 
 
-        private static void CheckTerceroReceptor(this ComprobanteEgreso request, DALProxy proxy)
+        private static Tercero CheckTerceroReceptor(this ComprobanteEgreso request, DALProxy proxy)
         {
-                Tercero t = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTerceroReceptor);
+            Tercero t = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTerceroReceptor);
 
-                t.AssertExists(request.IdTerceroReceptor);
+            t.AssertExists(request.IdTerceroReceptor);
+
+			return t;
 
         }
 
@@ -403,7 +438,7 @@ namespace Aicl.Galapago.BusinessLogic
 
         }
 
-        private static void CheckUsuarioGiradora(this ComprobanteEgreso documento, DALProxy proxy, int idUsuario)
+        private static PresupuestoItem CheckUsuarioGiradora(this ComprobanteEgreso documento, DALProxy proxy, int idUsuario)
         {
             PresupuestoItem pi = DAL.GetPresupuestoItem(proxy, documento.IdCuentaGiradora);
             pi.AssertExists(documento.IdCuentaGiradora);
@@ -411,7 +446,10 @@ namespace Aicl.Galapago.BusinessLogic
             PresupuestoItemValidador piv= new PresupuestoItemValidador();
             piv.ValidateAndThrowHttpError(pi, Definiciones.PrspItemActivo);
 
+			if(!pi.UsaTercero) documento.IdTerceroGiradora=null;
+
             pi.CheckUsuarioGiradora(proxy,idUsuario, documento.IdTerceroGiradora);
+			return pi;
         }
 
 

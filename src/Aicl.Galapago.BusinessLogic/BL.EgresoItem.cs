@@ -50,7 +50,6 @@ namespace Aicl.Galapago.BusinessLogic
 
             request.ValidateAndThrowHttpError(Operaciones.Create);
 
-
             factory.Execute(proxy=>{
 
                 PresupuestoItem pi= Check1(proxy,request, int.Parse(authSession.UserAuthId));
@@ -84,6 +83,7 @@ namespace Aicl.Galapago.BusinessLogic
                     egreso.ActualizarValorSaldo(proxy);
                     request.Create(proxy);
                     proxy.CommitDbTransaction();
+
 
                 }
             });

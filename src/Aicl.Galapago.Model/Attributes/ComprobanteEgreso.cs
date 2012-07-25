@@ -10,7 +10,7 @@ namespace Aicl.Galapago.Model.Types
     [RestService("/ComprobanteEgreso/patch/{Id}/asentar","patch")]
     [RestService("/ComprobanteEgreso/patch/{Id}/reversar","patch")]
     [RestService("/ComprobanteEgreso/patch/{Id}/anular","patch")]
-	[RestService("/ComprobanteEgreso/destroy/{Id}","delete")]
+	//[RestService("/ComprobanteEgreso/destroy/{Id}","delete")]
 	public partial class ComprobanteEgreso
 	{
 	}

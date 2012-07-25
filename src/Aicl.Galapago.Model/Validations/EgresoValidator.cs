@@ -30,7 +30,7 @@ namespace Aicl.Galapago.Model.Types
 				RuleFor(x => x.Fecha).NotEqual(default(DateTime)).WithMessage("Debe Indicar la fecha del asiento").WithErrorCode("SinFecha");
 				RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Se debe omitir la Fecha de Asentado");
 				RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Se debe omitir la Fecha de Anulado");
-				//RuleFor(x => x.Periodo).Must(r=> string.IsNullOrEmpty(r) ).WithMessage("Se debe omitir el Periodo");
+				//RuleFor(x => x.Periodo).Must(r=> !string.IsNullOrEmpty(r) ).WithMessage("Se debe omitir el Periodo");
 				RuleFor(x => x.Descripcion).Must(r=> !string.IsNullOrEmpty(r) ).WithMessage("Debe Indicar la Descripcion").WithErrorCode("SinDescripcion");
 				RuleFor(x => x.CodigoDocumento).NotEmpty().WithMessage("Debe Indicar el codigo del documento").WithErrorCode("SinCodigoDocumento");
 				RuleFor(x => x.Documento).NotEmpty().When( x=> codigos.Contains(x.CodigoDocumento)).WithMessage("Debe Indicar el del documento").WithErrorCode("SinDocumento");

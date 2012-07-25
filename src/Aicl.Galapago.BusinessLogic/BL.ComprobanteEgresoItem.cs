@@ -58,13 +58,21 @@ namespace Aicl.Galapago.BusinessLogic
 
                     request.ValidateAndThrowHttpError(ce,egreso,Operaciones.InsertarEgresoEnCE);
 
-                    ce.Valor+=request.Valor;
+                    ce.Valor+=request.Abono;
 
                     proxy.BeginDbTransaction();
                     ce.ActualizarValor(proxy);
                     proxy.Create(request);
                     proxy.CommitDbTransaction();
 
+					request.Documento=egreso.Documento;
+					request.DiasCredito= egreso.DiasCredito;
+					request.Numero= egreso.Numero;
+					request.Fecha= egreso.Fecha;
+					request.IdTercero= egreso.IdTercero;
+					request.IdSucursal= egreso.IdSucursal;
+					request.Saldo=egreso.Saldo;
+					request.Valor= egreso.Valor;
                 }
             });
 
@@ -102,9 +110,9 @@ namespace Aicl.Galapago.BusinessLogic
                     request.ValidateAndThrowHttpError(oldData, ce,egreso,Operaciones.ActualizarEgresoEnCE);
                     request.CheckOldAndNew(oldData,proxy);
                                     
-                    if( request.Valor!=oldData.Valor)
+                    if( request.Abono!=oldData.Abono)
                     {
-                        ce.Valor+=request.Valor-oldData.Valor;
+                        ce.Valor+=request.Abono-oldData.Abono;
                         proxy.BeginDbTransaction();
                         ce.ActualizarValor(proxy);
                         request.ActualizarValor(proxy);
@@ -147,7 +155,7 @@ namespace Aicl.Galapago.BusinessLogic
 
                     request.ValidateAndThrowHttpError(oldData,ce,egreso,Operaciones.BorraregresoEnCE);
 
-                    ce.Valor-=oldData.Valor;
+                    ce.Valor-=oldData.Abono;
                     proxy.BeginDbTransaction();
                     ce.ActualizarValor(proxy);
                     request.Borrar(proxy);
@@ -206,8 +214,8 @@ namespace Aicl.Galapago.BusinessLogic
             ComprobanteEgresoItem data = new ComprobanteEgresoItem();
             data.PopulateWith(oldData);
 
-            if(request.Valor!=default(decimal) && request.Valor!=data.Valor)
-                data.Valor=request.Valor;
+            if(request.Abono!=default(decimal) && request.Abono!=data.Abono)
+                data.Abono=request.Abono;
 
             request.PopulateWith(data);
         }
