@@ -45,11 +45,35 @@ Ext.define('App.view.comprobanteegreso.Panel',{
     	xtype:'comprobanteegresolist'
     },{
     	xtype:'comprobanteegresoform'
+    //},{
+    	//xtype:'comprobanteegresotabpanel', colspan:2
     },{
-    	xtype:'comprobanteegresotabpanel', colspan:2
-    }]
+    	xtype: 'toolbar',
+    	name:'itemToolbar',
+        colspan:2,
+        items:[{
+           	tooltip:'Agregar Cuenta',
+           	iconCls:'new_document',
+           	disabled:true,
+           	action: 'new_item'
+        },{
+        	tooltip:'Guardar',
+      		iconCls:'save_document',
+        	disabled:true,
+        	action:'save_item'
+        },'-',{
+           	tooltip:'Borrar cuenta Seleccionada',
+           	iconCls:'remove',
+           	disabled:true,
+           	action: 'delete_item'
+        }]		
+    },{	
+   		xtype:'comprobanteegresoitemlist'
+   	},{	
+   		xtype:'comprobanteegresoitemform'
+   	}]
 });
-
+/*
 Ext.define('App.view.comprobanteegreso.TabPanel',{
 	extend: 'Ext.tab.Panel',
     alias : 'widget.comprobanteegresotabpanel',
@@ -114,7 +138,7 @@ Ext.define('App.view.comprobanteegreso.TabPanel',{
    		}]    		
    	}]
 });
-
+*/
 Ext.define('App.view.comprobanteegreso.List',{ 
     extend: 'Ext.grid.Panel',
     alias : 'widget.comprobanteegresolist', 
@@ -145,40 +169,31 @@ Ext.define('App.view.comprobanteegreso.List',{
     
     initComponent: function() {
         
-        this.columns=[
-	{
-		text: 'Fecha',
-		dataIndex: 'Fecha',
-		flex: 1,
-		sortable: true,
-		renderer: Ext.util.Format.dateRenderer('d.m.Y')
-	},
-	{
+        this.columns=[{
 		text: 'Periodo',
 		dataIndex: 'Periodo',
-		sortable: true
-	},
-	{
+		width: 60
+	},{
 		text: 'Numero',
 		dataIndex: 'Numero',
-		sortable: true,
+		align: 'center',
+		width: 60,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+            	return '<div class="x-cell-positive" style="text-align:center">'+Aicl.Util.formatInt(value)+'</div>';
         	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+            	return '<div class="x-cell-negative" style="text-align:center">'+Aicl.Util.formatInt(value)+'</div>';
         	}
         }
-	},
-	{
+	},{
 		text: 'Descripcion',
 		dataIndex: 'Descripcion',
-		sortable: true
+		width: 140
 	},
 	{
 		text: 'Valor',
 		dataIndex: 'Valor',
-		sortable: true,
+		align: 'center',
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
             	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
@@ -186,130 +201,47 @@ Ext.define('App.view.comprobanteegreso.List',{
             	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
         	}
         }
-	},
-	{
-		text: 'IdCuentaGiradora',
-		dataIndex: 'IdCuentaGiradora',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdTercero',
-		dataIndex: 'IdTercero',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'FechaAsentado',
+	},{
+		text: 'Asentado',
 		dataIndex: 'FechaAsentado',
-		sortable: true,
+		width: 80,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
-	},
-	{
-		text: 'FechaAnulado',
+	},{
+		text: 'Anulado',
 		dataIndex: 'FechaAnulado',
-		sortable: true,
+		width: 80,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
-	},
-	{
+	},{
 		text: 'Externo',
 		dataIndex: 'Externo',
-		sortable: true,
 		xtype: 'booleancolumn',
 		trueText: 'Si',
 		falseText: 'No',
 		align: 'center'
-	},
-	{
-		text: 'IdTerceroReceptor',
-		dataIndex: 'IdTerceroReceptor',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdTerceroGiradora',
-		dataIndex: 'IdTerceroGiradora',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'NombreSucursal',
-		dataIndex: 'NombreSucursal',
-		sortable: true
-	},
-	{
+	},{
 		text: 'DocumentoTercero',
-		dataIndex: 'DocumentoTercero',
-		sortable: true
-	},
-	{
+		dataIndex: 'DocumentoTercero'
+	},{
 		text: 'DVTercero',
-		dataIndex: 'DVTercero',
-		sortable: true
-	},
-	{
+		dataIndex: 'DVTercero'
+	},{
 		text: 'NombreTercero',
-		dataIndex: 'NombreTercero',
-		sortable: true
-	},
-	{
+		dataIndex: 'NombreTercero'
+	},{
 		text: 'NombreDocumentoTercero',
-		dataIndex: 'NombreDocumentoTercero',
-		sortable: true
-	},
-	{
+		dataIndex: 'NombreDocumentoTercero'
+	},	{
 		text: 'DocumentoReceptor',
-		dataIndex: 'DocumentoReceptor',
-		sortable: true
-	},
-	{
+		dataIndex: 'DocumentoReceptor'
+	},{
 		text: 'DVReceptor',
-		dataIndex: 'DVReceptor',
-		sortable: true
-	},
-	{
+		dataIndex: 'DVReceptor'
+	},{
 		text: 'NombreReceptor',
-		dataIndex: 'NombreReceptor',
-		sortable: true
-	},
-	{
+		dataIndex: 'NombreReceptor'
+	},{
 		text: 'NombreDocumentoReceptor',
-		dataIndex: 'NombreDocumentoReceptor',
-		sortable: true
-	},
-	{
-		text: 'CodigoItem',
-		dataIndex: 'CodigoItem',
-		sortable: true
-	},
-	{
-		text: 'NombreItem',
-		dataIndex: 'NombreItem',
-		sortable: true
+		dataIndex: 'NombreDocumentoReceptor'
 	}
 ];
                
@@ -359,7 +291,8 @@ Ext.define('App.view.comprobanteegreso.Form', {
 		name: 'Fecha',
 		fieldLabel: 'Fecha',
 		allowBlank: false,
-		format: 'd.m.Y'
+		format: 'd.m.Y',
+		value : new Date()
 	},
 	{
 		name: 'Descripcion',
@@ -406,40 +339,17 @@ Ext.define('App.view.comprobanteegresoitem.List',{
     
     initComponent: function() {
         
-        this.columns=[
-    {
+        this.columns=[{
+    	text:'Descripcion',
+    	dataIndex:'Descripcion',
+    	width: 120
+    },{
     	text:'Documento',
-    	dataIndex:'Documento'
-    },
-	{
-		text: 'IdComprobanteEgreso',
-		dataIndex: 'IdComprobanteEgreso',
-		flex: 1,
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdEgreso',
-		dataIndex: 'IdEgreso',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
+    	dataIndex:'Documento',
+    	width: 120
+    },{
 		text: 'Abono',
 		dataIndex: 'Abono',
-		sortable: true,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
             	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
@@ -447,23 +357,22 @@ Ext.define('App.view.comprobanteegresoitem.List',{
             	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
         	}
         }
-	},
-	{
+	},{
 		text: 'Numero',
 		dataIndex: 'Numero',
-		sortable: true,
+		align:'center',
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+            	return '<div class="x-cell-positive" style="text-align:center">'+Aicl.Util.formatInt(value)+'</div>';
         	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+            	return '<div class="x-cell-negative" style="text-align:center">'+Aicl.Util.formatInt(value)+'</div>';
         	}
         }
 	},
 	{
 		text: 'Valor',
 		dataIndex: 'Valor',
-		sortable: true,
+		align:'center',
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
             	return '<div class="x-cell-positive">'+Aicl.Util.formatNumber(value)+'</div>';
@@ -487,30 +396,6 @@ Ext.define('App.view.comprobanteegresoitem.List',{
 	{
 		text: 'DiasCredito',
 		dataIndex: 'DiasCredito',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdSucursal',
-		dataIndex: 'IdSucursal',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdTercero',
-		dataIndex: 'IdTercero',
 		sortable: true,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){

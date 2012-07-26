@@ -1,18 +1,6 @@
-using System;
-using System.Data;
-using System.Text;
-using System.IO;
-using System.Linq;
 using System.Collections.Generic;
-using ServiceStack.OrmLite;
-using ServiceStack.Redis;
 using ServiceStack.Common;
-using ServiceStack.Common.Web;
-using ServiceStack.Common.Utils;
-using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
-using ServiceStack.Text;
-using ServiceStack.CacheAccess;
 using ServiceStack.ServiceHost;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
@@ -76,7 +64,7 @@ namespace Aicl.Galapago.BusinessLogic
                 }
             });
 
-            List<ComprobanteEgresoItem> data = new List<ComprobanteEgresoItem>();
+            var data = new List<ComprobanteEgresoItem>();
             data.Add(request);
             
             return new Response<ComprobanteEgresoItem>(){
@@ -181,7 +169,7 @@ namespace Aicl.Galapago.BusinessLogic
             av.ValidateAndThrowHttpError(request, ruleSet);
         }
 
-        private  static void ValidateAndThrowHttpError(this ComprobanteEgresoItem request,
+        static void ValidateAndThrowHttpError(this ComprobanteEgresoItem request,
                                                        ComprobanteEgreso comprobante,
                                                        Egreso egreso,string ruleSet)
         {
@@ -189,7 +177,7 @@ namespace Aicl.Galapago.BusinessLogic
                                               egreso, ruleSet);
         }
 
-        private  static void ValidateAndThrowHttpError(this ComprobanteEgresoItem request,
+        static void ValidateAndThrowHttpError(this ComprobanteEgresoItem request,
                                                        ComprobanteEgresoItem oldData,
                                                        ComprobanteEgreso comprobante,
                                                        Egreso egreso,string ruleSet)
@@ -206,7 +194,7 @@ namespace Aicl.Galapago.BusinessLogic
         }
 
 
-        private static void CheckOldAndNew(this ComprobanteEgresoItem request,
+        static void CheckOldAndNew(this ComprobanteEgresoItem request,
                                            ComprobanteEgresoItem oldData,
                                            DALProxy proxy
                                            )

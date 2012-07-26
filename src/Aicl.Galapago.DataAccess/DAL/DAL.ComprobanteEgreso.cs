@@ -142,7 +142,7 @@ namespace Aicl.Galapago.DataAccess
 		{
             documento.FechaAsentado=null;
 			var visitor = ReadExtensions.CreateExpression<ComprobanteEgreso>();
-            visitor.Update(f=> f.FechaAnulado);                  
+            visitor.Update(f=> f.FechaAsentado);                  
             visitor.Where(r=>r.Id==documento.Id);
 			proxy.Update(documento, visitor);
         }

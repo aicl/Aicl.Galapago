@@ -52,6 +52,11 @@ Ext.define('App.model.ComprobanteEgresoItem',{
 			name:'Documento',
 			type:'string'
 			
+		},
+		{
+			name:'Descripcion',
+			type:'string'
+			
 		}
 	]
 });

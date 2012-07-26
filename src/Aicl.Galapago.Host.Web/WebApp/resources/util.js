@@ -527,7 +527,7 @@ Ext.data.Store.implement({
 				var record;
 				if (success){
 					var data= result.Data[0];
-					data.FechaAsentado=null;
+					if(data.FechaAsentado==undefined) data.FechaAsentado=null;
 					record= me.updateLocal(data);
 				}
 				else

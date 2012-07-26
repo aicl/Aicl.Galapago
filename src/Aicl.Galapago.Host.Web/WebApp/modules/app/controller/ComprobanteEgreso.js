@@ -40,7 +40,6 @@ Ext.define('App.controller.ComprobanteEgreso',{
         this.control({
             'comprobanteegresolist': { 
                 selectionchange: function( sm,  selections,  eOpts){
-             	
                 	this.getComprobanteEgresoItemStore().removeAll();   
                 	this.getEgresoStore().removeAll();
                 	
@@ -75,6 +74,17 @@ Ext.define('App.controller.ComprobanteEgreso',{
             		var record = this.getComprobanteEgresoForm().getForm().getFieldValues(true);
             		this.getComprobanteEgresoStore().save(record);
             	}
+            },
+            
+            'comprobanteegresopanel button[action=asentar]': {
+                click: function(button, event, options){
+                	var grid = this.getComprobanteEgresoList();
+                	var record = grid.getSelectionModel().getSelection()[0];
+        			if(record.get('FechaAsentado'))
+        				this.getComprobanteEgresoStore().reversar(record);
+        			else
+        				this.getComprobanteEgresoStore().asentar(record);
+                }
             },
             
             'comprobanteegresopanel button[action=buscarComprobantes]': {
@@ -168,7 +178,10 @@ Ext.define('App.controller.ComprobanteEgreso',{
         this.getComprobanteEgresoSaveButton().setDisabled(!this.getComprobanteEgresoStore().canUpdate());
     	
     	this.getComprobanteEgresoStore().on('write', function(store, operation, eOpts ){
-    		var record =  operation.getRecords()[0];                                    
+    		var record =  operation.getRecords()[0];
+    		if (operation.action=='create') {
+        		this.cargarItems(record);
+        	}  
             if (operation.action != 'destroy') {
                this.getComprobanteEgresoList().getSelectionModel().select(record,true,true);
                this.refreshButtons([record]);
@@ -240,7 +253,6 @@ Ext.define('App.controller.ComprobanteEgreso',{
 				DigitoVerificacion:record.get('DVReceptor'),
 				NombreDocumento:record.get('NombreDocumentoReceptor')})
 			};
-			
 			
 			var canUpdate=true;
 			if(record.get('FechaAsentado') ){

@@ -1,9 +1,4 @@
-
 using System;
-using System.Reflection;
-using System.ComponentModel.DataAnnotations;
-using ServiceStack.Common;
-using ServiceStack.Common.Utils;
 using ServiceStack.DataAnnotations;
 using ServiceStack.DesignPatterns.Model;
 
@@ -14,7 +9,7 @@ namespace Aicl.Galapago.Model.Types
     [JoinTo(typeof(Tercero),"IdTercero","Id", Order=1)]
     [JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", Order=2)]
     [JoinTo(typeof(PresupuestoItem),"IdPresupuestoItem","Id", Order=3)]
-    public partial class SaldoTercero:IHasId<System.Int32>{
+    public partial class SaldoTercero:IHasId<Int32>{
 
         public SaldoTercero(){}
 
@@ -22,28 +17,28 @@ namespace Aicl.Galapago.Model.Types
         [Sequence("SALDO_TERCERO_ID_GEN")]
         [PrimaryKey]
         [AutoIncrement]
-        public System.Int32 Id { get; set;} 
+        public Int32 Id { get; set;} 
 
         [Alias("ID_PRESUPUESTO_ITEM")]
-        public System.Int32 IdPresupuestoItem { get; set;} 
+        public Int32 IdPresupuestoItem { get; set;} 
 
         [Alias("ID_SUCURSAL")]
-        public System.Int32 IdSucursal { get; set;} 
+        public Int32 IdSucursal { get; set;} 
 
         [Alias("ID_TERCERO")]
-        public System.Int32 IdTercero { get; set;} 
+        public Int32 IdTercero { get; set;} 
 
 		[Alias("SALDO_INICIAL")]
         [DecimalLength(15,2)]
-        public System.Decimal SaldoInicial { get; set;} 
+        public Decimal SaldoInicial { get; set;} 
         
         [Alias("DEBITOS")]
         [DecimalLength(15,2)]
-        public System.Decimal Debitos { get; set;} 
+        public Decimal Debitos { get; set;} 
 
         [Alias("CREDITOS")]
         [DecimalLength(15,2)]
-        public System.Decimal Creditos { get; set;} 
+        public Decimal Creditos { get; set;} 
 
 		#region Sucursal
         [BelongsTo(typeof(Sucursal),"Nombre")]
@@ -68,10 +63,10 @@ namespace Aicl.Galapago.Model.Types
 
         #region CuentaGiradora
         [BelongsTo(typeof(PresupuestoItem),"Codigo")]
-        public System.String CodigoItem { get; set;} 
+        public String CodigoItem { get; set;} 
 
         [BelongsTo(typeof(PresupuestoItem),"Nombre")]
-        public System.String NombreItem { get; set;} 
+        public String NombreItem { get; set;} 
         #endregion CuentaGiradora
 
 

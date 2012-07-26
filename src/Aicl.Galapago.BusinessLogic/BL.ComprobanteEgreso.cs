@@ -1,18 +1,10 @@
 using System;
-using System.Data;
-using System.Text;
-using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using ServiceStack.OrmLite;
-using ServiceStack.Redis;
 using ServiceStack.Common;
 using ServiceStack.Common.Web;
-using ServiceStack.Common.Utils;
-using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
-using ServiceStack.CacheAccess;
 using ServiceStack.ServiceHost;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
@@ -174,7 +166,7 @@ namespace Aicl.Galapago.BusinessLogic
                 }
             });
 
-            List<ComprobanteEgreso> data = new List<ComprobanteEgreso>();
+            var data = new List<ComprobanteEgreso>();
             data.Add(request);
             
             return new Response<ComprobanteEgreso>(){
@@ -232,9 +224,7 @@ namespace Aicl.Galapago.BusinessLogic
                     if(factor==0)
                     {
                         proxy.BeginDbTransaction();
-                        proxy.ExecuteBeforePatch(request, oldData, operacion);
                         request.Anular(proxy,"Anulado por Usuario");
-                        proxy.ExecuteAfterPatch(request, oldData, operacion);
                         proxy.CommitDbTransaction();
                         return;
                     }
@@ -243,19 +233,20 @@ namespace Aicl.Galapago.BusinessLogic
 
                     proxy.BeginDbTransaction();
                     #region ActualizarCuentaPorPagar
-                    //if(request.Valor!=0)
-                    //{
                     foreach(ComprobanteEgresoItem cei in items)
                     {
                         using (proxy.AcquireLock(cei.IdEgreso.GetLockKey<Egreso>(), Definiciones.LockSeconds))
                         {
                             var egreso = DAL.GetEgresoById(proxy, cei.IdEgreso);
 
-                            EgresoCE ece= new EgresoCE(){Egreso=egreso, Cei= cei};
-                            EgresoCEValidator ecv= new EgresoCEValidator();
-                            ecv.ValidateAndThrowHttpError(ece, Operaciones.ActualizarValorEgresoAlAsentarCE);
+							if(operacion=="asentar")
+							{
+                            	var ece= new EgresoCE(){Egreso=egreso, Cei= cei};
+                            	var ecv= new EgresoCEValidator();
+                            	ecv.ValidateAndThrowHttpError(ece, Operaciones.ActualizarValorEgresoAlAsentarCE);
+							}
 
-                            egreso.Saldo= egreso.Saldo-cei.Abono;
+                            egreso.Saldo= egreso.Saldo-( cei.Abono*factor);
                             egreso.ActualizarValorSaldo(proxy);
 
                             var  prs= DAL.GetPresupuestoActivo(proxy,request.IdSucursal,Definiciones.IdCentroGeneral);
@@ -404,7 +395,7 @@ namespace Aicl.Galapago.BusinessLogic
         }
 
 
-        private static Tercero CheckTerceroReceptor(this ComprobanteEgreso request, DALProxy proxy)
+        static Tercero CheckTerceroReceptor(this ComprobanteEgreso request, DALProxy proxy)
         {
             Tercero t = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTerceroReceptor);
 
@@ -415,7 +406,7 @@ namespace Aicl.Galapago.BusinessLogic
         }
 
 
-        private static void CheckBeforePatch(ComprobanteEgreso oldData, ComprobanteEgreso request,
+        static void CheckBeforePatch(ComprobanteEgreso oldData, ComprobanteEgreso request,
                                              DALProxy proxy,
                                              int idUsuario,
                                              string operacion)
@@ -438,7 +429,7 @@ namespace Aicl.Galapago.BusinessLogic
 
         }
 
-        private static PresupuestoItem CheckUsuarioGiradora(this ComprobanteEgreso documento, DALProxy proxy, int idUsuario)
+        static PresupuestoItem CheckUsuarioGiradora(this ComprobanteEgreso documento, DALProxy proxy, int idUsuario)
         {
             PresupuestoItem pi = DAL.GetPresupuestoItem(proxy, documento.IdCuentaGiradora);
             pi.AssertExists(documento.IdCuentaGiradora);

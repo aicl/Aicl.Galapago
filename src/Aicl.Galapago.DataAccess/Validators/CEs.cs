@@ -16,7 +16,7 @@ namespace Aicl.Galapago.DataAccess
     }
 
 
-     public class CEsValidator:AbstractValidator<CEs>
+    public class CEsValidator:AbstractValidator<CEs>
     {
         public CEsValidator()
         {
@@ -64,7 +64,6 @@ namespace Aicl.Galapago.DataAccess
             RuleSet(Operaciones.Reversar, () => common() );
             RuleSet(Operaciones.Anular, () => common() );
 
-
             RuleSet(Operaciones.Update, () =>{
                 RuleFor(x => x.Nuevo).Must((x, nuevo)=> x.Viejo.IdSucursal==nuevo.IdSucursal).
                     When(x=> x.Nuevo.IdSucursal!=default(int)).
@@ -77,7 +76,6 @@ namespace Aicl.Galapago.DataAccess
                   RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTercero==nuevo.IdTercero).
                     When(e=> e.Nuevo.IdTercero!=default(int) && e.Viejo.Valor!=0).
                     WithMessage("Tercero modificado").WithErrorCode("TerceroModificado");
-
 
             });
 
