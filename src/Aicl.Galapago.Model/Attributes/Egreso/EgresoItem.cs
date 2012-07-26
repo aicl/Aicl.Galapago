@@ -1,4 +1,3 @@
-using System;
 using ServiceStack.ServiceHost;
 
 namespace Aicl.Galapago.Model.Types

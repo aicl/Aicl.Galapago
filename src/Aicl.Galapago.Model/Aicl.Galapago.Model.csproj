@@ -99,13 +99,9 @@
     <Compile Include="Validations\TerceroValidator.cs" />
     <Compile Include="Types\CodigoDocumento.cs" />
     <Compile Include="Attributes\CodigoDocumento.cs" />
-    <Compile Include="Attributes\Egreso.cs" />
-    <Compile Include="Types\Egreso.cs" />
     <Compile Include="Validations\EgresoValidator.cs" />
     <Compile Include="IHasIdTercero.cs" />
     <Compile Include="IHasCodigoDocumento.cs" />
-    <Compile Include="Types\EgresoItem.cs" />
-    <Compile Include="Attributes\EgresoItem.cs" />
     <Compile Include="Types\MayorPresupuesto.cs" />
     <Compile Include="Attributes\MayorPresupuesto.cs" />
     <Compile Include="Types\Presupuesto.cs" />
@@ -114,13 +110,7 @@
     <Compile Include="Attributes\PresupuestoItem.cs" />
     <Compile Include="Validations\EgresoItemValidador.cs" />
     <Compile Include="Validations\PresupuestoItemValidador.cs" />
-    <Compile Include="Types\ComprobanteEgreso.cs" />
-    <Compile Include="Types\ComprobanteEgresoItem.cs" />
     <Compile Include="Validations\ComprobanteEgresoValidator.cs" />
-    <Compile Include="Attributes\ComprobanteEgreso.cs" />
-    <Compile Include="Attributes\ComprobanteEgresoItem.cs" />
-    <Compile Include="Types\ComprobanteEgresoRetencion.cs" />
-    <Compile Include="Attributes\ComprobanteEgresoRetencion.cs" />
     <Compile Include="Types\UsuarioGiradora.cs" />
     <Compile Include="Attributes\UsuarioGiradora.cs" />
     <Compile Include="Validations\ComprobanteEgresoItemValidator.cs" />
@@ -129,14 +119,26 @@
     <Compile Include="Types\Rubro.cs" />
     <Compile Include="Types\SaldoTercero.cs" />
     <Compile Include="Attributes\SaldoTercero.cs" />
-    <Compile Include="Types\Ingreso.cs" />
-    <Compile Include="Attributes\Ingreso.cs" />
-    <Compile Include="Types\ComprobanteIngreso.cs" />
-    <Compile Include="Attributes\ComprobanteIngreso.cs" />
-    <Compile Include="Types\ComprobanteIngresoItem.cs" />
-    <Compile Include="Attributes\ComprobanteIngresoItem.cs" />
-    <Compile Include="Types\ComprobanteIngresoRetencion.cs" />
-    <Compile Include="Attributes\ComprobanteIngresoRetencion.cs" />
+    <Compile Include="Types\Egreso\ComprobanteEgresoItem.cs" />
+    <Compile Include="Types\Egreso\ComprobanteEgreso.cs" />
+    <Compile Include="Types\Egreso\ComprobanteEgresoRetencion.cs" />
+    <Compile Include="Types\Egreso\Egreso.cs" />
+    <Compile Include="Types\Egreso\EgresoItem.cs" />
+    <Compile Include="Types\Ingreso\ComprobanteIngreso.cs" />
+    <Compile Include="Types\Ingreso\ComprobanteIngresoItem.cs" />
+    <Compile Include="Types\Ingreso\ComprobanteIngresoRetencion.cs" />
+    <Compile Include="Types\Ingreso\Ingreso.cs" />
+    <Compile Include="Types\Ingreso\IngresoItem.cs" />
+    <Compile Include="Attributes\Egreso\ComprobanteEgreso.cs" />
+    <Compile Include="Attributes\Egreso\ComprobanteEgresoItem.cs" />
+    <Compile Include="Attributes\Egreso\ComprobanteEgresoRetencion.cs" />
+    <Compile Include="Attributes\Egreso\Egreso.cs" />
+    <Compile Include="Attributes\Egreso\EgresoItem.cs" />
+    <Compile Include="Attributes\Ingreso\Ingreso.cs" />
+    <Compile Include="Attributes\Ingreso\ComprobanteIngreso.cs" />
+    <Compile Include="Attributes\Ingreso\ComprobanteIngresoItem.cs" />
+    <Compile Include="Attributes\Ingreso\ComprobanteIngresoRetencion.cs" />
+    <Compile Include="Attributes\Ingreso\IngresoItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -144,5 +146,9 @@
     <Folder Include="Properties\" />
     <Folder Include="Attributes\" />
     <Folder Include="Validations\" />
+    <Folder Include="Types\Egreso\" />
+    <Folder Include="Types\Ingreso\" />
+    <Folder Include="Attributes\Egreso\" />
+    <Folder Include="Attributes\Ingreso\" />
   </ItemGroup>
 </Project>

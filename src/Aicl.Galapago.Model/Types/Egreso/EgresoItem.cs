@@ -1,6 +1,4 @@
 using System;
-using System.ComponentModel.DataAnnotations;
-using ServiceStack.Common;
 using ServiceStack.DataAnnotations;
 using ServiceStack.DesignPatterns.Model;
 
@@ -10,7 +8,7 @@ namespace Aicl.Galapago.Model.Types
     [JoinTo(typeof(Centro),"IdCentro", "Id", Order=1)]
     [JoinTo(typeof(Tercero),"IdTercero", "Id", Order=2, JoinType=JoinType.Left)]
 	[Alias("EGRESO_ITEM")]
-	public partial class EgresoItem:IHasId<System.Int32>, IHasIdCentro{
+	public partial class EgresoItem:IHasId<Int32>, IHasIdCentro{
 
 		public EgresoItem(){}
 
@@ -18,26 +16,26 @@ namespace Aicl.Galapago.Model.Types
 		[Sequence("EGRESO_ITEM_ID_GEN")]
 		[PrimaryKey]
 		[AutoIncrement]
-		public System.Int32 Id { get; set;} 
+		public Int32 Id { get; set;} 
 
 		[Alias("ID_EGRESO")]
-		public System.Int32 IdEgreso { get; set;} 
+		public Int32 IdEgreso { get; set;} 
 
 		[Alias("ID_PRESUPUESTO_ITEM")]
-		public System.Int32 IdPresupuestoItem { get; set;} 
+		public Int32 IdPresupuestoItem { get; set;} 
 
 		[Alias("TIPO_PARTIDA")]
-		public System.Int16 TipoPartida { get; set;} 
+		public Int16 TipoPartida { get; set;} 
 
 		[Alias("VALOR")]
 		[DecimalLength(15,2)]
-		public System.Decimal Valor { get; set;} 
+		public Decimal Valor { get; set;} 
 
 		[Alias("ID_CENTRO")]
-		public System.Int32 IdCentro { get; set;} 
+		public Int32 IdCentro { get; set;} 
 
         [Alias("ID_TERCERO")]
-        public System.Int32? IdTercero { get; set;} 
+        public Int32? IdTercero { get; set;} 
 
         #region PresupuestoItem
         [BelongsTo(typeof(PresupuestoItem),"Codigo")]
