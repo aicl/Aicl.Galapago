@@ -5,19 +5,17 @@ using ServiceStack.DesignPatterns.Model;
 
 namespace Aicl.Galapago.Model.Types
 {
-	[Alias("COMPROBANTE_EGRESO")]
+	[Alias("COMPROBANTE_INGRESO")]
     [JoinTo(typeof(Sucursal),"IdSucursal", "Id", Order=0)]
     [JoinTo(typeof(Tercero),"IdTercero","Id", Order=1)]
     [JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", Order=2)]
-    [JoinTo(typeof(Tercero),"IdTerceroReceptor","Id", ChildAlias="Receptor", Order=3, JoinType=JoinType.Left)]
-    [JoinTo(typeof(Tercero),typeof(TipoDocumento),"IdTipoDocumento","Id", ParentAlias="Receptor", ChildAlias="DocRec", Order=4, JoinType=JoinType.Left)]
-    [JoinTo(typeof(PresupuestoItem),"IdCuentaGiradora","Id", Order=5)]
-	public partial class ComprobanteEgreso:IHasId<Int32>,IHasPeriodo,IHasIdSucursal,IHasIdTercero
+    [JoinTo(typeof(PresupuestoItem),"IdCuentaReceptora","Id", Order=3)]
+	public partial class ComprobanteIngreso:IHasId<Int32>,IHasPeriodo,IHasIdSucursal,IHasIdTercero
     {
-		public ComprobanteEgreso(){}
+		public ComprobanteIngreso(){}
 
 		[Alias("ID")]
-		[Sequence("COMPROBANTE_EGRESO_ID_GEN")]
+		[Sequence("COMPROBANTE_INGRESO_ID_GEN")]
 		[PrimaryKey]
 		[AutoIncrement]
 		public Int32 Id { get; set;} 
@@ -42,8 +40,8 @@ namespace Aicl.Galapago.Model.Types
 		[DecimalLength(15,2)]
 		public Decimal Valor { get; set;} 
 
-		[Alias("ID_CUENTA_GIRADORA")]
-		public Int32 IdCuentaGiradora { get; set;} 
+		[Alias("ID_CUENTA_RECEPTORA")]
+		public Int32 IdCuentaReceptora { get; set;} 
 
 		[Alias("ID_TERCERO")]
 		public Int32 IdTercero { get; set;} 
@@ -63,8 +61,8 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("ID_TERCERO_RECEPTOR")]
 		public Int32 IdTerceroReceptor { get; set;} 
 
-        [Alias("ID_TERCERO_GIRADORA")]
-        public Int32? IdTerceroGiradora { get; set;} 
+        [Alias("ID_TERCERO_RECEPTORA")]
+        public Int32? IdTerceroReceptora { get; set;} 
 
 
         #region Sucursal
@@ -89,32 +87,14 @@ namespace Aicl.Galapago.Model.Types
         public string NombreDocumentoTercero {get;set;}
         #endregion TipoDocumento Tercero
 
-        #region TerceroReceptor
-        [BelongsTo(typeof(Tercero),"Documento", ParentAlias="Receptor" )]
-        public string DocumentoReceptor {get;set;}
 
-        [BelongsTo(typeof(Tercero),"DigitoVerificacion", ParentAlias="Receptor")]
-        public string DVReceptor {get;set;}
-
-        [BelongsTo(typeof(Tercero), "Nombre", ParentAlias="Receptor")]
-        public string NombreReceptor {get;set;}
-
-        #endregion TerceroReceptor
-
-        #region TipoDocumento TerceroReceptor
-        [BelongsTo(typeof(TipoDocumento),"Nombre", ParentAlias="DocRec")]
-        public string NombreDocumentoReceptor {get;set;}
-        #endregion TipoDocumento TerceroReceptor
-
-        #region CuentaGiradora
-
+        #region CuentaReceptora
         [BelongsTo(typeof(PresupuestoItem),"Codigo")]
         public String CodigoItem { get; set;} 
 
         [BelongsTo(typeof(PresupuestoItem),"Nombre")]
         public String NombreItem { get; set;} 
-
-        #endregion CuentaGiradora
+        #endregion CuentaReceptora
 
 	}
 }

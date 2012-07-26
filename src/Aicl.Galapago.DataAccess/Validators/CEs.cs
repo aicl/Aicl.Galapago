@@ -37,13 +37,11 @@ namespace Aicl.Galapago.DataAccess
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTercero==nuevo.IdTercero).
                     When(e=> e.Nuevo.IdTercero!=default(int)).
                     WithMessage("Tercero modificado").WithErrorCode("TerceroModificado");
-
             
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Periodo==nuevo.Periodo).
                     When(e=> !e.Nuevo.Periodo.IsNullOrEmpty()).
                     WithMessage("Periodo modificado").WithErrorCode("PeriodoModificado");
-
-            
+    
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Valor==nuevo.Valor).
                     When(e=> e.Nuevo.Valor!=default(decimal)).
                     WithMessage("Valor modificado").WithErrorCode("ValorModificado");
@@ -51,7 +49,6 @@ namespace Aicl.Galapago.DataAccess
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTerceroReceptor==nuevo.IdTerceroReceptor).
                 When(e=> e.Nuevo.IdTerceroReceptor !=default(int)).
                 WithMessage("Tercero Receptor Modificado").WithErrorCode("TerceroModificado");
-
       
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdCuentaGiradora==nuevo.IdCuentaGiradora).
                 When(e=> e.Nuevo.IdTerceroReceptor !=default(int)).

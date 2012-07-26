@@ -129,6 +129,14 @@
     <Compile Include="Types\Rubro.cs" />
     <Compile Include="Types\SaldoTercero.cs" />
     <Compile Include="Attributes\SaldoTercero.cs" />
+    <Compile Include="Types\Ingreso.cs" />
+    <Compile Include="Attributes\Ingreso.cs" />
+    <Compile Include="Types\ComprobanteIngreso.cs" />
+    <Compile Include="Attributes\ComprobanteIngreso.cs" />
+    <Compile Include="Types\ComprobanteIngresoItem.cs" />
+    <Compile Include="Attributes\ComprobanteIngresoItem.cs" />
+    <Compile Include="Types\ComprobanteIngresoRetencion.cs" />
+    <Compile Include="Attributes\ComprobanteIngresoRetencion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -66,27 +66,29 @@ namespace Aicl.Galapago.Model.Types
                 RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento asentado.No se puede Anular").WithErrorCode("Asentado");               
             });
 
-
             RuleSet(Definiciones.CheckRequestBeforeAsentar, () => {
                 RuleFor(x => x.Id).NotEqual(0).WithMessage("Debe Indicar el Id del Documento a asentar").WithErrorCode("SinId");
-                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento enviado como Anulado. No se puede asentar").WithErrorCode("Anulado");               
+                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento  Anulado. No se puede asentar").WithErrorCode("Anulado");               
+				RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento ya esta Asentado. No se puede asentar de nuevo").WithErrorCode("Asentado");
             });
 
             RuleSet(Definiciones.CheckRequestBeforeReversar, () => {
                 RuleFor(x => x.Id).NotEqual(0).WithMessage("Debe Indicar el Id del Documento a reversar").WithErrorCode("SinId");
-                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento enviado como Anulado. No se puede reversar").WithErrorCode("Anulado");               
+                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento Anulado. No se puede reversar").WithErrorCode("Anulado");
+				RuleFor(x => x.FechaAsentado).Must(r=> r.HasValue).WithMessage("Documento No esta Asentado. No se puede reversar").WithErrorCode("NoAsentado");
             });
 
             RuleSet(Definiciones.CheckRequestBeforeAnular, () => {
                 RuleFor(x => x.Id).NotEqual(0).WithMessage("Debe Indicar el Id del Documento a anular").WithErrorCode("SinId");
-                RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento enviado como asentado. No se puede anular").WithErrorCode("Asentado");               
+				RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento ya esta Anulado. No se puede anular de nuevo").WithErrorCode("Anulado");
+                RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento asentado. No se puede anular").WithErrorCode("Asentado");               
             });
 
 
             RuleSet(Definiciones.CheckRequestBeforeUpdate, () => {
                 RuleFor(x => x.Id).NotEqual(0).WithMessage("Debe Indicar el Id del Documento a actualizar").WithErrorCode("SinId");
-                RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento enviado como Asentado. No se puede actualizar").WithErrorCode("Asentado");
-                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento enviado como Anulado. No se puede actualizar").WithErrorCode("Anulado");
+                RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento Asentado. No se puede actualizar").WithErrorCode("Asentado");
+                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento  Anulado. No se puede actualizar").WithErrorCode("Anulado");
                 
             });
 

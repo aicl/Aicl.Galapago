@@ -133,7 +133,7 @@ namespace Aicl.Galapago.BusinessLogic
 
             });
         
-            List<ComprobanteEgreso> data = new List<ComprobanteEgreso>();
+            var data = new List<ComprobanteEgreso>();
             data.Add(request);
             
             return new Response<ComprobanteEgreso>(){
@@ -210,14 +210,14 @@ namespace Aicl.Galapago.BusinessLogic
             else
                 throw new HttpError(string.Format("Operacion:'{0}' NO implementada para ComprobanteEgreso",
                                                       action ));            
-             
-            request.ValidateAndThrowHttpError(rule);
+            
             var idUsuario = int.Parse(authSession.UserAuthId);
 
             factory.Execute(proxy=>{
                 using(proxy.AcquireLock(request.GetLockKey(), Definiciones.LockSeconds))
                 {
                     ComprobanteEgreso oldData= DAL.GetComprobanteEgreso(proxy, request.Id);
+					oldData.ValidateAndThrowHttpError(rule);
                     oldData.AssertExists(request.Id);
                     CheckBeforePatch(oldData, request, proxy, idUsuario, operacion);
 
@@ -419,13 +419,7 @@ namespace Aicl.Galapago.BusinessLogic
             oldData.CheckSucursal(proxy,idUsuario);
             oldData.CheckPeriodo(proxy);
 
-            var data = new ComprobanteEgreso();
-            data.PopulateWith(oldData);
-
-            data.FechaAnulado=request.FechaAnulado;
-            data.FechaAsentado= request.FechaAsentado;
-
-            request.PopulateWith(data);
+            request.PopulateWith(oldData);
 
         }
 
@@ -442,8 +436,6 @@ namespace Aicl.Galapago.BusinessLogic
             pi.CheckUsuarioGiradora(proxy,idUsuario, documento.IdTerceroGiradora);
 			return pi;
         }
-
-
 
     }
 }

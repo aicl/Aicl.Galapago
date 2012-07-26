@@ -16,7 +16,6 @@ namespace Aicl.Galapago.BusinessLogic
 {
 	public static  partial class BL
 	{
-		
 
         #region Get
         public static Response<Egreso> Get(this Egreso request,
@@ -245,14 +244,14 @@ namespace Aicl.Galapago.BusinessLogic
                 throw new HttpError(string.Format("Operacion:'{0}' NO implementada para Egreso",
                                                       action ));            
              
-            request.ValidateAndThrowHttpError(rule);
             var idUsuario = int.Parse(authSession.UserAuthId);
 
             factory.Execute(proxy=>{
                 using(proxy.AcquireLock(request.GetLockKey(), Definiciones.LockSeconds))
                 {
-                    Egreso oldData= DAL.GetEgresoById(proxy, request.Id);
+                    var oldData= DAL.GetEgresoById(proxy, request.Id);
                     oldData.AssertExists(request.Id);
+					oldData.ValidateAndThrowHttpError(rule);
                     CheckBeforePatch(oldData, request, proxy, idUsuario, operacion);
 
                     if(factor==0)
@@ -385,7 +384,7 @@ namespace Aicl.Galapago.BusinessLogic
 		
 			
 
-        private static void CheckOldAndNew(Egreso oldData, Egreso request,
+        static void CheckOldAndNew(Egreso oldData, Egreso request,
                                            DALProxy proxy,
                                            int idUsuario)
         {
@@ -446,7 +445,7 @@ namespace Aicl.Galapago.BusinessLogic
         }
 
 
-        private static void CheckBeforePatch(Egreso oldData, Egreso request,
+        static void CheckBeforePatch(Egreso oldData, Egreso request,
                                              DALProxy proxy,
                                              int idUsuario,
                                              string operacion)
@@ -459,18 +458,11 @@ namespace Aicl.Galapago.BusinessLogic
             oldData.CheckSucursal(proxy,idUsuario);
             oldData.CheckPeriodo(proxy);
 
-            var data = new Egreso();
-            data.PopulateWith(oldData);
-
-            data.FechaAnulado=request.FechaAnulado;
-            data.FechaAsentado= request.FechaAsentado;
-
-            request.PopulateWith(data);
-
+            request.PopulateWith(oldData);
         }
 
 
-        private static void CheckTercero(PresupuestoItem presupuestoItem, EgresoItem egresoItem)
+        static void CheckTercero(PresupuestoItem presupuestoItem, EgresoItem egresoItem)
         {
             if(presupuestoItem.UsaTercero)
             {
@@ -482,7 +474,7 @@ namespace Aicl.Galapago.BusinessLogic
             }
         }
 
-        private static void CheckSaldo(Egreso request, decimal saldo)
+        static void CheckSaldo(Egreso request, decimal saldo)
         {
             if(saldo!=request.Saldo)
                 throw new HttpError(string.Format("El Egreso:'{0}' NO puede ser Reversado. Revise los comprobantes de Egreso",
@@ -490,7 +482,7 @@ namespace Aicl.Galapago.BusinessLogic
         }
 
 
-        private static Tercero CheckTerceroReceptor(this Egreso request, DALProxy proxy)
+        static Tercero CheckTerceroReceptor(this Egreso request, DALProxy proxy)
         {
             Tercero t = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTerceroReceptor.Value);
 
