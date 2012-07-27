@@ -13,17 +13,17 @@ namespace Aicl.Galapago.BusinessLogic
     {
 
         #region Get
-        public static Response<EgresoItem> Get(this EgresoItem request,
+        public static Response<IngresoItem> Get(this IngresoItem request,
                                             Factory factory,
                                             IHttpRequest httpRequest)
         {
             return factory.Execute(proxy=>{
             
-				var visitor = ReadExtensions.CreateExpression<EgresoItem>();
+				var visitor = ReadExtensions.CreateExpression<IngresoItem>();
                  
-				visitor.Where(r=>r.IdEgreso==request.IdEgreso).OrderBy(r=>r.TipoPartida);
+				visitor.Where(r=>r.IdIngreso==request.IdIngreso).OrderBy(r=>r.TipoPartida);
 
-				return new Response<EgresoItem>(){
+				return new Response<IngresoItem>(){
 	                Data= proxy.Get(visitor)
 	            };
             });
@@ -31,11 +31,11 @@ namespace Aicl.Galapago.BusinessLogic
         #endregion Get
 
         #region Post        
-        public static Response<EgresoItem> Post(this EgresoItem request,
+        public static Response<IngresoItem> Post(this IngresoItem request,
                                             Factory factory,
                                             IAuthSession authSession)
         {
-            if(request.IdTercero.HasValue && request.IdTercero.Value==default(int)) request.IdTercero=null;
+
 
             request.ValidateAndThrowHttpError(Operaciones.Create);
 
@@ -43,44 +43,44 @@ namespace Aicl.Galapago.BusinessLogic
 
                 PresupuestoItem pi= Check1(proxy,request, int.Parse(authSession.UserAuthId));
 
-                // bloquear el Egreso parent para evitar actualizaciones....
-                using(proxy.AcquireLock(request.IdEgreso.GetLockKey<Egreso>(), Definiciones.LockSeconds))
+                // bloquear el Ingreso parent para evitar actualizaciones....
+                using(proxy.AcquireLock(request.IdIngreso.GetLockKey<Ingreso>(), Definiciones.LockSeconds))
                 {
-                    Egreso egreso= DAL.GetEgresoById(proxy,request.IdEgreso);
-                    egreso.AssertExists(request.IdEgreso);
-                    egreso.ValidateAndThrowHttpError(Operaciones.Update);
-                    egreso.CheckPeriodo(proxy);
-                    request.CheckCentro(proxy, egreso.IdSucursal,int.Parse(authSession.UserAuthId));
+                    Ingreso ingreso=proxy.FirstOrDefaultById<Ingreso>(request.IdIngreso);
+                    ingreso.AssertExists(request.IdIngreso);
+                    ingreso.ValidateAndThrowHttpError(Operaciones.Update);
+                    ingreso.CheckPeriodo(proxy);
+                    request.CheckCentro(proxy, ingreso.IdSucursal,int.Parse(authSession.UserAuthId));
 
-                    CodigoDocumento cd = proxy.GetCodigoDocumento(egreso.CodigoDocumento);
-                    cd.AssertExists(egreso.CodigoDocumento); 
+                    CodigoDocumento cd = proxy.GetCodigoDocumento(ingreso.CodigoDocumento);
+                    cd.AssertExists(ingreso.CodigoDocumento); 
                     cd.AssertEstaActivo();
 
                     if(request.TipoPartida==1)
                     {
                         cd.CheckDebitos(pi.Codigo);
-                        egreso.Valor= egreso.Valor+request.Valor;
-                        egreso.Saldo=egreso.Saldo+request.Valor;
+                        ingreso.Valor= ingreso.Valor+request.Valor;
+                        ingreso.Saldo=ingreso.Saldo+request.Valor;
                     }
                     else
                     {
                         cd.CheckCreditos(pi.Codigo);
-                        egreso.Saldo=egreso.Saldo-request.Valor;
+                        ingreso.Saldo=ingreso.Saldo-request.Valor;
                     }
 
                     proxy.BeginDbTransaction();
-                    egreso.ActualizarValorSaldo(proxy);
-                    request.Create(proxy);
+                    ingreso.ActualizarValorSaldo(proxy);
+                    proxy.Create(request);
                     proxy.CommitDbTransaction();
 
 
                 }
             });
 
-            List<EgresoItem> data = new List<EgresoItem>();
+            List<IngresoItem> data = new List<IngresoItem>();
             data.Add(request);
             
-            return new Response<EgresoItem>(){
+            return new Response<IngresoItem>(){
                 Data=data
             };  
             
@@ -88,87 +88,88 @@ namespace Aicl.Galapago.BusinessLogic
         #endregion Post
 
         #region Put
-        public static Response<EgresoItem> Put(this EgresoItem request,
+        public static Response<IngresoItem> Put(this IngresoItem request,
                                             Factory factory,
                                             IAuthSession authSession)
         {
-            if(request.IdTercero.HasValue && request.IdTercero.Value==default(int)) request.IdTercero=null;
+            
 
             request.CheckId(Operaciones.Update);
 
             factory.Execute(proxy=>{
-                using (proxy.AcquireLock(request.IdEgreso.GetLockKey<Egreso>(), Definiciones.LockSeconds))
+                using (proxy.AcquireLock(request.IdIngreso.GetLockKey<Ingreso>(), Definiciones.LockSeconds))
                 {
-                    EgresoItem oldData = proxy.FirstOrDefaultById<EgresoItem>(request.Id);
+                    IngresoItem oldData = proxy.FirstOrDefaultById<IngresoItem>(request.Id);
                     oldData.AssertExists(request.Id);
 
-                    Egreso egreso=  DAL.GetEgresoById(proxy, oldData.IdEgreso);
-                    egreso.AssertExists(request.IdEgreso);
+                    Ingreso ingreso=  proxy.FirstOrDefaultById<Ingreso>( oldData.IdIngreso);
+                    ingreso.AssertExists(request.IdIngreso);
 
-                    CheckOldAndNew(egreso,request,oldData, proxy, int.Parse(authSession.UserAuthId));
+                    CheckOldAndNew(ingreso,request,oldData, proxy, int.Parse(authSession.UserAuthId));
                     PresupuestoItem pi= Check1(proxy, request, int.Parse(authSession.UserAuthId));
 
-                    CodigoDocumento cd = proxy.GetCodigoDocumento(egreso.CodigoDocumento);
-                    cd.AssertExists(egreso.CodigoDocumento);
+                    CodigoDocumento cd = proxy.GetCodigoDocumento(ingreso.CodigoDocumento);
+                    cd.AssertExists(ingreso.CodigoDocumento);
                     cd.AssertEstaActivo();
+
 
                     if(request.TipoPartida!=oldData.TipoPartida || request.Valor!=oldData.Valor)
                     {
                         if(oldData.TipoPartida==1)
                         {
-                            egreso.Valor= egreso.Valor-oldData.Valor;
-                            egreso.Saldo= egreso.Saldo-oldData.Valor;
+                            ingreso.Valor= ingreso.Valor-oldData.Valor;
+                            ingreso.Saldo= ingreso.Saldo-oldData.Valor;
                         }
                         else
-                            egreso.Saldo=egreso.Saldo+oldData.Valor;
+                            ingreso.Saldo=ingreso.Saldo+oldData.Valor;
 
                         if(request.TipoPartida==1)
                         {
                             cd.CheckDebitos(pi.Codigo);
-                            egreso.Valor= egreso.Valor+request.Valor;
-                            egreso.Saldo=egreso.Saldo+request.Valor;
+                            ingreso.Valor= ingreso.Valor+request.Valor;
+                            ingreso.Saldo=ingreso.Saldo+request.Valor;
                         }
                         else
                         {
                             cd.CheckCreditos(pi.Codigo);
-                            egreso.Saldo=egreso.Saldo-request.Valor;
+                            ingreso.Saldo=ingreso.Saldo-request.Valor;
                         }
     
                         proxy.BeginDbTransaction();
-                        egreso.ActualizarValorSaldo(proxy);
-                        request.Actualizar(proxy);
+                        ingreso.ActualizarValorSaldo(proxy);
+						proxy.Update(request);
                         proxy.CommitDbTransaction();
                     }
                     else
-                        request.Actualizar(proxy);
+						proxy.Update(request);
                 }
             });
 
 
-            List<EgresoItem> data = new List<EgresoItem>();
+            List<IngresoItem> data = new List<IngresoItem>();
             data.Add(request);
 
-            return new Response<EgresoItem>(){
+            return new Response<IngresoItem>(){
                 Data=data
             };
         }
         #endregion Put
 
         #region Delete
-        public static Response<EgresoItem> Delete(this EgresoItem request,
+        public static Response<IngresoItem> Delete(this IngresoItem request,
                                             Factory factory,
                                             IAuthSession authSession)
         {
             request.CheckId(Operaciones.Destroy);
 
             factory.Execute(proxy=>{
-                using (proxy.AcquireLock(request.IdEgreso.GetLockKey<Egreso>(), Definiciones.LockSeconds))
+                using (proxy.AcquireLock(request.IdIngreso.GetLockKey<Ingreso>(), Definiciones.LockSeconds))
                 {
-                    EgresoItem oldData = proxy.FirstOrDefaultById<EgresoItem>(request.Id);
+                    IngresoItem oldData = proxy.FirstOrDefaultById<IngresoItem>(request.Id);
                     oldData.AssertExists(request.Id);
 
-                    Egreso egreso=  DAL.GetEgresoById(proxy, oldData.IdEgreso);
-                    egreso.AssertExists(request.IdEgreso);
+                    Ingreso egreso= proxy.FirstOrDefaultById<Ingreso>(oldData.IdIngreso);
+                    egreso.AssertExists(request.IdIngreso);
 
                     CheckOldAndNew(egreso,request,oldData, proxy, int.Parse(authSession.UserAuthId));
                    
@@ -182,29 +183,27 @@ namespace Aicl.Galapago.BusinessLogic
                                      
                     proxy.BeginDbTransaction();
                     egreso.ActualizarValorSaldo(proxy);
-                    request.Borrar(proxy);
+					proxy.Delete<EgresoItem>(q=>q.Id==request.Id);
                     proxy.CommitDbTransaction();
-
                 }
             });
 
-            List<EgresoItem> data = new List<EgresoItem>();
+            List<IngresoItem> data = new List<IngresoItem>();
             data.Add(request);
 
-            return new Response<EgresoItem>(){
+            return new Response<IngresoItem>(){
                 Data=data
             };
         }
         #endregion Destroy
 
-
-        static void ValidateAndThrowHttpError(this EgresoItem  request, string ruleSet)
+        static void ValidateAndThrowHttpError(this IngresoItem  request, string ruleSet)
         {
-            EgresoItemValidator av = new EgresoItemValidator();
+            IngresoItemValidator av = new IngresoItemValidator();
             av.ValidateAndThrowHttpError(request, ruleSet);
         }
 
-		static PresupuestoItem Check1(DALProxy proxy, EgresoItem request, int idUsuario)
+        static PresupuestoItem Check1(DALProxy proxy, IngresoItem request, int idUsuario)
         {
             PresupuestoItem pi = CheckPresupuestoItem(proxy,request);
 
@@ -214,38 +213,29 @@ namespace Aicl.Galapago.BusinessLogic
             Centro centro= proxy.FirstOrDefaultById<Centro>(request.IdCentro);
             centro.AssertExists(request.IdCentro);
 
-            Tercero tercero= default(Tercero);
-            if(!pi.UsaTercero) request.IdTercero=null;
-            if(request.IdTercero.HasValue)
-                tercero=proxy.FirstOrDefaultById<Tercero>(request.IdTercero.Value);
-
-
-            EgresoItemAlCrear ei = new EgresoItemAlCrear(){
+        
+            IngresoItemAlCrear ei = new IngresoItemAlCrear(){
                 NewItem=request,
                 Prs= pr,
                 Pi= pi,
-                CentroItem= centro,
-                TerceroItem=tercero
+                CentroItem= centro
             };
 
-            EgresoItemAlCrearValidador eiv = new EgresoItemAlCrearValidador();
-            eiv.ValidateAndThrowHttpError(ei, EgresoItemAlCrear.Regla1);
+            IngresoItemAlCrearValidador eiv = new IngresoItemAlCrearValidador();
+            eiv.ValidateAndThrowHttpError(ei, IngresoItemAlCrear.Regla1);
 
-            pi.CheckUsuarioGiradora(proxy, idUsuario, request.IdTercero);
+            pi.CheckUsuarioGiradora(proxy, idUsuario, null);
+
 
             request.CodigoItem= pi.Codigo;
             request.NombreItem= pi.Nombre;
             request.NombreCentro=centro.Nombre;
-            if(tercero!=default(Tercero))
-            {
-                request.NombreTercero=tercero.Nombre;
-                request.DocumentoTercero=tercero.Documento;
-                request.DVTercero= tercero.DigitoVerificacion;
-            }
+            
             return pi;
         }
 
-        static void CheckOldAndNew(Egreso egreso, EgresoItem request, EgresoItem oldData,
+
+        static void CheckOldAndNew(Ingreso egreso, IngresoItem request, IngresoItem oldData,
                                            DALProxy proxy,
                                            int idUsuario)
         {
@@ -254,19 +244,13 @@ namespace Aicl.Galapago.BusinessLogic
 
             oldData.CheckCentro(proxy,egreso.IdSucursal, idUsuario);
 
-            EgresoItem data = new EgresoItem();
+            IngresoItem data = new IngresoItem();
             data.PopulateWith(oldData);
 
             if(request.IdCentro!=default(int) && request.IdCentro!=data.IdCentro)
             {
                 data.IdCentro=request.IdCentro;
                 data.CheckCentro(proxy, egreso.IdSucursal, idUsuario);
-            }
-
-            if(request.IdTercero.HasValue &&
-               ( !data.IdTercero.HasValue ||  (data.IdTercero.HasValue && request.IdTercero.Value!=data.IdTercero.Value)))
-            {
-                data.IdTercero= request.IdTercero;
             }
 
             if(request.IdPresupuestoItem!=default(int) && request.IdPresupuestoItem!= data.IdPresupuestoItem)
@@ -279,14 +263,12 @@ namespace Aicl.Galapago.BusinessLogic
                 data.Valor=request.Valor;
 
             request.PopulateWith(data);
-
         }   
 
-        static PresupuestoItem CheckPresupuestoItem(DALProxy proxy,EgresoItem egresoItem)
+        static PresupuestoItem CheckPresupuestoItem(DALProxy proxy,IngresoItem egresoItem)
         {
             PresupuestoItem pi = DAL.GetPresupuestoItem(proxy, egresoItem.IdPresupuestoItem);
             pi.AssertExists(egresoItem.IdPresupuestoItem);
-            // en check 1 se hace el resto de las validaciones para pi
             return pi;
         }
 

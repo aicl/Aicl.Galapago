@@ -1,34 +1,27 @@
 using System;
-using System.Collections.Generic;
 using ServiceStack.FluentValidation;
 
 namespace Aicl.Galapago.Model.Types
 {
-	public class EgresoValidator:AbstractValidator<Egreso>
+	public class IngresoValidator:AbstractValidator<Ingreso>
 	{
-		// contemplar Operaciones.Exportar,
-		//Egreso.ActualizarSaldo ( despues de asentado se puede agregar items en el comprobante de pago...)
-        // o Operaciones.InsertarItem.....
-		public EgresoValidator ()
-		{
-            List<string> codigos= new List<string>(){"CLCC","CLFV", "PRFV"};
-
+		public IngresoValidator ()
+		{       
 			RuleSet(Operaciones.Create, () => {
 				RuleFor(x => x.Id).Equal(0).WithMessage("Se debe omitir el Id").WithErrorCode("ConId");
                 RuleFor(x => x.Numero).Equal(0).WithMessage("Se debe omitir el Numero").WithErrorCode("ConNumero");
 				RuleFor(x => x.IdSucursal).NotEqual(0).WithMessage("Debe Indicar el IdSucursal").WithErrorCode("SinSucursal");
 				RuleFor(x => x.IdTercero).NotEqual(0).WithMessage("Debe Indicar el IdTercero").WithErrorCode("SinTercero");
 				RuleFor(x => x.Valor).Equal(0).WithMessage("Valor debe ser 0").WithErrorCode("ConValor");
-				RuleFor(x => x.Saldo).Equal(0).WithMessage("Saldo debe ser 0").WithErrorCode("ConSaldo");		
-				RuleFor(x => x.DiasCredito).Must(r=> r>=0).WithMessage("Dias Credito debe ser >=0").WithErrorCode("DiasCreditoNegativo");
+				RuleFor(x => x.Saldo).Equal(0).WithMessage("Saldo debe ser 0").WithErrorCode("ConSaldo");				
+				RuleFor(x => x.DiasCredito).Must(r=> r>=0).WithMessage("Dias Credito debe ser >=0").WithErrorCode("DiasCreditoNegativo");				
 				RuleFor(x => x.Fecha).NotEqual(default(DateTime)).WithMessage("Debe Indicar la fecha del asiento").WithErrorCode("SinFecha");
 				RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Se debe omitir la Fecha de Asentado");
 				RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Se debe omitir la Fecha de Anulado");
 				//RuleFor(x => x.Periodo).Must(r=> !string.IsNullOrEmpty(r) ).WithMessage("Se debe omitir el Periodo");
 				RuleFor(x => x.Descripcion).Must(r=> !string.IsNullOrEmpty(r) ).WithMessage("Debe Indicar la Descripcion").WithErrorCode("SinDescripcion");
 				RuleFor(x => x.CodigoDocumento).NotEmpty().WithMessage("Debe Indicar el codigo del documento").WithErrorCode("SinCodigoDocumento");
-				RuleFor(x => x.Documento).NotEmpty().When( x=> codigos.Contains(x.CodigoDocumento)).WithMessage("Debe Indicar el documento").WithErrorCode("SinDocumento");
-				RuleFor(x => x.Externo).Equal(false).WithMessage("Externo debe ser falso").WithErrorCode("NoFalso");	
+				RuleFor(x => x.Externo).Equal(false).WithMessage("Externo debe ser falso").WithErrorCode("NoFalso");		
 			});
 			
 			RuleSet(Operaciones.Update, () => {
@@ -37,10 +30,8 @@ namespace Aicl.Galapago.Model.Types
 			});
 			
 			RuleSet(Operaciones.Destroy, () => {
-
 				RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento Asentado. No se puede borrar").WithErrorCode("Asentado");
 				RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento Anulado. No se puede borrar").WithErrorCode("Anulado");
-				
 			});
 
             RuleSet(Operaciones.Asentar, () => {
@@ -79,7 +70,7 @@ namespace Aicl.Galapago.Model.Types
             RuleSet(Definiciones.CheckRequestBeforeUpdate, () => {
                 RuleFor(x => x.Id).NotEqual(0).WithMessage("Debe Indicar el Id del Documento a actualizar").WithErrorCode("SinId");
                 RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento Asentado. No se puede actualizar").WithErrorCode("Asentado");
-                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento  Anulado. No se puede actualizar").WithErrorCode("Anulado");
+                RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento  Anulado. No se puede actualizar").WithErrorCode("Anulado");                
             });
 		}
 	}

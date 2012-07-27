@@ -2,28 +2,33 @@ using System;
 using ServiceStack.Common;
 using ServiceStack.FluentValidation;
 using Aicl.Galapago.Model.Types;
+
 namespace Aicl.Galapago.DataAccess
 {
-    public class CEs
+    public class Ingresos
     {
-        public ComprobanteEgreso Nuevo {get; set;}
+        public Ingreso Viejo{get; set;}
+        public Ingreso Nuevo{get; set;}
 
-        public ComprobanteEgreso Viejo {get; set;}
-
-        public CEs ()
-        {
-        }
+		public Ingresos (){}
     }
 
-    public class CEsValidator:AbstractValidator<CEs>
+    public class IngresosValidator:AbstractValidator<Ingresos>
     {
-        public CEsValidator()
+        public IngresosValidator()
         {
             Action common=()=>{
-           
+            RuleFor(e => e.Nuevo).Must((e,nuevo)=> e.Viejo.CodigoDocumento==nuevo.CodigoDocumento ).
+                    When(e=> !e.Nuevo.CodigoDocumento.IsNullOrEmpty()).
+                    WithMessage("CodigoDocumento modificado").WithErrorCode("CodigoDocumentoModificado");
+
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Descripcion==nuevo.Descripcion).
                     When(e=> !e.Nuevo.Descripcion.IsNullOrEmpty()).
                     WithMessage("Descripcion modificada").WithErrorCode("DescripcionModificada");
+
+            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.DiasCredito==nuevo.DiasCredito).
+                    When(e=> e.Nuevo.DiasCredito!=default(short)).
+                    WithMessage("DiasCredito modificado").WithErrorCode("DiasModificado");
 
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Fecha==nuevo.Fecha).
                     When(e=> e.Nuevo.Fecha!=default(DateTime)).
@@ -36,25 +41,24 @@ namespace Aicl.Galapago.DataAccess
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTercero==nuevo.IdTercero).
                     When(e=> e.Nuevo.IdTercero!=default(int)).
                     WithMessage("Tercero modificado").WithErrorCode("TerceroModificado");
-            
+
+            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Numero==nuevo.Numero).
+                    When(e=> e.Nuevo.Numero!=default(int)).
+                    WithMessage("Numero modificado").WithErrorCode("NumeroModificado");
+
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Periodo==nuevo.Periodo).
                     When(e=> !e.Nuevo.Periodo.IsNullOrEmpty()).
                     WithMessage("Periodo modificado").WithErrorCode("PeriodoModificado");
-    
+
+            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Saldo==nuevo.Saldo).
+                    When(e=> e.Nuevo.Saldo!=default(decimal)).
+                    WithMessage("Saldo modificado").WithErrorCode("SaldoModificado");
+
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Valor==nuevo.Valor).
                     When(e=> e.Nuevo.Valor!=default(decimal)).
                     WithMessage("Valor modificado").WithErrorCode("ValorModificado");
-
-            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTerceroReceptor==nuevo.IdTerceroReceptor).
-                When(e=> e.Nuevo.IdTerceroReceptor !=default(int)).
-                WithMessage("Tercero Receptor Modificado").WithErrorCode("TerceroModificado");
-      
-            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdCuentaGiradora==nuevo.IdCuentaGiradora).
-                When(e=> e.Nuevo.IdTerceroReceptor !=default(int)).
-                WithMessage("Cuenta Giradora Modificada").WithErrorCode("CuentaGiradoraModificada");
-
             };
-      
+
             RuleSet(Operaciones.Asentar, () => common() );
             RuleSet(Operaciones.Reversar, () => common() );
             RuleSet(Operaciones.Anular, () => common() );
@@ -63,16 +67,23 @@ namespace Aicl.Galapago.DataAccess
                 RuleFor(x => x.Nuevo).Must((x, nuevo)=> x.Viejo.IdSucursal==nuevo.IdSucursal).
                     When(x=> x.Nuevo.IdSucursal!=default(int)).
                     WithMessage("No se debe modificar la Sucursal").WithErrorCode("SucursalModificada");
-              
+
+                RuleFor(x=>x.Nuevo).Must((x,nuevo)=> x.Viejo.Saldo==nuevo.Saldo).
+                When(x=> x.Nuevo.Saldo!=default(decimal)).
+                    WithMessage("Saldo modificado").WithErrorCode("SaldoModificado");
+
                  RuleFor(x => x.Nuevo).Must((x, nuevo)=> x.Viejo.Valor==nuevo.Valor).
                     When(x=> x.Nuevo.Valor!=default(decimal)).
                         WithMessage("Valor modificado").WithErrorCode("ValorModificado");
 
-                  RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTercero==nuevo.IdTercero).
-                    When(e=> e.Nuevo.IdTercero!=default(int) && e.Viejo.Valor!=0).
-                    WithMessage("Tercero modificado").WithErrorCode("TerceroModificado");
+                RuleFor(x=>x.Nuevo).Must((x,nuevo)=>x.Viejo.Numero==nuevo.Numero).
+                    When(x=> x.Nuevo.Numero!=default(int)).
+                    WithMessage("Numero modificado").WithErrorCode("NumeroModificado");
+
+                RuleFor(x=>x.Nuevo).Must((x,nuevo)=>x.Viejo.CodigoDocumento==nuevo.CodigoDocumento).
+                    When(x=> !x.Nuevo.CodigoDocumento.IsNullOrEmpty()).
+                    WithMessage("Tipo Documento Modificado").WithErrorCode("TipoDocumentoModificado");
             });
         }
     }
 }
-

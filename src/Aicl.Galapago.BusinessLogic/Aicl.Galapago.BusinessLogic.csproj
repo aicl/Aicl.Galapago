@@ -69,11 +69,15 @@
     <Compile Include="Egreso\BL.ComprobanteEgresoRetencion.cs" />
     <Compile Include="Egreso\BL.Egreso.cs" />
     <Compile Include="Egreso\BL.EgresoItem.cs" />
+    <Compile Include="Ingreso\BL.Ingreso.cs" />
+    <Compile Include="Ingreso\BL.IngresoItem.cs" />
+    <Compile Include="Ingreso\BL.ComprobanteIngreso.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="Egreso\" />
+    <Folder Include="Ingreso\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aicl.Galapago.Model\Aicl.Galapago.Model.csproj">

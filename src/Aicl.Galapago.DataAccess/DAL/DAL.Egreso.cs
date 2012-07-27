@@ -1,17 +1,6 @@
 using System;
-using System.Data;
-using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
 using ServiceStack.OrmLite;
-using ServiceStack.Redis;
-using ServiceStack.Common;
-using ServiceStack.Common.Web;
-using ServiceStack.Common.Utils;
-using ServiceStack.ServiceInterface;
-using ServiceStack.CacheAccess;
-using ServiceStack.ServiceHost;
-using ServiceStack.DesignPatterns.Model;
 using Aicl.Galapago.Model.Types;
 
 namespace Aicl.Galapago.DataAccess
@@ -35,13 +24,10 @@ namespace Aicl.Galapago.DataAccess
             return proxy.FirstOrDefault(visitor);
         }
 
-
-
         public static void AsignarConsecutivo(this Egreso egreso, DALProxy proxy)
         {
             egreso.Numero= proxy.GetNextConsecutivo(egreso.IdSucursal,Definiciones.Egreso).Numero;
         }
-
 
         public static void Update(this Egreso egreso,DALProxy proxy){
             var visitor = ReadExtensions.CreateExpression<Egreso>();

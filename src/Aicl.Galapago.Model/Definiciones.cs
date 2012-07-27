@@ -7,8 +7,10 @@ namespace Aicl.Galapago.Model.Types
 	public static class Definiciones
 	{
         public static readonly string Egreso="EG";
+		public static readonly string Ingreso="IN";
 		public static readonly string ComprobranteContable="CC";
 		public static readonly string ComprobranteEgreso="CE";
+		public static readonly string ComprobranteIngreso="CI";
               	
 		public static readonly double LockSeconds=5;
 		public static readonly double DiasEnCache=7;

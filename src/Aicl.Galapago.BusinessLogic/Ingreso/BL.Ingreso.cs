@@ -18,7 +18,7 @@ namespace Aicl.Galapago.BusinessLogic
 	{
 
         #region Get
-        public static Response<Egreso> Get(this Egreso request,
+        public static Response<Ingreso> Get(this Ingreso request,
 		                                              Factory factory,
 		                                              IHttpRequest httpRequest)
         {
@@ -29,7 +29,7 @@ namespace Aicl.Galapago.BusinessLogic
 				var paginador= new Paginador(httpRequest);
             	var queryString= httpRequest.QueryString;
 
-                Expression<Func<Egreso, bool>> predicate;
+                Expression<Func<Ingreso, bool>> predicate;
 
                 var periodo= queryString["Periodo"];
 				if(periodo.IsNullOrEmpty()) periodo= DateTime.Today.ObtenerPeriodo();
@@ -45,7 +45,6 @@ namespace Aicl.Galapago.BusinessLogic
 					int idSucursal;
 					if(int.TryParse(p,out idSucursal) && idSucursal!=default(int))
 						predicate= predicate.AndAlso(q=>q.IdSucursal==idSucursal);
-
 				}
 
 				p=queryString["IdTercero"];
@@ -54,7 +53,6 @@ namespace Aicl.Galapago.BusinessLogic
 					int idTercero;
 					if(int.TryParse(p,out idTercero) && idTercero!=default(int))
 						predicate= predicate.AndAlso(q=>q.IdTercero==idTercero);
-
 				}
 
                 var nombre= queryString["NombreTercero"];
@@ -78,7 +76,6 @@ namespace Aicl.Galapago.BusinessLogic
 	                }
 	            }
 
-
 				p= queryString["ConSaldo"];
             	if(!p.IsNullOrEmpty())
            		{
@@ -90,7 +87,7 @@ namespace Aicl.Galapago.BusinessLogic
 	                }
 	            }
 
-                var visitor = ReadExtensions.CreateExpression<Egreso>();
+                var visitor = ReadExtensions.CreateExpression<Ingreso>();
 				visitor.Where(predicate);
                 if(paginador.PageNumber.HasValue)
                 {
@@ -103,42 +100,29 @@ namespace Aicl.Galapago.BusinessLogic
                                 
                 visitor.OrderByDescending(r=>r.Numero);
                 
-				return new Response<Egreso>(){
+				return new Response<Ingreso>(){
                 	Data=proxy.Get(visitor),
                 	TotalCount=totalCount
             	};
-            });
-  
+            });  
         }
         #endregion Get
 
 		#region Post		
-		public static Response<Egreso> Post(this Egreso request,
+		public static Response<Ingreso> Post(this Ingreso request,
                                             Factory factory,
                                             IAuthSession authSession)
 		{
             request.ValidateAndThrowHttpError(Operaciones.Create);
             var idUsuario = int.Parse(authSession.UserAuthId);
             request.Periodo= request.Fecha.ObtenerPeriodo();
-            if(request.IdTerceroReceptor.HasValue && request.IdTerceroReceptor.Value==default(int))
-                request.IdTerceroReceptor=null;
-
+         
             factory.Execute(proxy=>{
 
                 var sucursal=request.CheckSucursal(proxy,idUsuario);
 
                 var tercero=request.CheckTercero(proxy);
-                Tercero tr= default(Tercero);
-                if(request.IdTerceroReceptor.HasValue)
-                {
-
-                    if(request.IdTerceroReceptor!=request.IdTercero)
-                        tr= request.CheckTerceroReceptor(proxy);
-                    else
-                        tr= tercero;
-                }
-
-
+                
                 request.CheckCodigoDocumento(proxy);
                 request.CheckPeriodo(proxy);
 
@@ -149,17 +133,8 @@ namespace Aicl.Galapago.BusinessLogic
                 request.NombreDocumentoTercero= tercero.NombreDocumento;
                 request.DVTercero= tercero.DigitoVerificacion;
 
-                if(tr!=default(Tercero))
-                {
-                    request.DocumentoReceptor= tr.Documento;
-                    request.NombreDocumentoReceptor= tr.NombreDocumento;
-                    request.NombreReceptor=tr.Nombre;
-                    request.DVReceptor= tr.DigitoVerificacion;
-                }
-
                 using (proxy.AcquireLock(request.GetLockKeyConsecutivo(), Definiciones.LockSeconds))
                 {
-                    // TODO : Revisar documento si es vacio y CC traer numero de Tercero
                     proxy.BeginDbTransaction();
                     request.AsignarConsecutivo(proxy);
                     request.Create(proxy);
@@ -167,23 +142,21 @@ namespace Aicl.Galapago.BusinessLogic
                 }
             });
 		
-			List<Egreso> data = new List<Egreso>();
+			List<Ingreso> data = new List<Ingreso>();
 			data.Add(request);
 			
-			return new Response<Egreso>(){
+			return new Response<Ingreso>(){
 				Data=data
 			};	
 			
 		}
 		#endregion Post
-		
+
         #region Put
-        public static Response<Egreso> Put(this Egreso request,
+        public static Response<Ingreso> Put(this Ingreso request,
                                               Factory factory,
                                               IAuthSession authSession)                                
         {
-
-            // TODO :  si cambio cambiar el Tercero y si el  Nro. Dto viene vacio traer Numero del nuevo Tercero...
 
             request.ValidateAndThrowHttpError(Definiciones.CheckRequestBeforeUpdate);
             var idUsuario = int.Parse(authSession.UserAuthId);
@@ -191,21 +164,17 @@ namespace Aicl.Galapago.BusinessLogic
             factory.Execute(proxy=>{
                 using(proxy.AcquireLock(request.GetLockKey(), Definiciones.LockSeconds))
                 {
-                    Egreso oldData= DAL.GetEgresoById(proxy, request.Id);
+                    Ingreso oldData=proxy.FirstOrDefaultById<Ingreso>( request.Id);
                     oldData.AssertExists(request.Id);
                     CheckOldAndNew(oldData, request, proxy, idUsuario );
                     request.Update(proxy);
-
-                    //Action<DALProxy> action=(p)=>request.Update(p);
-                    //Action<DALProxy> action= request.Update;
-                    //proxy.ExecuteUpdate(action,request,oldData); // me permite ejecutar con  o sin triggers
                 }
             });
 
-            List<Egreso> data = new List<Egreso>();
+            List<Ingreso> data = new List<Ingreso>();
             data.Add(request);
             
-            return new Response<Egreso>(){
+            return new Response<Ingreso>(){
                 Data=data
             };  
             
@@ -213,7 +182,7 @@ namespace Aicl.Galapago.BusinessLogic
         #endregion Put
 
         #region Patch
-        public static Response<Egreso> Patch(this Egreso request,
+        public static Response<Ingreso> Patch(this Ingreso request,
                                              Factory factory,
                                              IAuthSession authSession,
                                              string action)
@@ -241,7 +210,7 @@ namespace Aicl.Galapago.BusinessLogic
                  factor=0;
             }
             else
-                throw new HttpError(string.Format("Operacion:'{0}' NO implementada para Egreso",
+                throw new HttpError(string.Format("Operacion:'{0}' NO implementada para Ingreso",
                                                       action ));            
              
             var idUsuario = int.Parse(authSession.UserAuthId);
@@ -249,7 +218,7 @@ namespace Aicl.Galapago.BusinessLogic
             factory.Execute(proxy=>{
                 using(proxy.AcquireLock(request.GetLockKey(), Definiciones.LockSeconds))
                 {
-                    var oldData= DAL.GetEgresoById(proxy, request.Id);
+                    var oldData= proxy.FirstOrDefaultById<Ingreso>(request.Id);
                     oldData.AssertExists(request.Id);
 					oldData.ValidateAndThrowHttpError(rule);
                     CheckBeforePatch(oldData, request, proxy, idUsuario, operacion);
@@ -257,12 +226,14 @@ namespace Aicl.Galapago.BusinessLogic
                     if(factor==0)
                     {
                         proxy.BeginDbTransaction();
+                        proxy.ExecuteBeforePatch(request, oldData, operacion);
                         request.Anular(proxy);
+                        proxy.ExecuteAfterPatch(request, oldData, operacion);
                         proxy.CommitDbTransaction();
                         return;
                     }
 
-                    List<EgresoItem> items = request.GetItems(proxy);
+                    List<IngresoItem> items =  proxy.Get<IngresoItem>(q=> q.IdIngreso==request.Id);
                     decimal saldo=0; // si queremos reversar debe coincidir con request.Saldo
 
                     proxy.BeginDbTransaction();
@@ -275,7 +246,6 @@ namespace Aicl.Galapago.BusinessLogic
 
                         var  prs= DAL.GetPresupuestoActivo(proxy,request.IdSucursal,Definiciones.IdCentroGeneral);
                         prs.AssertExistsActivo(request.IdSucursal, Definiciones.IdCentroGeneral);
-                        //urn:PresupuestoItem:IdPresupuesto:{0}:Codigo:{1}"
                         CodigoDocumento cd = proxy.GetCodigoDocumento(request.CodigoDocumento);
                         cd.AssertExists(request.CodigoDocumento);
                         cd.AssertEstaActivo();
@@ -292,24 +262,23 @@ namespace Aicl.Galapago.BusinessLogic
                     }
                     #endregion ActualizarCuentaPorPagar
 
-                    List<EgresoItem> itemsCajaBancos= new List<EgresoItem>();
+                    List<IngresoItem> itemsCajaBancos= new List<IngresoItem>();
                     #region ActualizarSaldoItems
                     foreach(var item in items)
                     {
                         var  prs= DAL.GetPresupuestoActivo(proxy,request.IdSucursal, item.IdCentro);
                         prs.AssertExistsActivo(request.IdSucursal, item.IdCentro);
-                        //urn:PresupuestoItem:Id{0}"
+
                         using(proxy.AcquireLock(item.IdPresupuestoItem.GetLockKey<PresupuestoItem>(), Definiciones.LockSeconds))
                         {
                             var pi= DAL.GetPresupuestoItem(proxy,item.IdPresupuestoItem);
                             pi.AssertExists(item.IdPresupuestoItem);
-                            CheckTercero(pi,item);
-                            pi.UpdatePresupuesto(proxy, request.IdSucursal,item.IdCentro,request.Periodo,item.TipoPartida,item.Valor*factor, item.IdTercero);
+                            pi.UpdatePresupuesto(proxy, request.IdSucursal,item.IdCentro,request.Periodo,item.TipoPartida,item.Valor*factor, null);
                             if (pi.Codigo.StartsWith(Definiciones.GrupoCajaBancos)) itemsCajaBancos.Add(item);
                         }
                     }
                     #endregion ActualizarSaldoItems
-                    #region CrearComprobanteEgresos
+                    #region CrearComprobanteIngresos
                     // solo es crear el comprobante y un detalle, los saldos ya estan actualizados...
                     // el centro de costo no interesa...
 
@@ -322,16 +291,14 @@ namespace Aicl.Galapago.BusinessLogic
                         foreach(var cg in valorPorCuentaGiradora)
                         {
                             string descripcion=string.Format("Cancelacion {0}:{1} ${2}",request.CodigoDocumento,
-                                                             request.Documento, cg.Valor); 
-                            ComprobanteEgreso ce= DAL.CreateComprobanteEgreso(proxy,request.IdSucursal,
+                                                             request.Numero, cg.Valor); 
+                            ComprobanteIngreso ce= DAL.CreateComprobanteIngreso(proxy,request.IdSucursal,
                                                                               cg.IdPresupuestoItem,
                                                                               request.IdTercero,
                                                                               cg.Valor,
                                                                               descripcion,
-                                                                              request.IdTerceroReceptor,
                                                                               DateTime.Today,true);
                             ce.CreateItem(proxy,request.Id,cg.Valor);
-
                         }
                         request.Asentar(proxy);
                     }
@@ -340,18 +307,20 @@ namespace Aicl.Galapago.BusinessLogic
                         if( itemsCajaBancos.Count!=0)
                         {
                             CheckSaldo(request,saldo);
-                            var ei=  request.GetComprobanteEgresoItems(proxy);
+                            var ei= proxy.Get<ComprobanteIngresoItem>(q=> q.IdIngreso==request.Id); 
                             foreach(var cei in ei){
-                                using(proxy.AcquireLock(cei.IdComprobanteEgreso.GetLockKey<ComprobanteEgreso>(),Definiciones.LockSeconds))
+                                using(proxy.AcquireLock(cei.IdComprobanteIngreso.GetLockKey<ComprobanteIngreso>(),Definiciones.LockSeconds))
                                 {
-                                    ComprobanteEgreso ce = DAL.GetComprobanteEgreso(proxy, cei.IdComprobanteEgreso);
-                                    ce.Anular(proxy,string.Format("Anulado. Egreso:'{0}' reversado",request.Numero));
+                                    ComprobanteIngreso ce =proxy.FirstOrDefaultById<ComprobanteIngreso>(cei.IdComprobanteIngreso);
+                                    ce.Anular(proxy,string.Format("Anulado. Ingreso:'{0}' reversado",request.Numero));
                                 }
                             }
                         }
+                        proxy.ExecuteBeforePatch(request, oldData, operacion);
                         request.Reversar(proxy);
+                        proxy.ExecuteAfterPatch(request, oldData, operacion);
                     }
-                    #endregion CrearComprobanteEgresos
+                    #endregion CrearComprobanteIngresos
 
                     proxy.CommitDbTransaction();
 
@@ -359,10 +328,10 @@ namespace Aicl.Galapago.BusinessLogic
             });
 
                     
-            List<Egreso> data = new List<Egreso>();
+            List<Ingreso> data = new List<Ingreso>();
             data.Add(request);
             
-            return new Response<Egreso>(){
+            return new Response<Ingreso>(){
                 Data=data
             };  
             
@@ -370,27 +339,25 @@ namespace Aicl.Galapago.BusinessLogic
         #endregion Patch
 
 
-		public static void ValidateAndThrowHttpError(this Egreso request, string ruleSet)
+		public static void ValidateAndThrowHttpError(this Ingreso request, string ruleSet)
 		{
-			EgresoValidator av = new EgresoValidator();
+			IngresoValidator av = new IngresoValidator();
 			av.ValidateAndThrowHttpError(request, ruleSet);
 		}
-		
-			
 
-        static void CheckOldAndNew(Egreso oldData, Egreso request,
+        static void CheckOldAndNew(Ingreso oldData, Ingreso request,
                                            DALProxy proxy,
                                            int idUsuario)
         {
             oldData.ValidateAndThrowHttpError(Operaciones.Update);
 
-            Egresos egresos= new Egresos(){Nuevo=request, Viejo=oldData};
-            EgresosValidator ev = new EgresosValidator();
+            Ingresos egresos= new Ingresos(){Nuevo=request, Viejo=oldData};
+            IngresosValidator ev = new IngresosValidator();
             ev.ValidateAndThrowHttpError(egresos,Operaciones.Update);
 
             oldData.CheckSucursal(proxy, idUsuario);
 
-            var data = new Egreso();
+            var data = new Ingreso();
             data.PopulateWith(oldData);
 
             if( request.Fecha!=default(DateTime) && request.Fecha!=data.Fecha)
@@ -410,26 +377,7 @@ namespace Aicl.Galapago.BusinessLogic
                 data.DocumentoTercero=tercero.Documento;
                 data.DVTercero= tercero.DigitoVerificacion;
             }
-
-            if(request.IdTerceroReceptor.HasValue && request.IdTerceroReceptor.Value!=default(int))
-            {
-                if(!data.IdTerceroReceptor.HasValue ||
-                   (data.IdTerceroReceptor.HasValue &&
-                    data.IdTerceroReceptor.Value!=request.IdTerceroReceptor.Value))
-                {
-                    data.IdTerceroReceptor=request.IdTerceroReceptor;
-                    var tr =data.CheckTerceroReceptor(proxy);
-                    data.DocumentoReceptor= tr.Documento;
-                    data.NombreDocumentoReceptor= tr.NombreDocumento;
-                    data.NombreReceptor=tr.Nombre;
-                    data.DVReceptor= tr.DigitoVerificacion;
-                }
-
-            }
-
-            if(!request.Documento.IsNullOrEmpty() && request.Documento!=data.Documento)
-                data.Documento=request.Documento;
-
+			            
             if(!request.Descripcion.IsNullOrEmpty() && request.Descripcion!=data.Descripcion)
                 data.Descripcion=request.Descripcion;
 
@@ -439,14 +387,14 @@ namespace Aicl.Galapago.BusinessLogic
         }
 
 
-        static void CheckBeforePatch(Egreso oldData, Egreso request,
+        static void CheckBeforePatch(Ingreso oldData, Ingreso request,
                                              DALProxy proxy,
                                              int idUsuario,
                                              string operacion)
         {
             oldData.ValidateAndThrowHttpError(operacion);
-            Egresos egresos= new Egresos(){Nuevo=request, Viejo=oldData};
-            EgresosValidator ev = new EgresosValidator();
+            Ingresos egresos= new Ingresos(){Nuevo=request, Viejo=oldData};
+            IngresosValidator ev = new IngresosValidator();
             ev.ValidateAndThrowHttpError(egresos,operacion);
 
             oldData.CheckSucursal(proxy,idUsuario);
@@ -454,37 +402,14 @@ namespace Aicl.Galapago.BusinessLogic
 
             request.PopulateWith(oldData);
         }
-
-
-        static void CheckTercero(PresupuestoItem presupuestoItem, EgresoItem egresoItem)
-        {
-            if(presupuestoItem.UsaTercero)
-            {
-                if(!egresoItem.IdTercero.HasValue)
-                {
-                    throw new HttpError(string.Format("Item de Presupuesto: '{0}' usa Tercero. EgresoItem.Id:'{1}'",
-                                                      presupuestoItem.Nombre, egresoItem.Id ));            
-                }
-            }
-        }
-
-        static void CheckSaldo(Egreso request, decimal saldo)
+  
+        static void CheckSaldo(Ingreso request, decimal saldo)
         {
             if(saldo!=request.Saldo)
-                throw new HttpError(string.Format("El Egreso:'{0}' NO puede ser Reversado. Revise los comprobantes de Egreso",
+                throw new HttpError(string.Format("El Ingreso:'{0}' NO puede ser Reversado. Revise los comprobantes de Ingreso",
                                                       request.Numero ));            
         }
 
-
-        static Tercero CheckTerceroReceptor(this Egreso request, DALProxy proxy)
-        {
-            Tercero t = proxy.FirstOrDefaultByIdFromCache<Tercero>(request.IdTerceroReceptor.Value);
-
-            t.AssertExists(request.IdTerceroReceptor.Value);
-            return t;
-
-        }
-
-		
+		       
 	}
 }

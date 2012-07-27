@@ -4,20 +4,20 @@ using ServiceStack.FluentValidation;
 using Aicl.Galapago.Model.Types;
 namespace Aicl.Galapago.DataAccess
 {
-    public class CEs
+    public class CIs
     {
-        public ComprobanteEgreso Nuevo {get; set;}
+        public ComprobanteIngreso Nuevo {get; set;}
 
-        public ComprobanteEgreso Viejo {get; set;}
+        public ComprobanteIngreso Viejo {get; set;}
 
-        public CEs ()
+        public CIs ()
         {
         }
     }
 
-    public class CEsValidator:AbstractValidator<CEs>
+    public class CIsValidator:AbstractValidator<CIs>
     {
-        public CEsValidator()
+        public CIsValidator()
         {
             Action common=()=>{
            
@@ -44,14 +44,9 @@ namespace Aicl.Galapago.DataAccess
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.Valor==nuevo.Valor).
                     When(e=> e.Nuevo.Valor!=default(decimal)).
                     WithMessage("Valor modificado").WithErrorCode("ValorModificado");
-
-            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTerceroReceptor==nuevo.IdTerceroReceptor).
-                When(e=> e.Nuevo.IdTerceroReceptor !=default(int)).
-                WithMessage("Tercero Receptor Modificado").WithErrorCode("TerceroModificado");
-      
-            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdCuentaGiradora==nuevo.IdCuentaGiradora).
-                When(e=> e.Nuevo.IdTerceroReceptor !=default(int)).
-                WithMessage("Cuenta Giradora Modificada").WithErrorCode("CuentaGiradoraModificada");
+				           
+            RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdCuentaReceptora==nuevo.IdCuentaReceptora).
+                WithMessage("Cuenta Receptora Modificada").WithErrorCode("CuentaReceptoraModificada");
 
             };
       
@@ -75,4 +70,3 @@ namespace Aicl.Galapago.DataAccess
         }
     }
 }
-

@@ -3,9 +3,9 @@ using ServiceStack.FluentValidation;
 
 namespace Aicl.Galapago.Model.Types
 {
-    public class ComprobanteEgresoValidator:AbstractValidator<ComprobanteEgreso>
+    public class ComprobanteIngresoValidator:AbstractValidator<ComprobanteIngreso>
     {
-        public ComprobanteEgresoValidator ()
+        public ComprobanteIngresoValidator ()
         {
 
             RuleSet(Operaciones.Create, () => {
@@ -13,8 +13,7 @@ namespace Aicl.Galapago.Model.Types
                 RuleFor(x => x.Numero).Equal(0).WithMessage("Se debe omitir el Numero").WithErrorCode("ConNumero");
                 RuleFor(x => x.IdSucursal).NotEqual(0).WithMessage("Debe Indicar el IdSucursal").WithErrorCode("SinSucursal");
                 RuleFor(x => x.IdTercero).NotEqual(0).WithMessage("Debe Indicar el IdTercero").WithErrorCode("SinTercero");
-                RuleFor(x => x.IdTerceroReceptor).NotEqual(0).WithMessage("Debe Indicar el IdTercero Receptor").WithErrorCode("SinReceptor");
-                RuleFor(x => x.IdCuentaGiradora).NotEqual(0).WithMessage("Debe Indicar la Cuenta Giradora").WithErrorCode("SinCuentaGiradora");                
+                RuleFor(x => x.IdCuentaReceptora).NotEqual(0).WithMessage("Debe Indicar la Cuenta Receptora").WithErrorCode("SinCuentaReceptora");                
                 RuleFor(x => x.Valor).Equal(0).WithMessage("Valor debe ser 0").WithErrorCode("ConValor");
                 RuleFor(x => x.Fecha).NotEqual(default(DateTime)).WithMessage("Debe Indicar la fecha del asiento").WithErrorCode("SinFecha");
                 RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Se debe omitir la Fecha de Asentado");
@@ -26,7 +25,7 @@ namespace Aicl.Galapago.Model.Types
             });
             
             RuleSet(Operaciones.Update, () => {
-                RuleFor(x => x.Id).Must(x=> x!=default(int)).WithMessage("Debe Indicar el IdComprobanteEgreso").WithErrorCode("SinId");
+                RuleFor(x => x.Id).Must(x=> x!=default(int)).WithMessage("Debe Indicar el IdComprobanteIngreso").WithErrorCode("SinId");
                 RuleFor(x => x.FechaAsentado).Must(r=> !r.HasValue).WithMessage("Documento Asentado. No se puede actualizar").WithErrorCode("Asentado");
                 RuleFor(x => x.FechaAnulado).Must(r=> !r.HasValue).WithMessage("Documento Anulado. No se puede actualizar").WithErrorCode("Anulado");               
             });

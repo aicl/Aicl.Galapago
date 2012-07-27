@@ -141,7 +141,7 @@ namespace Aicl.Galapago.BusinessLogic
                     Egreso egreso= DAL.GetEgresoById(proxy,oldData.IdEgreso);
                     egreso.AssertExists(oldData.IdEgreso);
 
-                    request.ValidateAndThrowHttpError(oldData,ce,egreso,Operaciones.BorraregresoEnCE);
+                    request.ValidateAndThrowHttpError(oldData,ce,egreso,Operaciones.BorrarEgresoEnCE);
 
                     ce.Valor-=oldData.Abono;
                     proxy.BeginDbTransaction();

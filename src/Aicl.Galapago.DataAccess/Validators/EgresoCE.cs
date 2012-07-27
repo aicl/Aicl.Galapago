@@ -1,5 +1,4 @@
 using System;
-using ServiceStack.Common;
 using ServiceStack.FluentValidation;
 using Aicl.Galapago.Model.Types;
 
@@ -104,7 +103,7 @@ namespace Aicl.Galapago.DataAccess
             });
 
 
-            RuleSet(Operaciones.BorraregresoEnCE, () =>{
+            RuleSet(Operaciones.BorrarEgresoEnCE, () =>{
 
                 RuleFor(x=>x.Egreso).Must((e,x)=>x.Saldo!=0).
                     WithMessage("Egreso sin Saldo").WithErrorCode("SinSaldo");
@@ -122,9 +121,7 @@ namespace Aicl.Galapago.DataAccess
                 RuleFor(x=>x.Ce).Must(x=>!x.FechaAnulado.HasValue).
                     WithMessage("ComprobanteEgreso  esta Anulado.No se pueden borrar el egreso").
                         WithErrorCode("ComprobanteEgresoAnulado");
-
             });
-
 
             RuleSet(Operaciones.ActualizarValorEgresoAlAsentarCE, () =>{
 
@@ -139,14 +136,8 @@ namespace Aicl.Galapago.DataAccess
 
                 RuleFor(x=>x.Cei).Must((e,x)=> Math.Abs(x.Abono)<=Math.Abs(e.Egreso.Saldo)).
                     WithMessage("El Valor  es mayor al Saldo Disponible").WithErrorCode("ValorMayorSaldo");
-
             });
-
-
-
         }
-
     }
-
 }
 

@@ -77,6 +77,11 @@
     <Compile Include="Validators\EgresoCE.cs" />
     <Compile Include="Validators\EgresoCERet.cs" />
     <Compile Include="RedisExtensions.cs" />
+    <Compile Include="DAL\DAL.Ingreso.cs" />
+    <Compile Include="Validators\Ingresos.cs" />
+    <Compile Include="DAL\DAL.ComprobanteIngreso.cs" />
+    <Compile Include="Validators\IngresoCI.cs" />
+    <Compile Include="Validators\CIs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

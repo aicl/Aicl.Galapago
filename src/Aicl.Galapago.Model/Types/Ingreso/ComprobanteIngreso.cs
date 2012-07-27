@@ -58,9 +58,6 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("EXTERNO")]
 		public Boolean? Externo { get; set;} 
 
-		[Alias("ID_TERCERO_RECEPTOR")]
-		public Int32 IdTerceroReceptor { get; set;} 
-
         [Alias("ID_TERCERO_RECEPTORA")]
         public Int32? IdTerceroReceptora { get; set;} 
 

@@ -10,10 +10,7 @@ namespace Aicl.Galapago.DataAccess
         public Egreso Viejo{get; set;}
         public Egreso Nuevo{get; set;}
 
-        public Egresos ()
-        {
-        }
-
+        public Egresos (){}
     }
 
     public class EgresosValidator:AbstractValidator<Egresos>
@@ -68,13 +65,11 @@ namespace Aicl.Galapago.DataAccess
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdTerceroReceptor==nuevo.IdTerceroReceptor).
                 When(e=> e.Nuevo.IdTerceroReceptor.HasValue).
                 WithMessage("Tercero Receptor Modificado").WithErrorCode("TerceroModificado");
-
             };
 
             RuleSet(Operaciones.Asentar, () => common() );
             RuleSet(Operaciones.Reversar, () => common() );
             RuleSet(Operaciones.Anular, () => common() );
-
 
             RuleSet(Operaciones.Update, () =>{
                 RuleFor(x => x.Nuevo).Must((x, nuevo)=> x.Viejo.IdSucursal==nuevo.IdSucursal).
@@ -93,16 +88,13 @@ namespace Aicl.Galapago.DataAccess
                     When(x=> x.Nuevo.Numero!=default(int)).
                     WithMessage("Numero modificado").WithErrorCode("NumeroModificado");
 
-
                 RuleFor(x=>x.Nuevo).Must((x,nuevo)=>x.Viejo.CodigoDocumento==nuevo.CodigoDocumento).
                     When(x=> !x.Nuevo.CodigoDocumento.IsNullOrEmpty()).
                     WithMessage("Tipo Documento Modificado").WithErrorCode("TipoDocumentoModificado");
-
             });
 
         }
     }
-
 }
 
 

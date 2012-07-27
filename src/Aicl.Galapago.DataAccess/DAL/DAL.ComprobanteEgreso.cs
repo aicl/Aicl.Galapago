@@ -1,17 +1,7 @@
 using System;
-using System.Data;
-using System.Linq;
 using System.Collections.Generic;
-using System.Reflection;
 using ServiceStack.OrmLite;
-using ServiceStack.Redis;
 using ServiceStack.Common;
-using ServiceStack.Common.Web;
-using ServiceStack.Common.Utils;
-using ServiceStack.ServiceInterface;
-using ServiceStack.CacheAccess;
-using ServiceStack.ServiceHost;
-using ServiceStack.DesignPatterns.Model;
 using Aicl.Galapago.Model.Types;
 
 namespace Aicl.Galapago.DataAccess
@@ -97,7 +87,6 @@ namespace Aicl.Galapago.DataAccess
 			proxy.Update(documento,visitor);
         }
 
-
         public static void Anular(this ComprobanteEgreso comprobanteEgreso, DALProxy proxy, string descripcion)
         {
             comprobanteEgreso.FechaAnulado= DateTime.Today;
@@ -127,7 +116,6 @@ namespace Aicl.Galapago.DataAccess
             return string.Format("urn:lock:Consecutivo:IdSucursal:{0}:Documento:{1}",
                                  comprobanteEgreso.IdSucursal, Definiciones.ComprobranteEgreso); 
         }
-
 
         public static void Asentar(this ComprobanteEgreso documento,DALProxy  proxy)
 		{
