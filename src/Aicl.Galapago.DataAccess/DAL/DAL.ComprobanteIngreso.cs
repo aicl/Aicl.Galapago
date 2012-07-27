@@ -17,7 +17,6 @@ namespace Aicl.Galapago.DataAccess
             proxy.Create(comprobante, visitor);
         }
 
-
 		public static ComprobanteIngreso CreateComprobanteIngreso(DALProxy proxy,
                                             int idSucursal, int idCuentaReceptora, int idTercero, 
 		                                    decimal valor,
@@ -66,14 +65,10 @@ namespace Aicl.Galapago.DataAccess
 
             proxy.Execute(dbCmd=>{
                 proxy.Delete<ComprobanteIngresoItem>(r=>r.IdComprobanteIngreso==comprobanteIngreso.Id);
-
-				var visitor = ReadExtensions.CreateExpression<ComprobanteIngreso>();
-            	visitor.Update(r=> new {r.FechaAnulado, r.Descripcion,r.Valor});                  
-            	visitor.Where(r=> r.Id==comprobanteIngreso.Id );
-
-                proxy.Update(comprobanteIngreso,visitor);
+				proxy.Update(comprobanteIngreso,
+				     ev=> ev.Update(f=>new {f.FechaAnulado, f.Descripcion,f.Valor}).
+				          Where(q=>q.Id==comprobanteIngreso.Id ));
             });
-
         }
 
 		public static void AsignarConsecutivo(this ComprobanteIngreso comprobanteIngreso, DALProxy proxy)
@@ -88,31 +83,44 @@ namespace Aicl.Galapago.DataAccess
                                  comprobanteIngreso.IdSucursal, Definiciones.ComprobranteIngreso); 
         }
 
+		public static void Actualizar(this ComprobanteIngreso documento,DALProxy proxy)
+		{
+			proxy.Update(documento,
+			         ev=> ev.Update(f=>new{f.Descripcion,f.Fecha,f.Periodo,f.IdTercero,f.IdCuentaReceptora}).
+			         Where(q=>q.Id==documento.Id));
+        }
 
-		public static void Actualizar(this ComprobanteIngreso documento,DALProxy proxy){
+		public static void ActualizarValor(this ComprobanteIngreso documento, DALProxy proxy)
+        {
+            proxy.Update(documento, ev=> ev.Update(f=>f.Valor).Where(q=>q.Id==documento.Id));
+        }
 
-			var visitor = ReadExtensions.CreateExpression<ComprobanteIngreso>();
-            visitor.Update( f=> new { f.Descripcion,f.Fecha,f.Periodo,f.IdTercero,f.IdCuentaReceptora});                  
-            visitor.Where(q=>q.Id==documento.Id);
-			proxy.Update(documento,visitor);
+
+		public static void ActualizarValor(this ComprobanteIngresoItem documento, DALProxy proxy)
+        {
+            proxy.Update( documento, ev=> ev.Update(f=>f.Abono).Where(q=>q.Id==documento.Id));
         }
 
 		public static void Asentar(this ComprobanteIngreso documento,DALProxy  proxy)
 		{
             documento.FechaAsentado=DateTime.Today;
-			var visitor = ReadExtensions.CreateExpression<ComprobanteIngreso>();
-            visitor.Update(f=> f.FechaAsentado);                  
-            visitor.Where(r=>r.Id==documento.Id);
-            proxy.Update(documento, visitor);
+			proxy.Update(documento, ev=> ev.Update(f=>f.FechaAsentado).Where(q=>q.Id==documento.Id));
         }
 
         public static void Reversar(this ComprobanteIngreso documento, DALProxy proxy)
 		{
             documento.FechaAsentado=null;
-			var visitor = ReadExtensions.CreateExpression<ComprobanteIngreso>();
-            visitor.Update(f=> f.FechaAsentado);                  
-            visitor.Where(r=>r.Id==documento.Id);
-			proxy.Update(documento, visitor);
+			proxy.Update(documento, ev=> ev.Update(f=>f.FechaAsentado).Where(q=>q.Id==documento.Id));
+        }
+
+
+		public static void Borrar(this ComprobanteIngresoItem item, DALProxy proxy)
+        {
+			proxy.Delete<ComprobanteIngresoItem>(q=>q.Id==item.Id);
+            proxy.Delete<ComprobanteIngresoRetencion>(x=>
+			                                         x.IdComprobanteIngresoItem==item.Id &&
+                                                     x.IdComprobanteIngreso==item.IdComprobanteIngreso);
+
         }
 
 

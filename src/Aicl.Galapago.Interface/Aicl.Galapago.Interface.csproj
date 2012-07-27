@@ -63,13 +63,18 @@
     <Compile Include="Auth\AuthenticationProvider.cs" />
     <Compile Include="Auth\AuthorizationService.cs" />
     <Compile Include="Auth\AuthenticationService.cs" />
-    <Compile Include="Services\EgresoService.cs" />
-    <Compile Include="Services\EgresoItemService.cs" />
-    <Compile Include="Services\ComprobanteEgresoService.cs" />
-    <Compile Include="Services\ComprobanteEgresoItemService.cs" />
-    <Compile Include="Services\ComprobanteEgresoRetencionService.cs" />
     <Compile Include="Services\TerceroService.cs" />
     <Compile Include="Services\SaldoTerceroService.cs" />
+    <Compile Include="Services\Egreso\ComprobanteEgresoItemService.cs" />
+    <Compile Include="Services\Egreso\ComprobanteEgresoRetencionService.cs" />
+    <Compile Include="Services\Egreso\ComprobanteEgresoService.cs" />
+    <Compile Include="Services\Egreso\EgresoItemService.cs" />
+    <Compile Include="Services\Egreso\EgresoService.cs" />
+    <Compile Include="Services\Ingreso\IngresoService.cs" />
+    <Compile Include="Services\Ingreso\IngresoItemService.cs" />
+    <Compile Include="Services\Ingreso\ComprobanteIngresoService.cs" />
+    <Compile Include="Services\Ingreso\ComprobanteIngresoRetencionService.cs" />
+    <Compile Include="Services\Egreso\ComprobanteIngresoItemService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -92,5 +97,7 @@
     <Folder Include="Attributes\" />
     <Folder Include="Auth\" />
     <Folder Include="Services\Asiento\" />
+    <Folder Include="Services\Egreso\" />
+    <Folder Include="Services\Ingreso\" />
   </ItemGroup>
 </Project>

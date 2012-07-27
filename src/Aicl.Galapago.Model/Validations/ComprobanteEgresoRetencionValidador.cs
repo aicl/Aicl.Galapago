@@ -1,8 +1,3 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using ServiceStack.Common;
-using ServiceStack.Common.Web;
 using ServiceStack.FluentValidation;
 namespace Aicl.Galapago.Model.Types
 {

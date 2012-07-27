@@ -1,18 +1,5 @@
-using System;
-using System.Data;
-using System.Text;
-using System.IO;
-using System.Linq;
 using System.Collections.Generic;
-using ServiceStack.OrmLite;
-using ServiceStack.Redis;
-using ServiceStack.Common;
-using ServiceStack.Common.Web;
-using ServiceStack.Common.Utils;
-using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
-using ServiceStack.Text;
-using ServiceStack.CacheAccess;
 using ServiceStack.ServiceHost;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
@@ -22,7 +9,6 @@ namespace Aicl.Galapago.BusinessLogic
 {
     public static partial class BL
     {
-
 		#region Get
 		public static Response<ComprobanteEgresoRetencion> Get(this ComprobanteEgresoRetencion request,
 		                                              Factory factory,
@@ -51,7 +37,6 @@ namespace Aicl.Galapago.BusinessLogic
                 // bloquear el ComprobanteEgreso parent para evitar actualizaciones....
                 using(proxy.AcquireLock(request.IdComprobanteEgreso.GetLockKey<ComprobanteEgreso>(), Definiciones.LockSeconds))
                 {
-
                     ComprobanteEgreso ce = DAL.GetComprobanteEgreso(proxy, request.IdComprobanteEgreso);
                     ce.AssertExists(request.IdComprobanteEgreso);
                     ce.CheckPeriodo(proxy);
@@ -65,13 +50,11 @@ namespace Aicl.Galapago.BusinessLogic
                     request.ValidateAndThrowHttpError(ce, cei, egreso,
                                                       pi,
                                                       Operaciones.InsertarRetencionEnCE);
-
-                    ce.Valor-= request.Valor;
+					ce.Valor-= request.Valor;
                     proxy.BeginDbTransaction();
                     ce.ActualizarValor(proxy);
                     proxy.Create(request);
                     proxy.CommitDbTransaction();
-
                 }
             });
 
@@ -81,17 +64,15 @@ namespace Aicl.Galapago.BusinessLogic
             return new Response<ComprobanteEgresoRetencion>(){
                 Data=data
             };  
-            
         }
         #endregion Post
 
-         #region Delete
+        #region Delete
         public static Response<ComprobanteEgresoRetencion> Delete(this ComprobanteEgresoRetencion request,
                                             Factory factory,
                                             IAuthSession authSession)
         {
-
-            request.CheckId(Operaciones.Destroy);
+			request.CheckId(Operaciones.Destroy);
 
             factory.Execute(proxy=>{
                 using (proxy.AcquireLock(request.IdComprobanteEgreso.GetLockKey<ComprobanteEgreso>(), Definiciones.LockSeconds))
@@ -115,8 +96,7 @@ namespace Aicl.Galapago.BusinessLogic
                                                       egreso,
                                                       null,
                                                       Operaciones.BorrarRetencionEnCE);
-
-                    ce.Valor+=oldData.Valor;
+					ce.Valor+=oldData.Valor;
                     proxy.BeginDbTransaction();
                     ce.ActualizarValor(proxy);
                     proxy.Delete<ComprobanteEgresoRetencion>(q=>q.Id==request.Id);
@@ -124,17 +104,14 @@ namespace Aicl.Galapago.BusinessLogic
                 }
             });
 
-
             List<ComprobanteEgresoRetencion> data = new List<ComprobanteEgresoRetencion>();
             data.Add(request);
 
             return new Response<ComprobanteEgresoRetencion>(){
                 Data=data
             };
-
         }
         #endregion Delete
-
 
 
         public static void ValidateAndThrowHttpError(this ComprobanteEgresoRetencion request, string ruleSet)
@@ -142,7 +119,6 @@ namespace Aicl.Galapago.BusinessLogic
             ComprobanteEgresoRetencionValidator av = new ComprobanteEgresoRetencionValidator();
             av.ValidateAndThrowHttpError(request, ruleSet);
         }
-
 
         public static void ValidateAndThrowHttpError(this ComprobanteEgresoRetencion request, 
                                                      ComprobanteEgreso ce,
@@ -176,15 +152,11 @@ namespace Aicl.Galapago.BusinessLogic
             av.ValidateAndThrowHttpError(ret, ruleSet);
         }
 
-
-        private static PresupuestoItem CheckPresupuestoItem(this ComprobanteEgresoRetencion item, DALProxy proxy)
+        static PresupuestoItem CheckPresupuestoItem(this ComprobanteEgresoRetencion item, DALProxy proxy)
         {
             PresupuestoItem pi = DAL.GetPresupuestoItem(proxy, item.IdPresupuestoItem);
             pi.AssertExists(item.IdPresupuestoItem);
             return pi;
-
         }
-
     }
 }
-

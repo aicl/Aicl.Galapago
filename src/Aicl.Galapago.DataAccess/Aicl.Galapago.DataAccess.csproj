@@ -82,6 +82,7 @@
     <Compile Include="DAL\DAL.ComprobanteIngreso.cs" />
     <Compile Include="Validators\IngresoCI.cs" />
     <Compile Include="Validators\CIs.cs" />
+    <Compile Include="Validators\IngresoCIRet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

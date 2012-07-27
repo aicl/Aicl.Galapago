@@ -393,6 +393,25 @@ namespace Aicl.Galapago.DataAccess
 			});
         }
 
+		/// <summary>
+        /// Use an expression visitor to select which fields to update and construct the where expression, E.g: 
+        /// 
+        ///   dbCmd.UpdateOnly(new Person { FirstName = "JJ" }, ev => ev.Update(p => p.FirstName).Where(x => x.FirstName == "Jimi"));
+        ///   UPDATE "Person" SET "FirstName" = 'JJ' WHERE ("FirstName" = 'Jimi')
+        /// 
+        ///   What's not in the update expression doesn't get updated. No where expression updates all rows. E.g:
+        /// 
+        ///   dbCmd.UpdateOnly(new Person { FirstName = "JJ", LastName = "Hendo" }, ev => ev.Update(p => p.FirstName));
+        ///   UPDATE "Person" SET "FirstName" = 'JJ'
+        /// </summary>
+		public  void Update<T>(T request, Func<SqlExpressionVisitor<T>, SqlExpressionVisitor<T>> updateExpression)
+		{
+			Execute(dbCmd=>{
+				dbCmd.UpdateOnly(request, updateExpression(OrmLiteConfig.DialectProvider.ExpressionVisitor<T>()));
+			});
+		}
+
+
 		public void Update<T>(T request,Expression<Func<T,bool>> predicate=null) 
 			where T: new()
 		{

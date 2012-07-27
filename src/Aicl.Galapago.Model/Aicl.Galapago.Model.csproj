@@ -142,6 +142,8 @@
     <Compile Include="Validations\IngresoValidator.cs" />
     <Compile Include="Validations\IngresoItemValidador.cs" />
     <Compile Include="Validations\ComprobanteIngresoValidator.cs" />
+    <Compile Include="Validations\ComprobanteIngresoRetencionValidador.cs" />
+    <Compile Include="Validations\ComprobanteIngresoItemValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

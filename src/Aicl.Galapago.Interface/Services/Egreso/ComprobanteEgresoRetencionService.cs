@@ -1,10 +1,6 @@
 using System;
-﻿using ServiceStack.CacheAccess;
-using ServiceStack.Common;
-using ServiceStack.Common.Web;
-using ServiceStack.ServiceHost;
+﻿using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
-
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
 using Aicl.Galapago.BusinessLogic;
@@ -18,7 +14,6 @@ namespace Aicl.Galapago.Interface
     [Permission(ApplyTo.Delete, "ComprobanteEgresoRetencion.destroy")]
     public class ComprobanteEgresoRetencionService:AppRestService<ComprobanteEgresoRetencion>
     {
-
 		public override object OnGet (ComprobanteEgresoRetencion request)
         {
 			try{
@@ -40,7 +35,6 @@ namespace Aicl.Galapago.Interface
 			}
         }
 
-
         public override object OnPut (ComprobanteEgresoRetencion request)
         {
             return HttpResponse.
@@ -58,6 +52,5 @@ namespace Aicl.Galapago.Interface
 				return HttpResponse.ErrorResult<Response<ComprobanteEgresoRetencion>>(e,"DeleteErrorComprobanteEgresoRetencion");
 			}
         }
-
     }
 }

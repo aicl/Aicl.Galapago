@@ -6,7 +6,7 @@ namespace Aicl.Galapago.Model.Types
 {
 	[Alias("COMPROBANTE_INGRESO_ITEM")]
 	[JoinTo(typeof(Ingreso),"IdIngreso", "Id", Order=0)]
-	public partial class ComprobanteIngresoItem:IHasId<Int32>{
+	public partial class ComprobanteIngresoItem:IHasId<Int32>,IHasIdSucursal{
 
 		public ComprobanteIngresoItem(){}
 

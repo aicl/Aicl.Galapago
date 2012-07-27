@@ -1,5 +1,3 @@
-using System;
-using ServiceStack.Common;
 using ServiceStack.FluentValidation;
 using Aicl.Galapago.Model.Types;
 

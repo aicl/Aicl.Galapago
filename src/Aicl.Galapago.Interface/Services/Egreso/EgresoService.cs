@@ -1,12 +1,8 @@
 using System;
-﻿using ServiceStack.CacheAccess;
-using ServiceStack.Common;
-using ServiceStack.ServiceHost;
+﻿using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
-
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
-using Aicl.Galapago.DataAccess;
 using Aicl.Galapago.BusinessLogic;
 
 namespace Aicl.Galapago.Interface
@@ -18,7 +14,6 @@ namespace Aicl.Galapago.Interface
 	[Permission(ApplyTo.Delete, "Egreso.destroy")]
 	public class EgresoService:AppRestService<Egreso>
 	{
-
         public override object OnGet (Egreso request)
         {
 			try{
@@ -51,7 +46,6 @@ namespace Aicl.Galapago.Interface
 			}
         }
 
-
         public override object OnPatch (Egreso request)
         {
             var httpRequest = RequestContext.Get<IHttpRequest>();       
@@ -63,10 +57,5 @@ namespace Aicl.Galapago.Interface
 				return HttpResponse.ErrorResult<Response<Egreso>>(e,"PatchErrorEgreso");
 			}
         }
-
-    //TODO : borrar Mayor_Presupuesto para acomodar Saldo_anterior_08 default 0
-
-    
-
 	}
 }
