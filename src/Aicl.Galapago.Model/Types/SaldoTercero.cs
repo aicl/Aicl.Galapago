@@ -61,14 +61,13 @@ namespace Aicl.Galapago.Model.Types
         public string NombreDocumento {get;set;}
         #endregion TipoDocumento Tercero
 
-        #region CuentaGiradora
+        #region PresupuestoItem
         [BelongsTo(typeof(PresupuestoItem),"Codigo")]
         public String CodigoItem { get; set;} 
 
         [BelongsTo(typeof(PresupuestoItem),"Nombre")]
         public String NombreItem { get; set;} 
-        #endregion CuentaGiradora
-
+        #endregion PresupuestoItem
 
         public void UpdateDbCr( decimal debitos, decimal creditos)
         {

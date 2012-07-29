@@ -9,7 +9,7 @@ namespace Aicl.Galapago.DataAccess
 		public static void Create(this Ingreso request, DALProxy proxy)
         {
             var visitor = ReadExtensions.CreateExpression<Ingreso>();
-            visitor.Insert( f=> new { f.Id, f.Descripcion, f.Fecha , f.Periodo, f.IdSucursal,f.Numero,f.CodigoDocumento, f.IdTercero, f.DiasCredito });
+            visitor.Insert( f=> new { f.Id, f.Descripcion, f.Fecha, f.Periodo, f.IdSucursal,f.Numero,f.CodigoDocumento,f.Documento, f.IdTercero, f.DiasCredito });
 			proxy.Create(request,visitor);
         }
 
@@ -22,6 +22,12 @@ namespace Aicl.Galapago.DataAccess
 		public static void AsignarConsecutivo(this Ingreso request, DALProxy proxy)
         {
             request.Numero= proxy.GetNextConsecutivo(request.IdSucursal,Definiciones.Ingreso).Numero;
+        }
+
+		public static void AsignarDocumento(this Ingreso request, DALProxy proxy)
+        {
+			var numero =proxy.GetNextConsecutivo(request.IdSucursal,request.CodigoDocumento).Numero;
+			request.Documento= numero.ToString().PadLeft(5,'0');
         }
 
 		public static void Update(this Ingreso ingreso,DALProxy proxy){

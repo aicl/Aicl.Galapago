@@ -65,6 +65,11 @@ namespace Aicl.Galapago.Model.Types
 		[StringLength(4)]
 		public String CodigoDocumento { get; set;} 
 
+		[Alias("DOCUMENTO")]
+		[Required]
+		[StringLength(12)]
+		public String Documento { get; set;} 
+
         #region Sucursal
         [BelongsTo(typeof(Sucursal),"Nombre")]
         public string NombreSucursal{ get;set;}

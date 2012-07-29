@@ -1,6 +1,6 @@
-Ext.define('App.view.comprobanteegreso.Panel',{ 
+Ext.define('App.view.comprobanteingreso.Panel',{ 
     extend: 'Ext.panel.Panel',
-    alias : 'widget.comprobanteegresopanel',
+    alias : 'widget.comprobanteingresopanel',
     frame: true,
     anchor:'100%',
     layout: {
@@ -42,11 +42,11 @@ Ext.define('App.view.comprobanteegreso.Panel',{
            tooltip:'Buscar por los criterios indicados..', iconCls:'find',  action: 'buscarComprobantes'
         }]		
     },{
-    	xtype:'comprobanteegresolist'
+    	xtype:'comprobanteingresolist'
     },{
-    	xtype:'comprobanteegresoform'
+    	xtype:'comprobanteingresoform'
     //},{
-    	//xtype:'comprobanteegresotabpanel', colspan:2
+    	//xtype:'comprobanteingresotabpanel', colspan:2
     },{
     	xtype: 'toolbar',
     	name:'itemToolbar',
@@ -68,15 +68,15 @@ Ext.define('App.view.comprobanteegreso.Panel',{
            	action: 'delete_item'
         }]		
     },{	
-   		xtype:'comprobanteegresoitemlist'
+   		xtype:'comprobanteingresoitemlist'
    	},{	
-   		xtype:'comprobanteegresoitemform'
+   		xtype:'comprobanteingresoitemform'
    	}]
 });
 /*
-Ext.define('App.view.comprobanteegreso.TabPanel',{
+Ext.define('App.view.comprobanteingreso.TabPanel',{
 	extend: 'Ext.tab.Panel',
-    alias : 'widget.comprobanteegresotabpanel',
+    alias : 'widget.comprobanteingresotabpanel',
     frame: true,
     anchor:'100%',
     items:[{
@@ -104,9 +104,9 @@ Ext.define('App.view.comprobanteegreso.TabPanel',{
                	action: 'delete_item'
            	}]		
        	},{	
-   			xtype:'comprobanteegresoitemlist'
+   			xtype:'comprobanteingresoitemlist'
    		},{	
-   			xtype:'comprobanteegresoitemform'
+   			xtype:'comprobanteingresoitemform'
    		}]
    	},{
     	title:'Retenciones',
@@ -132,19 +132,19 @@ Ext.define('App.view.comprobanteegreso.TabPanel',{
                	action: 'delete_retencion'
            	}]		
        	},{	
-   			xtype:'comprobanteegresoretencionlist'
+   			xtype:'comprobanteingresoretencionlist'
    		},{	
-   			xtype:'comprobanteegresoretencionform'
+   			xtype:'comprobanteingresoretencionform'
    		}]    		
    	}]
 });
 */
-Ext.define('App.view.comprobanteegreso.List',{ 
+Ext.define('App.view.comprobanteingreso.List',{ 
     extend: 'Ext.grid.Panel',
-    alias : 'widget.comprobanteegresolist', 
+    alias : 'widget.comprobanteingresolist', 
     constructor: function(config){
     	config= config|| {};
-    	config.store= config.store|| 'ComprobanteEgreso',
+    	config.store= config.store|| 'ComprobanteIngreso',
         config.frame = config.frame==undefined? false:config.frame;
 		config.selType = config.selType || 'rowmodel';
     	config.height = config.height||340;
@@ -156,7 +156,7 @@ Ext.define('App.view.comprobanteegreso.List',{
 	    config.bbar= Ext.create('Ext.PagingToolbar', {
             store: config.store,
             displayInfo: true,
-            displayMsg: 'Comporobantes de Egreso del {0} al {1} de {2}',
+            displayMsg: 'Ingresos del {0} al {1} de {2}',
             emptyMsg: "No hay Comprobantes para Mostrar"
         });
         
@@ -230,28 +230,15 @@ Ext.define('App.view.comprobanteegreso.List',{
 	},{
 		text: 'NombreDocumentoTercero',
 		dataIndex: 'NombreDocumentoTercero'
-	},	{
-		text: 'DocumentoReceptor',
-		dataIndex: 'DocumentoReceptor'
-	},{
-		text: 'DVReceptor',
-		dataIndex: 'DVReceptor'
-	},{
-		text: 'NombreReceptor',
-		dataIndex: 'NombreReceptor'
-	},{
-		text: 'NombreDocumentoReceptor',
-		dataIndex: 'NombreDocumentoReceptor'
-	}
-];
+	}];
                
         this.callParent(arguments);
     }
 });
 
-Ext.define('App.view.comprobanteegreso.Form', {
+Ext.define('App.view.comprobanteingreso.Form', {
     extend: 'Ext.form.Panel',
-    alias : 'widget.comprobanteegresoform',
+    alias : 'widget.comprobanteingresoform',
     ui:'default-framed',
     constructor: function(config){
     	config=config|| {};
@@ -278,51 +265,40 @@ Ext.define('App.view.comprobanteegreso.Form', {
     },
      
     initComponent: function() {
-        this.items = [        
-	{
+        this.items = [{
 		xtype: 'hidden',
 		name: 'Id'
-	},
-	{
+	},{
 		xtype: 'sucursalautorizadacombo',fieldLabel: 'Sucursal'
-	},
-	{
+	},{
 		xtype: 'datefield',
 		name: 'Fecha',
 		fieldLabel: 'Fecha',
 		allowBlank: false,
 		format: 'd.m.Y',
 		value : new Date()
-	},
-	{
+	},{
 		name: 'Descripcion',
 		fieldLabel: 'Descripcion',
 		allowBlank: false,
 		maxLength: 50,
 		enforceMaxLength: true
-	},
-	{
+	},{
 		xtype: 'remotesaldotercerocombo',fieldLabel: 'Tercero' 
-	},
-	{
-		xtype: 'rubrocombo',fieldLabel: 'Cuenta', name:'IdCuentaGiradora'
-	},
-	{
-		xtype:'remotereceptorcombo', fieldLabel: 'Pagar a'
-	}
-	
-];
+	},{
+		xtype: 'rubrocombo',fieldLabel: 'Cuenta', name:'IdCuentaReceptora'
+	}];
          this.callParent(arguments);
     }
 });
 
 
-Ext.define('App.view.comprobanteegresoitem.List',{ 
+Ext.define('App.view.comprobanteingresoitem.List',{ 
     extend: 'Ext.grid.Panel',
-    alias : 'widget.comprobanteegresoitemlist', 
+    alias : 'widget.comprobanteingresoitemlist', 
     constructor: function(config){
     	config= config|| {};
-    	config.store= config.store|| 'ComprobanteEgresoItem',
+    	config.store= config.store|| 'ComprobanteIngresoItem',
         config.frame = config.frame==undefined? false:config.frame;
 		config.selType = config.selType || 'rowmodel';
     	config.height = config.height||235;
@@ -368,8 +344,7 @@ Ext.define('App.view.comprobanteegresoitem.List',{
             	return '<div class="x-cell-negative" style="text-align:center">'+Aicl.Util.formatInt(value)+'</div>';
         	}
         }
-	},
-	{
+	},{
 		text: 'Valor',
 		dataIndex: 'Valor',
 		align:'center',
@@ -380,8 +355,7 @@ Ext.define('App.view.comprobanteegresoitem.List',{
             	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
         	}
         }
-	},
-	{
+	},{
 		text: 'Saldo',
 		dataIndex: 'Saldo',
 		sortable: true,
@@ -392,8 +366,7 @@ Ext.define('App.view.comprobanteegresoitem.List',{
             	return '<div class="x-cell-negative">'+Aicl.Util.formatNumber(value)+'</div>';
         	}
         }
-	},
-	{
+	},{
 		text: 'DiasCredito',
 		dataIndex: 'DiasCredito',
 		sortable: true,
@@ -404,23 +377,21 @@ Ext.define('App.view.comprobanteegresoitem.List',{
             	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
         	}
         }
-	},
-	{
+	},{
 		text: 'Fecha',
 		dataIndex: 'Fecha',
 		sortable: true,
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
-	}
-];
+	}];
 
         this.callParent(arguments);
     }
 });
 
 
-Ext.define('App.view.comprobanteegresoitem.Form', {
+Ext.define('App.view.comprobanteingresoitem.Form', {
     extend: 'Ext.form.Panel',
-    alias : 'widget.comprobanteegresoitemform',
+    alias : 'widget.comprobanteingresoitemform',
     ui:'default-framed',
     constructor: function(config){
     	config=config|| {};
@@ -447,38 +418,33 @@ Ext.define('App.view.comprobanteegresoitem.Form', {
     },
      
     initComponent: function() {
-        this.items = [
-	{
+        this.items = [{
 		xtype: 'hidden',
 		name: 'Id'
-	},
-	{
+	},{
 		xtype: 'hidden',
-		name: 'IdComprobanteEgreso'
-	},
-	{
-		xtype: 'egresocombo',
+		name: 'IdComprobanteIngreso'
+	},{
+		xtype: 'ingresocombo',
 		fieldLabel: 'Documento'
-	},
-	{
+	},{
 		xtype: 'numberfield',
 		name: 'Abono',
 		fieldLabel: 'Abono',
 		allowBlank: false
-	}
-];
+	}];
 
         this.callParent(arguments);
     }
 });
 
 
-Ext.define('App.view.comprobanteegresoretencion.List',{ 
+Ext.define('App.view.comprobanteingresoretencion.List',{ 
     extend: 'Ext.grid.Panel',
-    alias : 'widget.comprobanteegresoretencionlist', 
+    alias : 'widget.comprobanteingresoretencionlist', 
     constructor: function(config){
     	config= config|| {};
-    	config.store= config.store|| 'ComprobanteEgresoRetencion',
+    	config.store= config.store|| 'ComprobanteIngresoRetencion',
         config.frame = config.frame==undefined? false:config.frame;
 		config.selType = config.selType || 'rowmodel';
     	config.height = config.height||235;
@@ -497,8 +463,8 @@ Ext.define('App.view.comprobanteegresoretencion.List',{
         
         this.columns=[
 	{
-		text: 'IdComprobanteEgresoItem',
-		dataIndex: 'IdComprobanteEgresoItem',
+		text: 'IdComprobanteIngresoItem',
+		dataIndex: 'IdComprobanteIngresoItem',
 		flex: 1,
 		sortable: true,
 		renderer: function(value, metadata, record, store){
@@ -510,8 +476,8 @@ Ext.define('App.view.comprobanteegresoretencion.List',{
         }
 	},
 	{
-		text: 'IdComprobanteEgreso',
-		dataIndex: 'IdComprobanteEgreso',
+		text: 'IdComprobanteIngreso',
+		dataIndex: 'IdComprobanteIngreso',
 		sortable: true,
 		renderer: function(value, metadata, record, store){
            	if(value>=0){
@@ -550,9 +516,9 @@ Ext.define('App.view.comprobanteegresoretencion.List',{
     }
 });
 
-Ext.define('App.view.comprobanteegresoretencion.Form', {
+Ext.define('App.view.comprobanteingresoretencion.Form', {
     extend: 'Ext.form.Panel',
-    alias : 'widget.comprobanteegresoretencionform',
+    alias : 'widget.comprobanteingresoretencionform',
     ui:'default-framed',
     constructor: function(config){
     	config=config|| {};
@@ -587,15 +553,15 @@ Ext.define('App.view.comprobanteegresoretencion.Form', {
 	{
 		xtype: 'numberfield',
 		allowDecimals: false,
-		name: 'IdComprobanteEgresoItem',
-		fieldLabel: 'IdComprobanteEgresoItem',
+		name: 'IdComprobanteIngresoItem',
+		fieldLabel: 'IdComprobanteIngresoItem',
 		allowBlank: false
 	},
 	{
 		xtype: 'numberfield',
 		allowDecimals: false,
-		name: 'IdComprobanteEgreso',
-		fieldLabel: 'IdComprobanteEgreso',
+		name: 'IdComprobanteIngreso',
+		fieldLabel: 'IdComprobanteIngreso',
 		allowBlank: false
 	},
 	{
@@ -631,17 +597,11 @@ Ext.define('remotesaldotercero.ComboBox', {
     queryMode: 'remote',
     queryParam :'Nombre',
     triggerOnClick: false,
-    labelTpl: '{Nombre} ({Documento})',
+    labelTpl: '{Nombre} ({Documento}-{DigitoVerificacion})',
     listConfig: {
     	loadingText: 'buscando...',
         emptyText: 'sin informacion.',
-       /* tpl: Ext.create('Ext.XTemplate',
-            '<ul><tpl for=".">',
-                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}: {Documento}</li>',
-            '</tpl></ul>'
-        )
-     */
-    	getInnerTpl: function() {	
+       	getInnerTpl: function(){	
         	return   '<ul><li role="option" class="search-item" >' +
                         '<h3><span>{Documento}-{DigitoVerificacion}</span>{Nombre}</h3>' +
                     '</li></ul>'	
@@ -650,48 +610,13 @@ Ext.define('remotesaldotercero.ComboBox', {
 });
 
 
-Ext.define('remotereceptor.ComboBox', {
+Ext.define('ingreso.ComboBox', {
 	extend:'Ext.ux.form.field.BoxSelect',
-	alias : 'widget.remotereceptorcombo',
-    displayField: 'Nombre',
-	valueField: 'Id',
-	name:'IdTerceroReceptor',
-	store:'RemoteTercero',
-    forceSelection:true,
-    pageSize: 12,
-    multiSelect:false,
-    queryMode: 'remote',
-    queryParam :'Nombre',
-    triggerOnClick: false,
-    labelTpl: '{Nombre} ({Documento}-{DigitoVerificacion})',
-    listConfig: {
-    	loadingText: 'buscando...',
-        emptyText: 'sin informacion.',
-        getInnerTpl: function() {	
-        	return   '<ul><li role="option" class="search-item" >' +
-                        '<h3><span>{Documento}-{DigitoVerificacion}</span>{Nombre}</h3>' +
-                    '</li></ul>'	
-        }
-        /*tpl: Ext.create('Ext.XTemplate',
-            '<ul><tpl for=".">',
-            //'<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}: {Documento}</li>',
-           	'<li role="option" class="search-item" >' +
-            	'<h3><span>{Documento}<br /></span>{DigitoVerificacion}</h3>' +
-                '{Nombre}' +
-             '</li>',
-            '</tpl></ul>'
-        )*/   
-    } 
-    	
-});
-
-Ext.define('egreso.ComboBox', {
-	extend:'Ext.ux.form.field.BoxSelect',
-	alias : 'widget.egresocombo',
+	alias : 'widget.ingresocombo',
     displayField: 'Documento',
 	valueField: 'Id',
-	name:'IdEgreso',
-	store:'Egreso',
+	name:'IdIngreso',
+	store:'Ingreso',
     forceSelection:true,
     pageSize: 12,
     multiSelect:false,

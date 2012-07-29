@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 
 namespace Aicl.Galapago.Model.Types
@@ -36,6 +34,8 @@ namespace Aicl.Galapago.Model.Types
 
         public static readonly string GrupoCajaBancos="9";
         public static readonly string GrupoRetenciones="6101";
+		public static readonly string GrupoCuentasPorPagar="5";
+		public static readonly string GrupoCuentasPorCobrar="4";
 
 		public static int   PrspNiveles{
 			get{

@@ -46,7 +46,8 @@ namespace Aicl.Galapago.DataAccess
                     WithMessage("Valor modificado").WithErrorCode("ValorModificado");
 				           
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdCuentaReceptora==nuevo.IdCuentaReceptora).
-                WithMessage("Cuenta Receptora Modificada").WithErrorCode("CuentaReceptoraModificada");
+					When(e=> e.Nuevo.Valor!=default(int)).
+                	WithMessage("Cuenta Receptora Modificada").WithErrorCode("CuentaReceptoraModificada");
 
             };
       

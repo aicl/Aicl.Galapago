@@ -36,7 +36,7 @@ namespace Aicl.Galapago.DataAccess
                 Valor=valor,
                 Descripcion=descripcion,
                 FechaAsentado= fechaAsentado.HasValue?fechaAsentado.Value:fechaAsentado, //UTC ?                Externo= externo.HasValue?externo.Value:false
-
+				Externo= externo.HasValue?externo.Value:false
             };   
             ce.Numero=proxy.GetNextConsecutivo(idSucursal, Definiciones.ComprobranteIngreso).Numero;
             proxy.Create(ce);

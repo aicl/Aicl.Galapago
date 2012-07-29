@@ -137,6 +137,7 @@ namespace Aicl.Galapago.BusinessLogic
                 {
                     proxy.BeginDbTransaction();
                     request.AsignarConsecutivo(proxy);
+					request.AsignarDocumento(proxy);
                     request.Create(proxy);
                     proxy.CommitDbTransaction();
                 }
@@ -242,7 +243,7 @@ namespace Aicl.Galapago.BusinessLogic
                     {
                         saldo = 
                             (from r in items 
-                             select r.Valor*(r.TipoPartida==1?1:-1)).Sum();
+                             select r.Valor*(r.TipoPartida==1?-1:1)).Sum();
 
                         var  prs= DAL.GetPresupuestoActivo(proxy,request.IdSucursal,Definiciones.IdCentroGeneral);
                         prs.AssertExistsActivo(request.IdSucursal, Definiciones.IdCentroGeneral);
@@ -255,7 +256,7 @@ namespace Aicl.Galapago.BusinessLogic
                             pi.AssertExists(prs.Id,cd.CodigoPresupuesto );
                             pi.UpdatePresupuesto(proxy,request.IdSucursal,Definiciones.IdCentroGeneral,
                                                  request.Periodo,
-                                                 (saldo>0?(short)2:(short)1),
+                                                 (saldo>0?(short)1:(short)2),
                                                  Math.Abs(saldo)*factor,request.IdTercero);
                         }
 
@@ -286,7 +287,7 @@ namespace Aicl.Galapago.BusinessLogic
                     {
                         var valorPorCuentaGiradora=
                             (from r in itemsCajaBancos  group r by r.IdPresupuestoItem into g
-                             select new { IdPresupuestoItem=g.Key, Valor=g.Sum(p => p.Valor*(p.TipoPartida==1?-1:1))*factor}).
+                             select new { IdPresupuestoItem=g.Key, Valor=g.Sum(p => p.Valor*(p.TipoPartida==1?1:-1))*factor}).
                                 ToList(); 
                         foreach(var cg in valorPorCuentaGiradora)
                         {

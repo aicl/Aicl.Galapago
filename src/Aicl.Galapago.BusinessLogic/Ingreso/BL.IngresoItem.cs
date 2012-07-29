@@ -21,7 +21,7 @@ namespace Aicl.Galapago.BusinessLogic
             
 				var visitor = ReadExtensions.CreateExpression<IngresoItem>();
                  
-				visitor.Where(r=>r.IdIngreso==request.IdIngreso).OrderBy(r=>r.TipoPartida);
+				visitor.Where(r=>r.IdIngreso==request.IdIngreso).OrderByDescending(r=>r.TipoPartida);
 
 				return new Response<IngresoItem>(){
 	                Data= proxy.Get(visitor)
@@ -59,13 +59,13 @@ namespace Aicl.Galapago.BusinessLogic
                     if(request.TipoPartida==1)
                     {
                         cd.CheckDebitos(pi.Codigo);
-                        ingreso.Valor= ingreso.Valor+request.Valor;
-                        ingreso.Saldo=ingreso.Saldo+request.Valor;
+                        ingreso.Saldo=ingreso.Saldo-request.Valor;
                     }
                     else
                     {
-                        cd.CheckCreditos(pi.Codigo);
-                        ingreso.Saldo=ingreso.Saldo-request.Valor;
+						cd.CheckCreditos(pi.Codigo);
+                        ingreso.Valor= ingreso.Valor+request.Valor;
+                        ingreso.Saldo=ingreso.Saldo+request.Valor;
                     }
 
                     proxy.BeginDbTransaction();
@@ -117,22 +117,24 @@ namespace Aicl.Galapago.BusinessLogic
                     {
                         if(oldData.TipoPartida==1)
                         {
-                            ingreso.Valor= ingreso.Valor-oldData.Valor;
-                            ingreso.Saldo= ingreso.Saldo-oldData.Valor;
+							ingreso.Saldo=ingreso.Saldo+oldData.Valor;
                         }
                         else
-                            ingreso.Saldo=ingreso.Saldo+oldData.Valor;
+						{
+                            ingreso.Valor= ingreso.Valor-oldData.Valor;
+                            ingreso.Saldo= ingreso.Saldo-oldData.Valor;
+						}
 
                         if(request.TipoPartida==1)
                         {
                             cd.CheckDebitos(pi.Codigo);
-                            ingreso.Valor= ingreso.Valor+request.Valor;
-                            ingreso.Saldo=ingreso.Saldo+request.Valor;
+                            ingreso.Saldo=ingreso.Saldo-request.Valor;
                         }
                         else
                         {
                             cd.CheckCreditos(pi.Codigo);
-                            ingreso.Saldo=ingreso.Saldo-request.Valor;
+							ingreso.Valor= ingreso.Valor+request.Valor;
+                            ingreso.Saldo=ingreso.Saldo+request.Valor;
                         }
     
                         proxy.BeginDbTransaction();
@@ -175,15 +177,18 @@ namespace Aicl.Galapago.BusinessLogic
                    
                     if(oldData.TipoPartida==1)
                     {
-                        egreso.Valor= egreso.Valor-oldData.Valor;
-                        egreso.Saldo= egreso.Saldo-oldData.Valor;
+						egreso.Saldo=egreso.Saldo+oldData.Valor;
+                        
                     }
                     else
-                        egreso.Saldo=egreso.Saldo+oldData.Valor;
+					{
+                       egreso.Valor= egreso.Valor-oldData.Valor;
+                       egreso.Saldo= egreso.Saldo-oldData.Valor;
+					}
                                      
                     proxy.BeginDbTransaction();
                     egreso.ActualizarValorSaldo(proxy);
-					proxy.Delete<EgresoItem>(q=>q.Id==request.Id);
+					proxy.Delete<IngresoItem>(q=>q.Id==request.Id);
                     proxy.CommitDbTransaction();
                 }
             });

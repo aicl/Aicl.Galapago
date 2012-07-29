@@ -56,6 +56,8 @@ namespace Aicl.Galapago.BusinessLogic
 
 					request.DiasCredito= ingreso.DiasCredito;
 					request.Numero= ingreso.Numero;
+					request.Descripcion=ingreso.Descripcion;
+					request.Documento=ingreso.Descripcion;
 					request.Fecha= ingreso.Fecha;
 					request.IdTercero= ingreso.IdTercero;
 					request.IdSucursal= ingreso.IdSucursal;
@@ -92,10 +94,10 @@ namespace Aicl.Galapago.BusinessLogic
                     ce.AssertExists(oldData.IdComprobanteIngreso);
                     ce.CheckPeriodo(proxy);
                                          
-                    Ingreso egreso= proxy.FirstOrDefaultById<Ingreso>(oldData.IdIngreso);
-                    egreso.AssertExists(oldData.IdIngreso);
+                    Ingreso ingreso= proxy.FirstOrDefaultById<Ingreso>(oldData.IdIngreso);
+                    ingreso.AssertExists(oldData.IdIngreso);
 
-                    request.ValidateAndThrowHttpError(oldData, ce,egreso,Operaciones.ActualizarIngresoEnCI);
+                    request.ValidateAndThrowHttpError(oldData, ce,ingreso,Operaciones.ActualizarIngresoEnCI);
                     request.CheckOldAndNew(oldData,proxy);
                                     
                     if( request.Abono!=oldData.Abono)
@@ -171,19 +173,19 @@ namespace Aicl.Galapago.BusinessLogic
 
         static void ValidateAndThrowHttpError(this ComprobanteIngresoItem request,
                                                        ComprobanteIngreso comprobante,
-                                                       Ingreso egreso,string ruleSet)
+                                                       Ingreso ingreso,string ruleSet)
         {
             request.ValidateAndThrowHttpError(new ComprobanteIngresoItem(), comprobante,
-                                              egreso, ruleSet);
+                                              ingreso, ruleSet);
         }
 
         static void ValidateAndThrowHttpError(this ComprobanteIngresoItem request,
                                                        ComprobanteIngresoItem oldData,
                                                        ComprobanteIngreso comprobante,
-                                                       Ingreso egreso,string ruleSet)
+                                                       Ingreso ingreso,string ruleSet)
         {
             IngresoCI ece= new IngresoCI(){
-                Ingreso=egreso,
+                Ingreso=ingreso,
                 Ce= comprobante,
                 Cei= request,
                 OldCei= oldData,
@@ -192,7 +194,6 @@ namespace Aicl.Galapago.BusinessLogic
 
             av.ValidateAndThrowHttpError(ece,ruleSet );
         }
-
 
         static void CheckOldAndNew(this ComprobanteIngresoItem request,
                                            ComprobanteIngresoItem oldData,
@@ -207,7 +208,6 @@ namespace Aicl.Galapago.BusinessLogic
 
             request.PopulateWith(data);
         }
-
     }
 }
 

@@ -1,18 +1,7 @@
 using System;
-using System.Data;
-using System.Text;
-using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Collections.Generic;
 using ServiceStack.OrmLite;
-using ServiceStack.Redis;
 using ServiceStack.Common;
-using ServiceStack.Common.Web;
-using ServiceStack.Common.Utils;
-using ServiceStack.ServiceInterface;
-using ServiceStack.ServiceInterface.Auth;
-using ServiceStack.CacheAccess;
 using ServiceStack.ServiceHost;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
@@ -67,6 +56,16 @@ namespace Aicl.Galapago.BusinessLogic
 							predicate= predicate.AndAlso(q=>q.IdTercero==idTercero);
 	                }
 	            }
+
+				p= queryString["Grupo"];
+				if(!p.IsNullOrEmpty())
+           		{
+					if(p=="CuentasPorPagar" || p=="CxP")
+						predicate=predicate.AndAlso(q=>q.CodigoItem.StartsWith(Definiciones.GrupoCuentasPorPagar));
+					else if(p=="CuentasPorCobrar" || p=="CxC")
+						predicate=predicate.AndAlso(q=>q.CodigoItem.StartsWith(Definiciones.GrupoCuentasPorCobrar));						
+	            }
+
 
 				predicate= predicate.AndAlso(q=> (q.SaldoInicial+q.Debitos-q.Creditos)!=0);
 

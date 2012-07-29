@@ -177,6 +177,8 @@ Ext.define('App.controller.ComprobanteEgreso',{
     	this.getComprobanteEgresoSaveButton().setTooltip('Guardar');
         this.getComprobanteEgresoSaveButton().setDisabled(!this.getComprobanteEgresoStore().canUpdate());
     	
+        this.getRemoteSaldoTerceroStore().getProxy().setExtraParam('Grupo', 'CxP');
+        
     	this.getComprobanteEgresoStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];
     		if (operation.action=='create') {

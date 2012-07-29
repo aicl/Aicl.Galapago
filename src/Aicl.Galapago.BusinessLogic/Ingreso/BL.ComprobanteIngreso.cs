@@ -252,7 +252,7 @@ namespace Aicl.Galapago.BusinessLogic
                                 pi.AssertExists(prs.Id,cd.CodigoPresupuesto );
                                 pi.UpdatePresupuesto(proxy,request.IdSucursal,Definiciones.IdCentroGeneral,
                                                      request.Periodo,
-                                                     (cei.Abono>0?(short)1:(short)2),
+                                                     (cei.Abono>0?(short)2:(short)1),
                                                      Math.Abs(cei.Abono)*factor,request.IdTercero);
                             }
 
@@ -265,7 +265,7 @@ namespace Aicl.Galapago.BusinessLogic
                                     pi.AssertExists(ret.IdPresupuestoItem);
                                     pi.UpdatePresupuesto(proxy, request.IdSucursal,
                                                          Definiciones.IdCentroGeneral,request.Periodo,
-                                                         (ret.Valor>0?(short)2:(short)1), 
+                                                         (ret.Valor>0?(short)1:(short)2), 
                                                          Math.Abs(ret.Valor)*factor, null);
                                 }
                             }
@@ -282,7 +282,7 @@ namespace Aicl.Galapago.BusinessLogic
 
                         pi.UpdatePresupuesto(proxy, request.IdSucursal,
                                              Definiciones.IdCentroGeneral,request.Periodo,
-                                             (request.Valor>0?(short)2:(short)1),
+                                             (request.Valor>0?(short)1:(short)2),
                                              request.Valor*factor, null);
                     }
 

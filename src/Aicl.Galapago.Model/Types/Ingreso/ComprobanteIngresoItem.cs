@@ -46,7 +46,10 @@ namespace Aicl.Galapago.Model.Types
 		public Int32 IdTercero { get; set;} 
 
 		[BelongsTo(typeof(Ingreso))]
-		public DateTime Fecha { get; set;} 
+		public DateTime Fecha { get; set;}
+
+		[BelongsTo(typeof(Ingreso))]
+		public String Documento { get; set;} 
 
 		[BelongsTo(typeof(Ingreso))]
 		public String Descripcion { get; set;} 

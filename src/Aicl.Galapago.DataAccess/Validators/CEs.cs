@@ -50,7 +50,7 @@ namespace Aicl.Galapago.DataAccess
                 WithMessage("Tercero Receptor Modificado").WithErrorCode("TerceroModificado");
       
             RuleFor(e=>e.Nuevo).Must((e,nuevo)=>e.Viejo.IdCuentaGiradora==nuevo.IdCuentaGiradora).
-                When(e=> e.Nuevo.IdTerceroReceptor !=default(int)).
+                When(e=> e.Nuevo.IdCuentaGiradora !=default(int)).
                 WithMessage("Cuenta Giradora Modificada").WithErrorCode("CuentaGiradoraModificada");
 
             };
