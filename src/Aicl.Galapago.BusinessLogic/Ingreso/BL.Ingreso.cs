@@ -29,15 +29,16 @@ namespace Aicl.Galapago.BusinessLogic
 				var paginador= new Paginador(httpRequest);
             	var queryString= httpRequest.QueryString;
 
-                Expression<Func<Ingreso, bool>> predicate;
+                var predicate=PredicateBuilder.True<Ingreso>();
 
                 var periodo= queryString["Periodo"];
-				if(periodo.IsNullOrEmpty()) periodo= DateTime.Today.ObtenerPeriodo();
-                if (periodo.Length==6)
-                    predicate= q=>q.Periodo==periodo;
-                else
-                    predicate= q=>q.Periodo.StartsWith(periodo) ;
-
+				if(! periodo.IsNullOrEmpty()) //periodo= DateTime.Today.ObtenerPeriodo();
+				{
+	                if (periodo.Length==6)
+	                    predicate= q=>q.Periodo==periodo;
+	                else
+	                    predicate= q=>q.Periodo.StartsWith(periodo) ;
+				}
 
 				var p =queryString["IdSucursal"];
 				if(!p.IsNullOrEmpty())
