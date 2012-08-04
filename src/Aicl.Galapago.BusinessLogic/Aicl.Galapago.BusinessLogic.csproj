@@ -74,12 +74,14 @@
     <Compile Include="Ingreso\BL.ComprobanteIngreso.cs" />
     <Compile Include="Ingreso\BL.ComprobanteIngresoRetencion.cs" />
     <Compile Include="Ingreso\BL.ComprobanteIngresoItem.cs" />
+    <Compile Include="Academico\BL.Infante.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Properties\" />
     <Folder Include="Egreso\" />
     <Folder Include="Ingreso\" />
+    <Folder Include="Academico\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Aicl.Galapago.Model\Aicl.Galapago.Model.csproj">

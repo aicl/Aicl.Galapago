@@ -144,6 +144,22 @@
     <Compile Include="Validations\ComprobanteIngresoValidator.cs" />
     <Compile Include="Validations\ComprobanteIngresoRetencionValidador.cs" />
     <Compile Include="Validations\ComprobanteIngresoItemValidator.cs" />
+    <Compile Include="Types\Academico\InfantePadre.cs" />
+    <Compile Include="Types\Academico\Matricula.cs" />
+    <Compile Include="Types\Academico\Infante.cs" />
+    <Compile Include="Types\Academico\Clase.cs" />
+    <Compile Include="Types\Academico\Curso.cs" />
+    <Compile Include="Types\Academico\Pension.cs" />
+    <Compile Include="Attributes\MatriculaFacturado.cs" />
+    <Compile Include="Attributes\MatriculaProducto.cs" />
+    <Compile Include="Attributes\MatriculaPago.cs" />
+    <Compile Include="Attributes\MensualidadProducto.cs" />
+    <Compile Include="Attributes\Academico\Clase.cs" />
+    <Compile Include="Attributes\Academico\InfantePadre.cs" />
+    <Compile Include="Attributes\Academico\Infante.cs" />
+    <Compile Include="Attributes\Academico\Matricula.cs" />
+    <Compile Include="Attributes\Academico\Curso.cs" />
+    <Compile Include="Attributes\Academico\Pension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -155,5 +171,7 @@
     <Folder Include="Types\Ingreso\" />
     <Folder Include="Attributes\Egreso\" />
     <Folder Include="Attributes\Ingreso\" />
+    <Folder Include="Types\Academico\" />
+    <Folder Include="Attributes\Academico\" />
   </ItemGroup>
 </Project>
