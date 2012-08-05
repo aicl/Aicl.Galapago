@@ -75,6 +75,8 @@
     <Compile Include="Services\Ingreso\ComprobanteIngresoService.cs" />
     <Compile Include="Services\Ingreso\ComprobanteIngresoRetencionService.cs" />
     <Compile Include="Services\Egreso\ComprobanteIngresoItemService.cs" />
+    <Compile Include="Academico\InfanteService.cs" />
+    <Compile Include="Academico\InfanteInfoService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -99,5 +101,6 @@
     <Folder Include="Services\Asiento\" />
     <Folder Include="Services\Egreso\" />
     <Folder Include="Services\Ingreso\" />
+    <Folder Include="Academico\" />
   </ItemGroup>
 </Project>

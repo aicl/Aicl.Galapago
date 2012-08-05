@@ -160,6 +160,11 @@
     <Compile Include="Attributes\Academico\Matricula.cs" />
     <Compile Include="Attributes\Academico\Curso.cs" />
     <Compile Include="Attributes\Academico\Pension.cs" />
+    <Compile Include="Types\Academico\InfanteAcudiente.cs" />
+    <Compile Include="Attributes\Academico\InfanteAcudiente.cs" />
+    <Compile Include="Types\Academico\InfanteInfo.cs" />
+    <Compile Include="Operations\InfanteInfoResponse.cs" />
+    <Compile Include="Attributes\Academico\InfanteInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

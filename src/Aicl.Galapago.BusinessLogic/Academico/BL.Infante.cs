@@ -1,11 +1,8 @@
 using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 using ServiceStack.OrmLite;
 using ServiceStack.Common;
-using ServiceStack.Common.Web;
-using ServiceStack.ServiceInterface.Auth;
 using ServiceStack.ServiceHost;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
@@ -65,13 +62,21 @@ namespace Aicl.Galapago.BusinessLogic
 		#endregion get
 
 		#region post
-		public static Response<Infante> Post(this Infante request,
-                                            Factory factory,
-                                            IAuthSession authSession)
-		{
-          
+		public static Response<Infante> Post(this Infante request, Factory factory,IHttpRequest httpRequest)
+		{  
+            request.CheckId(Operaciones.Create);
             factory.Execute(proxy=>{
-                
+
+                if(request.IdTerceroFactura.HasValue && request.IdTerceroFactura.Value!=default(int))
+                {
+                    var tercero= proxy.FirstOrDefault<Tercero>(q=>q.Id==request.IdTerceroFactura.Value);
+                    tercero.AssertExists(request.IdTerceroFactura.Value);
+                    request.NombreTercero=tercero.Nombre;
+                    request.DocumentoTercero=tercero.Documento;
+                    request.DVTercero=tercero.DigitoVerificacion;
+                }
+
+                proxy.Create<Infante>(request);
             });
 		
 			List<Infante> data = new List<Infante>();
@@ -83,6 +88,73 @@ namespace Aicl.Galapago.BusinessLogic
 			
 		}
 		#endregion post
+
+
+        #region put
+        public static Response<Infante> Put(this Infante request,Factory factory,IHttpRequest httpRequest)
+        {  
+            factory.Execute(proxy=>{
+                request.CheckId(Operaciones.Update);
+                var oldData= proxy.FirstOrDefault<Infante>(q=>q.Id==request.Id);
+                oldData.AssertExists(request.Id);
+
+                if(request.IdTerceroFactura.HasValue )
+                {
+                    if(request.IdTerceroFactura.Value==default(int) ) 
+                    {
+                        request.IdTerceroFactura=null;
+                        request.NombreTercero=string.Empty;
+                        request.DocumentoTercero=string.Empty;
+                        request.DVTercero=string.Empty;
+                    }
+                    else
+                    {
+                        if(!oldData.IdTerceroFactura.HasValue ||
+                           (oldData.IdTerceroFactura.HasValue && 
+                            oldData.IdTerceroFactura.Value!=request.IdTerceroFactura.Value))
+                        {
+                            var tercero= proxy.FirstOrDefault<Tercero>(q=>q.Id==request.IdTerceroFactura.Value);
+                            tercero.AssertExists(request.IdTerceroFactura.Value);
+                            request.NombreTercero=tercero.Nombre;
+                            request.DocumentoTercero=tercero.Documento;
+                            request.DVTercero=tercero.DigitoVerificacion;
+                        }
+                    }
+                }
+                proxy.Update<Infante>(request);
+            });
+        
+            List<Infante> data = new List<Infante>();
+            data.Add(request);
+            
+            return new Response<Infante>(){
+                Data=data
+            };  
+            
+        }
+        #endregion put
+
+        #region delete
+        public static Response<Infante> Delete(this Infante request, Factory factory,IHttpRequest httpRequest)
+        {
+            request.CheckId(Operaciones.Destroy);
+
+            factory.Execute(proxy=>
+            {
+                var oldData= proxy.FirstOrDefault<Infante>(q=>q.Id==request.Id);
+                oldData.AssertExists(request.Id);
+                //request.PopulateWith(oldData);
+                proxy.Delete<Infante>(q=>q.Id==request.Id);
+            });
+
+            List<Infante> data = new List<Infante>();
+            data.Add(request);
+            
+            return new Response<Infante>(){
+                Data=data
+            }; 
+        }
+        #endregion delete
 	}
 }
 

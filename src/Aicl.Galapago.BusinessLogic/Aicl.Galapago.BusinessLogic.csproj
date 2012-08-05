@@ -75,6 +75,7 @@
     <Compile Include="Ingreso\BL.ComprobanteIngresoRetencion.cs" />
     <Compile Include="Ingreso\BL.ComprobanteIngresoItem.cs" />
     <Compile Include="Academico\BL.Infante.cs" />
+    <Compile Include="Academico\BL.InfanteInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

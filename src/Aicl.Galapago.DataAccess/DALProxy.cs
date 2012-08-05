@@ -441,11 +441,11 @@ namespace Aicl.Galapago.DataAccess
         }
 
 
-		public void Delete<T>(Expression<Func<T,bool>> predicate=null) 
+		public void Delete<T>(Expression<Func<T,bool>> predicate) 
 			where T: new()
 		{
 			Execute(dbCmd=>{
-				dbCmd.Delete(predicate);
+                dbCmd.Delete(predicate);
 			});
 		}
 
