@@ -15,7 +15,7 @@ namespace Aicl.Galapago.Model.Operations
             PensionList = new List<Pension>();
         }
 
-        public int Id{get;set;}
+        //public int Id{get;set;}
 
         public List<InfantePadre> PadreList{get; set;}
 

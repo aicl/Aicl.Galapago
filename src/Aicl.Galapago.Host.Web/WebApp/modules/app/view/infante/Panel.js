@@ -59,7 +59,8 @@ Ext.define('App.view.infante.TabPanel',{
     	},{
         	xtype: 'panel', ui:'default-framed',
         	style: {border: 0, padding: 0},
-        	width: 410, height:520
+        	width: 410, height:520,
+        	items:[{xtype:'infantepadrelist'}]
     	}]
    	},{
     	title:'Cursos',
@@ -179,10 +180,20 @@ Ext.define('App.view.infante.Form', {
 		allowBlank: false,
 		format: 'd.m.Y'
 	},{
-		name: 'Sexo',
-		fieldLabel: 'Sexo',
-		maxLength: 1,
-		enforceMaxLength: true
+        xtype      : 'fieldcontainer',
+        fieldLabel : 'Sexo',
+        defaultType: 'radiofield',
+        defaults: {flex: 1},
+        layout: 'hbox',
+        items: [{
+          	name: 'Sexo',
+			boxLabel: 'Masculino',
+			inputValue:'M'
+		},{
+			name: 'Sexo',
+			boxLabel: 'Femenino',
+			inputValue:'F'
+		}]
 	},{
 		name: 'Direccion',
 		fieldLabel: 'Direccion',
@@ -520,5 +531,114 @@ Ext.define('App.view.infante.TerceroForm', {
 	}];
  
     this.callParent(arguments);
+    }
+});
+
+// padre...
+Ext.define('App.model.InfantePadre',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'IdInfante',	type: 'int'	},
+		{name: 'IdTercero',	type: 'int'	},
+		{name: 'Parentesco',type: 'string'},
+		{name: 'DocumentoTercero',type: 'string'},
+		{name: 'DVTercero',	type: 'string'},
+		{name: 'NombreTercero',type: 'string'}
+	]
+});
+
+Ext.define('App.store.InfantePadre',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.InfantePadre',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'InfantePadre';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.view.infantepadre.List',{ 
+    extend: 'Ext.grid.Panel',
+    alias : 'widget.infantepadrelist', 
+    store:Ext.create('Ext.data.Store',{
+    	autoDestroy: true,  
+    	model: 'App.model.InfantePadre',
+    	data:[]
+    }),
+    frame:false,
+    selType : 'rowmodel',
+    height:150,
+    autoWidth:true,
+    viewConfig : {stripeRows: true},
+    margin: '2 2 2 2',	
+    
+    initComponent: function() {
+        
+    this.columns=[{
+		text: 'IdInfante',
+		dataIndex: 'IdInfante',
+		flex: 1,
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+        	}
+        }
+	},
+	{
+		text: 'IdTercero',
+		dataIndex: 'IdTercero',
+		sortable: true,
+		renderer: function(value, metadata, record, store){
+           	if(value>=0){
+            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
+        	}else{
+            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
+        	}
+        }
+	},
+	{
+		text: 'Parentesco',
+		dataIndex: 'Parentesco',
+		sortable: true
+	},
+	{
+		text: 'DocumentoTercero',
+		dataIndex: 'DocumentoTercero',
+		sortable: true
+	},
+	{
+		text: 'DVTercero',
+		dataIndex: 'DVTercero',
+		sortable: true
+	},
+	{
+		text: 'NombreTercero',
+		dataIndex: 'NombreTercero',
+		sortable: true
+	}
+];
+ 
+        this.dockedItems=[{
+            xtype: 'toolbar',
+            items: [{
+                text:'New',
+                tooltip:'add new record',
+                iconCls:'add',
+                disabled:true,
+                action: 'new'
+            },'-',{
+                text:'Delete',
+                tooltip:'delete selected record',
+                iconCls:'remove',
+                disabled:true,
+                action: 'delete'
+            }]		
+        }]
+                
+        this.callParent(arguments);
     }
 });

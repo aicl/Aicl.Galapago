@@ -467,6 +467,7 @@ Ext.data.Store.implement({
 		var nr = Ext.create( this.model.getName(),record );
 		this.suspendAutoSync();
 		this.add(nr);
+		this.commitChanges();
 		this.resumeAutoSync();
 	},
 	

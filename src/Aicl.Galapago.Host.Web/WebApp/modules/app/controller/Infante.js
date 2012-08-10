@@ -120,11 +120,23 @@ Ext.define('App.controller.Infante',{
     	
     	this.getInfanteStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];
-            
             if (operation.action != 'destroy') {
             	this.infanteLoadRecord(record);
             }            
     	}, this);
+    	
+    	this.getRemoteTerceroStore().on('write', function(store, operation, eOpts ){
+    		this.getMainPanel().hideCreateTerceroWindow();
+            this.getTerceroForm().getForm().setValues({
+            	Documento:'',
+            	DigitoVerificacion:'',
+            	Nombre:'',
+            	Celular:'',
+            	Mail:''
+            });  		
+    	}, this);
+    	
+    	
     	
     	this.getTerceroSaveButton().setDisabled(!(this.getRemoteTerceroStore().canUpdate()));
     	this.getInfanteNewButton().setDisabled(!this.getInfanteStore().canCreate());
@@ -143,6 +155,18 @@ Ext.define('App.controller.Infante',{
 		};
                     	
         this.getInfanteForm().getForm().loadRecord(record);
+        
+        Aicl.Util.executeRestRequest({
+				url : Aicl.Util.getUrlApi()+'/Infante/Info/'+record.getId()+'?format=json',
+				method : 'get',
+				callback : function(result,success) {
+					console.log('InfanteInfo result', arguments);
+					if(success) alert('OK');
+					else alert('fail');
+				}
+				
+		});
+        
     }
  	
 	
