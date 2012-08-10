@@ -5,6 +5,7 @@ using ServiceStack.DesignPatterns.Model;
 namespace Aicl.Galapago.Model.Types
 {
 	[Alias("MATRICULA")]
+	[JoinTo(typeof(Curso),"IdCurso","Id")]
 	public partial class Matricula:IHasId<Int32>{
 
 		public Matricula(){}
@@ -18,22 +19,31 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("ID_INFANTE")]
 		public Int32 IdInfante { get; set;} 
 
-		[Alias("ID_ANIO_LECTIVO")]
-		public Int32 IdAnioLectivo { get; set;} 
+		[Alias("ID_CURSO")]
+		public Int32 IdCurso { get; set;} 
+
+		[Alias("ID_INGRESO")]
+		public Int32? IdIngreso { get; set;} 
 
 		[Alias("ID_CLASE")]
-		public Int32 IdClase { get; set;} 
+		public Int32? IdClase { get; set;} 
 
-		[Alias("FECHA_ASENTADO")]
-		public DateTime? FechaAsentado { get; set;} 
+		[Alias("ACTIVO")]
+		public bool Activo { get; set;} 
 
-		[Alias("VALOR_TOTAL")]
-		[DecimalLength(15,2)]
-		public Decimal ValorTotal { get; set;} 
+		#region Curso
+		[BelongsTo(typeof(Curso))]
+		public String Descripcion { get; set;} 
 
-		[Alias("VALOR_PAGADO")]
-		[DecimalLength(15,2)]
-		public Decimal ValorPagado { get; set;} 
+		[BelongsTo(typeof(Curso))]
+		public String Nombre { get; set;} 
+
+		[BelongsTo(typeof(Curso))]
+		public DateTime FechaInicio { get; set;} 
+
+		[BelongsTo(typeof(Curso))]
+		public DateTime FechaTerminacion { get; set;} 
+		#endregion Curso
 
 	}
 }

@@ -1,13 +1,12 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using ServiceStack.Common;
 using ServiceStack.DataAnnotations;
 using ServiceStack.DesignPatterns.Model;
 
 namespace Aicl.Galapago.Model.Types
 {
 	[Alias("DEPARTAMENTO")]
-	public partial class Departamento:IHasId<System.Int32>{
+	public partial class Departamento:IHasId<Int32>{
 
 		public Departamento(){}
 
@@ -15,17 +14,17 @@ namespace Aicl.Galapago.Model.Types
 		[Sequence("DEPARTAMENTO_ID_GEN")]
 		[PrimaryKey]
 		[AutoIncrement]
-		public System.Int32 Id { get; set;} 
+		public Int32 Id { get; set;} 
 
 		[Alias("CODIGO")]
 		[Required]
 		[StringLength(2)]
-		public System.String Codigo { get; set;} 
+		public String Codigo { get; set;} 
 
 		[Alias("NOMBRE")]
 		[Required]
 		[StringLength(30)]
-		public System.String Nombre { get; set;} 
+		public String Nombre { get; set;} 
 
 	}
 }

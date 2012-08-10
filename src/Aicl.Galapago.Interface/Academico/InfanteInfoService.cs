@@ -1,6 +1,5 @@
 using System;
 ﻿using ServiceStack.ServiceHost;
-using ServiceStack.ServiceInterface;
 using Aicl.Galapago.Model.Types;
 using Aicl.Galapago.Model.Operations;
 using Aicl.Galapago.BusinessLogic;

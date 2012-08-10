@@ -42,7 +42,7 @@ namespace Aicl.Galapago.Model.Types
 		[StringLength(1)]
 		public String Sexo { get; set;} 
 
-		[Alias("DIRECION")]
+		[Alias("DIRECCION")]
 		[StringLength(80)]
 		public String Direccion { get; set;} 
 

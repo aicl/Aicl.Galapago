@@ -165,6 +165,10 @@
     <Compile Include="Types\Academico\InfanteInfo.cs" />
     <Compile Include="Operations\InfanteInfoResponse.cs" />
     <Compile Include="Attributes\Academico\InfanteInfo.cs" />
+    <Compile Include="Types\Departamento.cs" />
+    <Compile Include="Types\Ciudad.cs" />
+    <Compile Include="Attributes\Departamento.cs" />
+    <Compile Include="Attributes\Academico\Ciudad.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

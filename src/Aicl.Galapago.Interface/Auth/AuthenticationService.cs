@@ -67,7 +67,9 @@ namespace Aicl.Galapago.Interface
                 Sucursales=aur.Sucursales,
                 CodigosEgreso= aur.CodigosDocumento.Where(r=>r.Tipo=="E" && r.Activo).OrderBy(r=>r.Nombre).ToList(),
                 CodigosIngreso=aur.CodigosDocumento.Where(r=>r.Tipo=="I" && r.Activo).OrderBy(r=>r.Nombre).ToList(),
-                Rubros=aur.Rubros
+                Rubros=aur.Rubros,
+				TiposDocumento=aur.TiposDocumento,
+				Ciudades= aur.Ciudades
             };
 
 		}

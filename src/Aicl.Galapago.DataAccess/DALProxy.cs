@@ -1,14 +1,11 @@
 using System;
-using System.Reflection;
 using System.Linq.Expressions;
 using System.Data;
 using System.Collections.Generic;
 using ServiceStack.OrmLite;
 using ServiceStack.Common;
-using ServiceStack.Common.Utils;
 using ServiceStack.Common.Web;
 using ServiceStack.DesignPatterns.Model;
-using ServiceStack.ServiceHost;
 using ServiceStack.Redis;
 using Aicl.Galapago.Model.Types;
 
@@ -16,11 +13,11 @@ namespace Aicl.Galapago.DataAccess
 {
     public class DALProxy:IDisposable
     {
-        private IDbTransaction dbTransaction=null;
-        private IDbCommand dbCmd=null;
-        private IDbConnection dbConn;
+        IDbTransaction dbTransaction=null;
+        IDbCommand dbCmd=null;
+        IDbConnection dbConn;
 
-        private IRedisClient redisClient;
+        IRedisClient redisClient;
 
         internal IDbConnectionFactory DbConnectionFactory {private get;set;}
         
@@ -157,7 +154,7 @@ namespace Aicl.Galapago.DataAccess
 
 		#region metodos
 
-		public List<T> Get<T>(  SqlExpressionVisitor<T> visitor)
+		public List<T> Get<T>(SqlExpressionVisitor<T> visitor)
             where T: new()
         {
             return Execute(dbCmd=>{
@@ -166,7 +163,7 @@ namespace Aicl.Galapago.DataAccess
 
         }
 
-        public List<T> Get<T>( Expression<Func<T,bool>> predicate)
+        public List<T> Get<T>(Expression<Func<T,bool>> predicate)
             where T: new()
         {
             return Execute(dbCmd=>{
@@ -175,14 +172,24 @@ namespace Aicl.Galapago.DataAccess
 
         }
 		         
-        public List<T> Get<T>()
-            where T: new()
+        public List<T> Get<T>() where T: new()
         {
             return Execute(dbCmd=>{
                 return dbCmd.Select<T>();
             });
 
         }
+
+		/// <summary>
+        /// Use an expression visitor to build select, E.g: 
+        /// Select<T>(ev => ev.Where(x => x.FirstName == "Jimi").OrderBy(x=>x.LastName));
+        /// </summary>
+		public  List<T> Get<T>(Func<SqlExpressionVisitor<T>, SqlExpressionVisitor<T>> expression) where T: new()
+		{
+			return Execute(dbCmd=>{
+				return dbCmd.Select<T>(expression);
+			});
+		}
 
 		public T FirstOrDefault<T>(Expression<Func<T,bool>> predicate)
             where T: new()

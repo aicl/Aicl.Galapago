@@ -1,19 +1,10 @@
 using System;
-using System.Data;
-using System.Text;
-using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
-using ServiceStack.OrmLite;
-using ServiceStack.Common;
-using ServiceStack.Common.Utils;
-using ServiceStack.DesignPatterns.Model;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Auth;
-using ServiceStack.CacheAccess;
 using ServiceStack.ServiceHost;
-using ServiceStack.Redis;
 using Mono.Linq.Expressions;
 
 using Aicl.Galapago.Model.Types;
@@ -52,6 +43,8 @@ namespace Aicl.Galapago.BusinessLogic
 
             List<CodigoDocumento> cd = new List<CodigoDocumento>();
             List<Rubro> rubros = new List<Rubro>();
+			List<Ciudad> ciudades = new List<Ciudad>();
+			List<TipoDocumento> tipos = new List<TipoDocumento>();
 
             factory.Execute(proxy=>
             {
@@ -100,9 +93,10 @@ namespace Aicl.Galapago.BusinessLogic
 
                 rubros= proxy.Get<Rubro>(predicate);
 
+				ciudades = proxy.Get<Ciudad>();
+				tipos = proxy.Get<TipoDocumento>();
+
             });
-						
-			
 			
 			return new AuthorizationResponse(){
 				Permissions= permissions,
@@ -110,11 +104,10 @@ namespace Aicl.Galapago.BusinessLogic
 				Sucursales= sa,
 				Centros= ca,
                 CodigosDocumento=cd,
-                Rubros=rubros
+                Rubros=rubros,
+				Ciudades=ciudades,
+				TiposDocumento= tipos
 			};
-		}
-				
-		
+		}			
 	}
-	
 }

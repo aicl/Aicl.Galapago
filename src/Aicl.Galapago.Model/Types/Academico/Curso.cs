@@ -26,8 +26,8 @@ namespace Aicl.Galapago.Model.Types
 		[StringLength(1)]
 		public String Nombre { get; set;} 
 
-		[Alias("FECHA_INCIO")]
-		public DateTime FechaIncio { get; set;} 
+		[Alias("FECHA_INICIO")]
+		public DateTime FechaInicio { get; set;} 
 
 		[Alias("FECHA_TERMINACION")]
 		public DateTime FechaTerminacion { get; set;} 

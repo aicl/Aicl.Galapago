@@ -6,8 +6,6 @@ namespace Aicl.Galapago.Model.Operations
 {
     public class  InfanteInfoResponse:IHasResponseStatus
     {
-
-
         public InfanteInfoResponse ()
         {
             ResponseStatus= new ResponseStatus();
@@ -15,7 +13,6 @@ namespace Aicl.Galapago.Model.Operations
             AcudienteList= new List<InfanteAcudiente>();
             MatriculaList = new List<Matricula>();
             PensionList = new List<Pension>();
-
         }
 
         public int Id{get;set;}
@@ -29,7 +26,5 @@ namespace Aicl.Galapago.Model.Operations
         public List<Pension> PensionList{get;set;}
         
         public ResponseStatus ResponseStatus { get; set; }
-
-        
     }
 }

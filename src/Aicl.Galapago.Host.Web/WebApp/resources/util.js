@@ -17,7 +17,9 @@
 		sessionStorage["codigosEgreso"]=Ext.encode(result.CodigosEgreso||[]);
 		sessionStorage["codigosIngreso"]=Ext.encode(result.CodigosIngreso||[]);
 		sessionStorage["rubros"]=Ext.encode(result.Rubros||[]);
-		sessionStorage["displayName"]=result.DisplayName|| 'anonimo';				
+		sessionStorage["displayName"]=result.DisplayName|| 'anonimo';
+		sessionStorage["tiposDocumento"]=Ext.encode(result.TiposDocumento||[]);
+		sessionStorage["ciudades"]=Ext.encode(result.Ciudades||[]);
 	};
 
 	_clearSession=function(result){
@@ -30,6 +32,8 @@
 		sessionStorage.removeItem("codigosIngreso");
 		sessionStorage.removeItem("rubros");
 		sessionStorage.removeItem("displayName");
+		sessionStorage.removeItem("tiposDocumento");
+		sessionStorage.removeItem("ciudades");
 	};
 	        
     Ext.apply(Util,{
@@ -293,6 +297,14 @@
 		
 		getRubros:function(){
 			return sessionStorage.rubros? Ext.decode(sessionStorage.rubros): [];		
+		},
+		
+		getTiposDocumento:function(){
+			return sessionStorage.tiposDocumento? Ext.decode(sessionStorage.tiposDocumento): [];		
+		},
+		
+		getCiudades:function(){
+			return sessionStorage.ciudades? Ext.decode(sessionStorage.ciudades): [];		
 		},
 		
 		setUrlModules: function (urlModules){
@@ -583,6 +595,99 @@ Ext.form.Panel.implement({
     }
 });
 
+
+// tipo Documento
+Ext.define('App.model.TipoDocumento',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'Nombre',type: 'string'},
+		{name: 'RequireDv',	type: 'boolean'}]
+});
+
+Ext.define('App.store.TipoDocumento',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.TipoDocumento',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'TipoDocumento';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
+});
+
+function createTipoDocumentoStore() {
+    return Ext.create('App.store.TipoDocumento', {
+        autoDestroy: true,
+        model: 'App.model.TipoDocumento',
+        data: Aicl.Util.getTiposDocumento()
+    });
+}
+
+Ext.define('tipdocumento.ComboBox', {
+	extend:'Ext.form.field.ComboBox',
+	alias : 'widget.tipodocumentocombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+    store: createTipoDocumentoStore() ,
+    queryMode: 'local',
+    typeAhead: true,
+    forceSelection:true,
+    listeners   : {  
+     	beforerender: function(combo){
+       		combo.setValue(2);  
+       	}
+    }
+});
+
+
+// ciudad
+Ext.define('App.model.Ciudad',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'Codigo',type: 'string'},
+		{name: 'Nombre',type: 'string'},
+		{name: 'IdDepartamento',type: 'int'},
+		{name: 'NombreDepartamento',type: 'string'}]
+});
+
+Ext.define('App.store.Ciudad',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Ciudad',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Ciudad';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
+});
+
+function createCiudadStore() {
+    return Ext.create('App.store.Ciudad', {
+        autoDestroy: true,
+        model: 'App.model.Ciudad',
+        data: Aicl.Util.getCiudades()
+    });
+}
+
+Ext.define('ciudad.ComboBox', {
+	extend:'Ext.form.field.ComboBox',
+	alias : 'widget.ciudadcombo',
+    displayField: 'Nombre',
+	valueField: 'Id',
+    store: createCiudadStore() ,
+    queryMode: 'local',
+    typeAhead: true,
+    forceSelection:true,
+    listeners   : {  
+     	beforerender: function(combo){
+       		combo.setValue(1);  
+       	}
+    }
+});
+
+
 Ext.define('EstadoAsentado', {
     extend: 'Ext.data.Model',
     idProperty: 'Id',
@@ -619,7 +724,8 @@ Ext.define('estadoasento.ComboBox', {
 Ext.define('SucursalAutorizadaModel',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Id',
-	fields:[{name: 'Id',type: 'int'},{name: 'Nombre',type: 'string'},{name: 'Codigo',type: 'string'}]
+	fields:[{name: 'Id',type: 'int'},{name: 'Nombre',type: 'string'},
+		{name: 'Codigo',type: 'string'}]
 });
 
 

@@ -1,13 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using ServiceStack.Common;
 using ServiceStack.DataAnnotations;
 using ServiceStack.DesignPatterns.Model;
 
 namespace Aicl.Galapago.Model.Types
 {
 	[Alias("CIUDAD")]
-	public partial class Ciudad:IHasId<System.Int32>{
+	[JoinTo(typeof(Departamento),"IdDepartamento","Id")]
+	public partial class Ciudad:IHasId<Int32>{
 
 		public Ciudad(){}
 
@@ -15,20 +15,23 @@ namespace Aicl.Galapago.Model.Types
 		[Sequence("CIUDAD_ID_GEN")]
 		[PrimaryKey]
 		[AutoIncrement]
-		public System.Int32 Id { get; set;} 
+		public Int32 Id { get; set;} 
 
 		[Alias("CODIGO")]
 		[Required]
 		[StringLength(8)]
-		public System.String Codigo { get; set;} 
+		public String Codigo { get; set;} 
 
 		[Alias("NOMBRE")]
 		[Required]
 		[StringLength(30)]
-		public System.String Nombre { get; set;} 
+		public String Nombre { get; set;} 
 
 		[Alias("ID_DEPARTAMENTO")]
-		public System.Int32 IdDepartamento { get; set;} 
+		public Int32 IdDepartamento { get; set;} 
+
+		[BelongsTo(typeof(Departamento),"Nombre")]
+		public string NombreDepartamento{ get;set; }
 
 	}
 }

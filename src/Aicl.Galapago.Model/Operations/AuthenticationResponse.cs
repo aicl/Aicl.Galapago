@@ -17,6 +17,8 @@ namespace Aicl.Galapago.Model.Operations
             CodigosEgreso= new List<CodigoDocumento>();
             CodigosIngreso=new List<CodigoDocumento>();
             Rubros= new List<Rubro>();
+			Ciudades = new List<Ciudad>();
+			TiposDocumento = new List<TipoDocumento>();
 		}
 		
 		public ResponseStatus ResponseStatus { get; set; }
@@ -30,5 +32,7 @@ namespace Aicl.Galapago.Model.Operations
         public List<CodigoDocumento> CodigosEgreso {get;set;}
         public List<CodigoDocumento> CodigosIngreso {get;set;}
         public List<Rubro> Rubros {get;set;}
+		public List<Ciudad> Ciudades {get; set;}
+		public List<TipoDocumento> TiposDocumento {get; set;}
 	}
 }

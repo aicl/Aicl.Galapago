@@ -84,7 +84,6 @@ Ext.define('App.controller.Egreso',{
             
             'egresopanel button[action=save]':{            	
             	click:function(button, event, options){
-            		var model = this.getEgresoStore();
             		var record = this.getEgresoForm().getForm().getFieldValues(true);
             		this.getEgresoStore().save(record);
             	}
