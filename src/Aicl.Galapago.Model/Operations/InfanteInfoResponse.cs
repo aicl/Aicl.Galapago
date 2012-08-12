@@ -9,17 +9,17 @@ namespace Aicl.Galapago.Model.Operations
         public InfanteInfoResponse ()
         {
             ResponseStatus= new ResponseStatus();
-            PadreList= new List<InfantePadre>();
-            AcudienteList= new List<InfanteAcudiente>();
+            InfantePadreList= new List<InfantePadre>();
+            InfanteAcudienteList= new List<InfanteAcudiente>();
             MatriculaList = new List<Matricula>();
             PensionList = new List<Pension>();
         }
 
         //public int Id{get;set;}
 
-        public List<InfantePadre> PadreList{get; set;}
+        public List<InfantePadre> InfantePadreList{get; set;}
 
-        public List<InfanteAcudiente> AcudienteList{get; set;}
+        public List<InfanteAcudiente> InfanteAcudienteList{get; set;}
 
         public List<Matricula> MatriculaList{get; set;}
 

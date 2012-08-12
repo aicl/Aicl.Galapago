@@ -688,6 +688,40 @@ Ext.define('ciudad.ComboBox', {
     }
 });
 
+// parentesco
+Ext.define('App.model.Parentesco', {
+    extend: 'Ext.data.Model',
+    idProperty: 'Id',
+    fields: [{type: 'int', name: 'Id'},   {type: 'string', name: 'Nombre'}]
+});
+
+var parentescoData = [{Id:1,Nombre:'Padre'},{Id:2,Nombre:'Madre'},
+	{Id:3,Nombre:'Abuelo'},{Id:4,Nombre:'Abuela'},
+	{Id:5,Nombre:'Tio'},{Id:6,Nombre:'Tia'},
+	{Id:7,Nombre:'Hermano'},{Id:8,Nombre:'Hermana'},
+	{Id:9,Nombre:'Padrino'}, {Id:10,Nombre:'Madrina'},
+	{Id:11,Nombre:'Otro'}
+	];
+
+function createParentescoStore() {
+    return Ext.create('Ext.data.Store', {
+        autoDestroy: true,
+        model: 'App.model.Parentesco',
+        data: parentescoData
+    });
+}
+
+Ext.define('App.view.parentesco.ComboBox', {
+	extend:'Ext.form.field.ComboBox',
+	alias : 'widget.parentescocombo',
+    displayField: 'Nombre',
+	valueField: 'Nombre',
+    store: createParentescoStore(),
+    queryMode: 'local',
+    typeAhead: true,
+    forceSelection:true
+});
+
 
 Ext.define('EstadoAsentado', {
     extend: 'Ext.data.Model',

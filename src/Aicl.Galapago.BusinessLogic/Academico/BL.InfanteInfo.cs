@@ -29,8 +29,8 @@ namespace Aicl.Galapago.BusinessLogic
 				var pensiones = proxy.Get<Pension>(ev=> ev.Where(predicate).OrderByDescending(q=>q.Periodo));
 
                 return new InfanteInfoResponse{
-					PadreList= padres,
-					AcudienteList=acudientes,
+					InfantePadreList= padres,
+					InfanteAcudienteList=acudientes,
 					MatriculaList=matriculas,
 					PensionList= pensiones
                 };

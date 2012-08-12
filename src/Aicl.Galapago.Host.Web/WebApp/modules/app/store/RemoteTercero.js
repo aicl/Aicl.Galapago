@@ -1,7 +1,7 @@
 Ext.define('App.store.RemoteTercero',{
 	extend: 'Aicl.data.Store',
 	model: 'App.model.Tercero',
-	constructor: function(config){
+	constructor: function(config){		
 		config=config||{};
 		config.storeId=config.storeId||'RemoteTercero';
 		config.pageSize= config.pageSize|| 12;

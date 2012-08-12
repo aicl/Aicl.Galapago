@@ -6,6 +6,7 @@ Ext.define('App.view.infante.Panel',{
     layout: 'hbox',
     dockedItems: [{
     	xtype: 'toolbar',
+    	name:'mainToolbar',
     	dock: 'top',
     	items: [{
             tooltip:'Nuevo', iconCls:'new_document',  disabled:true,
@@ -53,14 +54,17 @@ Ext.define('App.view.infante.TabPanel',{
     	items:[{
         	xtype: 'panel', ui:'default-framed',
         	style: {border: 0, padding: 0},
-        	width: 535, height:520,
+        	width: 535, height:535,
         	layout:'hbox',
         	items:[{xtype:'infantephotoform'}, {xtype:'infanteform'}]
     	},{
         	xtype: 'panel', ui:'default-framed',
         	style: {border: 0, padding: 0},
-        	width: 410, height:520,
-        	items:[{xtype:'infantepadrelist'}]
+        	width: 410, height:535,
+        	items:[
+        		{xtype:'infantepadrelist'},{xtype:'infantepadreform'},
+        		{xtype:'infanteacudientelist'},{xtype:'infanteacudienteform'}
+        	]
     	}]
    	},{
     	title:'Cursos',
@@ -74,7 +78,7 @@ Ext.define('App.view.infante.PhotoForm', {
     extend: 'Ext.form.Panel',
     alias : 'widget.infantephotoform',
     frame:false,
-    margin: '0 0 0 5',
+    margin: '5 0 0 5',
     bodyStyle: 'padding:10px 10px 0',
     width: 150,
     height: 200,
@@ -128,10 +132,10 @@ Ext.define('App.view.infante.Form', {
     ui:'default-framed',
     style: {border: 0, padding: 0},
     frame:false,
-    margin: '0 0 0 5px',
+    margin: '5 0 0 5px',
     bodyStyle :'padding:0px 0px 0px 0px',
     width:370,
-    height: 480,
+    autoHeight: true,
     autoScroll: true,
 	fieldDefaults :{ msgTarget: 'side',  labelWidth: 100, labelAlign: 'right'},
 	defaultType:'textfield',
@@ -140,6 +144,7 @@ Ext.define('App.view.infante.Form', {
     initComponent: function() {
         this.items = [{
     		xtype: 'toolbar',
+    		name:'infanteToolbar',
     		dock: 'top',
     		items: [{
            		tooltip:'Guardar',
@@ -245,7 +250,7 @@ Ext.define('App.view.infante.Form', {
 					xtype:"button",
 					tooltip:'Crear Tercero', 
 					iconCls:'add',
-           			action: 'newTercero',
+           			action: 'new',
 					hideLabel:true,
 					style:{marginLeft:"3px"}
 				}]
@@ -269,7 +274,18 @@ Ext.define('App.view.infante.Form', {
 					style:{marginLeft:"3px"}
 				}]
 			}]
-	
+		},{
+			name: 'CelularTercero',
+			fieldLabel: 'Celular',
+			readOnly:true
+		},{
+			name: 'TelefonoTercero',
+			fieldLabel: 'Telefono',
+			readOnly:true
+		},{
+			name: 'MailTercero',
+			fieldLabel: 'Mail',
+			readOnly:true
 		}]	
 	}];
 	
@@ -280,75 +296,59 @@ Ext.define('App.view.infante.Form', {
 Ext.define('App.view.infante.List',{ 
     extend: 'Ext.grid.Panel',
     alias : 'widget.infantelist', 
-    constructor: function(config){
-    	config= config|| {};
-    	config.store= config.store|| 'Infante',
-        config.frame = config.frame==undefined? false:config.frame;
-		config.selType = config.selType || 'rowmodel';
-    	config.height = config.height|| '100%'; //450;
-    	//config.width = config.width || 600;
-    	config.viewConfig = config.viewConfig || {
-        	stripeRows: true
-	    };
-        config.margin=config.margin|| '2 2 2 2';	
-    	if (arguments.length==0 )
-    		this.callParent([config]);
-    	else
-    		this.callParent(arguments); 
-    },
+    store: 'Infante',
+    frame: false,
+    selType:'rowmodel',
+    height: '100%',
+    viewConfig : {	stripeRows: true  },
+    margin: '2 2 2 2',	
     
     initComponent: function() {
+    	
+    this.bbar= Ext.create('Ext.PagingToolbar', {
+            store: this.store,
+            displayInfo: true,
+            displayMsg: 'Infantes del {0} al {1} de {2}',
+            emptyMsg: "No hay Infantes para Mostrar"
+    });
         
     this.columns=[{
-		text: 'Documento',
-		dataIndex: 'Documento'
+		text: 'Documento',	dataIndex: 'Documento'
 	},{
-		text: 'Nombres',
-		dataIndex: 'Nombres'
+		text: 'Nombres',	dataIndex: 'Nombres'
 	},{
-		text: 'Apellidos',
-		dataIndex: 'Apellidos'
+		text: 'Apellidos',	dataIndex: 'Apellidos'
 	},{
-		text: 'FechaNacimiento',
-		dataIndex: 'FechaNacimiento',
+		text: 'FechaNacimiento', dataIndex: 'FechaNacimiento',
 		renderer: Ext.util.Format.dateRenderer('d.m.Y')
 	},{
-		text: 'Sexo',
-		dataIndex: 'Sexo'
+		text: 'Sexo',		dataIndex: 'Sexo'
 	},{
-		text: 'Direccion',
-		dataIndex: 'Direccion'
+		text: 'Direccion',	dataIndex: 'Direccion'
 	},{
-		text: 'Telefono',
-		dataIndex: 'Telefono'
+		text: 'Telefono',	dataIndex: 'Telefono'
 	},{
-		text: 'Celular',
-		dataIndex: 'Celular'
+		text: 'Celular',	dataIndex: 'Celular'
 	},{
-		text: 'Mail',
-		dataIndex: 'Mail'
+		text: 'Mail',		dataIndex: 'Mail'
 	},{
-		text: 'Comentario',
-		dataIndex: 'Comentario'
+		text: 'Comentario',	dataIndex: 'Comentario'
 	},{
-		text: 'DocumentoTercero',
-		dataIndex: 'DocumentoTercero'
+		text: 'DocumentoTercero',	dataIndex: 'DocumentoTercero'
 	},{
-		text: 'DVTercero',
-		dataIndex: 'DVTercero'
+		text: 'DVTercero',	dataIndex: 'DVTercero'
 	},{
-		text: 'NombreTercero',
-		dataIndex: 'NombreTercero'
+		text: 'NombreTercero',	dataIndex: 'NombreTercero'
 	}];
 	
     this.dockedItems=[{
         xtype: 'toolbar',
         items: [{
             text:'Seleccionar',
-     		tooltip:'Seleccionar usuario',
+     		tooltip:'Seleccionar infate',
       		iconCls:'select',
     		disabled:true,
-    		action:'selectInfante'
+    		action:'select'
         }]		
     }]
                 
@@ -534,7 +534,172 @@ Ext.define('App.view.infante.TerceroForm', {
     }
 });
 
-// padre...
+Ext.define('App.view.infantepadre.List',{ 
+    extend: 'Ext.grid.Panel',
+    alias : 'widget.infantepadrelist', 
+    frame:false,
+    selType : 'rowmodel',
+    height:120,
+    autoWidth:true,
+    viewConfig : {stripeRows: true},
+    margin: '5 0 2 5',	
+    title: 'Parientes',
+    initComponent: function() {
+    
+    this.store = Ext.create('App.store.InfantePadre');
+    
+    this.columns=[{
+		text: 'Nombre',	dataIndex: 'NombreTercero',	width:150
+	},{
+		text: 'Celular', dataIndex: 'CelularTercero',width:80
+	},{
+		text: 'Telefono', dataIndex: 'TelefonoTercero',width:80
+	},{
+		text: 'Documento', dataIndex: 'DocumentoTercero'
+	},{
+		text: 'DV',	dataIndex: 'DVTercero'
+	}];
+                
+    this.callParent(arguments);
+    }
+});
+
+Ext.define('App.view.infantepadre.Form', {
+    extend: 'Ext.form.Panel',
+    alias : 'widget.infantepadreform',
+    ui:'default-framed',
+    frame:false,
+    margin: '0 0 0 5px',
+    bodyStyle :'padding:0px 0px 0px 0px',
+    style: {border: 0, padding: 0},
+    autoWidth:true,
+    autoHeight:true,
+    autoScroll:true,
+    fieldDefaults : { msgTarget: 'side', labelWidth: 120,labelAlign: 'right'},
+    defaultType:'textfield',
+    defaults : { anchor: '100%',labelStyle: 'padding-left:4px;'},
+         
+    initComponent: function() {
+    this.items = [{	
+    	xtype: 'toolbar',
+    	name: 'padreToolbar',
+        colspan:2,
+        items: [{
+            tooltip:'Agregar Pariente',
+            iconCls:'add',
+            disabled:true,
+            action: 'new'
+        },{
+         	tooltip:'Guardar',
+      		iconCls:'save_document',
+        	disabled:true,
+        	action:'save'
+        },'-',{
+            tooltip:'Borrar pariente seleccionado',
+            iconCls:'remove',
+            disabled:true,
+            action: 'delete'
+        }]
+    },{
+		xtype: 'hidden', name: 'Id'
+	},{
+		xtype: 'hidden', name: 'IdInfante'
+	},{
+		xtype: 'infantetercerocombo', name: 'IdTercero', fieldLabel: 'Nombre'
+	},{
+		name: 'Parentesco',	fieldLabel: 'Parentesco', xtype:'parentescocombo'
+	},{
+		name: 'MailTercero', fieldLabel: 'Mail', readOnly:true
+	}];
+  
+    this.callParent(arguments);
+    }
+});
+
+Ext.define('App.view.infanteacudiente.List',{ 
+    extend: 'Ext.grid.Panel',
+    alias : 'widget.infanteacudientelist', 
+    frame:false,
+    selType : 'rowmodel',
+    height:110,
+    autoWidth:true,
+    viewConfig : { 	stripeRows: true   },
+    margin: '25 0 2 5',
+    title:'Acudientes',    
+    initComponent: function() {
+    this.store = Ext.create('App.store.InfanteAcudiente');    
+    	
+    this.columns=[{
+		text: 'Nombre',	dataIndex: 'NombreTercero', width:150},
+	{
+		text: 'Celular', dataIndex: 'CelularTercero', width:80},
+	{
+		text: 'Telefono', dataIndex: 'TelefonoTercero', width:80},
+	{
+		text: 'Documento',	dataIndex: 'DocumentoTercero'},
+	{
+		text: 'DV',	dataIndex: 'DVTercero'
+	}];
+             
+    this.callParent(arguments);
+    }
+});
+
+Ext.define('App.view.infanteacudiente.Form', {
+    extend: 'Ext.form.Panel',
+    alias : 'widget.infanteacudienteform',
+    ui:'default-framed',
+    frame:false,
+    margin: '0 0 0 5px',
+    bodyStyle :'padding:0px 0px 0px 0px',
+    style: {border: 0, padding: 0},
+    autoWidth:true,
+    autoHeight:true,
+    autoScroll:true,
+    fieldDefaults : { msgTarget: 'side', labelWidth: 120,labelAlign: 'right'},
+    defaultType:'textfield',
+    defaults : { anchor: '100%',labelStyle: 'padding-left:4px;'},
+     
+    initComponent: function() {
+    this.items = [{	
+    	xtype: 'toolbar',
+    	name: 'acudienteToolbar',
+        colspan:2,
+        items: [{
+            tooltip:'Agregar Acudiente',
+            iconCls:'add',
+            disabled:true,
+            action: 'new'
+        },{
+         	tooltip:'Guardar',
+      		iconCls:'save_document',
+        	disabled:true,
+        	action:'save'
+        },'-',{
+            tooltip:'Borrar acudiente seleccionado',
+            iconCls:'remove',
+            disabled:true,
+            action: 'delete'
+        }]
+    },{
+		xtype: 'hidden',name: 'Id'
+	},{
+		xtype: 'hidden', name: 'IdInfante'
+	},{
+		xtype: 'infantetercerocombo', name: 'IdTercero', fieldLabel: 'Nombre'
+	},{
+		name: 'CelularTercero',	fieldLabel: 'Celular',readOnly:true
+	},{
+		name: 'TelefonoTercero', fieldLabel: 'Telefono', readOnly:true
+	},{
+		name: 'MailTercero', fieldLabel: 'Mail', readOnly:true
+	}];
+    
+    this.callParent(arguments);
+    }
+});
+
+
 Ext.define('App.model.InfantePadre',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Id',
@@ -545,7 +710,10 @@ Ext.define('App.model.InfantePadre',{
 		{name: 'Parentesco',type: 'string'},
 		{name: 'DocumentoTercero',type: 'string'},
 		{name: 'DVTercero',	type: 'string'},
-		{name: 'NombreTercero',type: 'string'}
+		{name: 'NombreTercero',type: 'string'},
+		{name: 'CelularTercero',	type: 'string'},
+		{name: 'TelefonTercero',	type: 'string'},
+		{name: 'MailTercero',	type: 'string'}
 	]
 });
 
@@ -555,90 +723,32 @@ Ext.define('App.store.InfantePadre',{
 	constructor: function(config){
 		config=config||{};
 		config.storeId=config.storeId||'InfantePadre';
-		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
 });
 
-Ext.define('App.view.infantepadre.List',{ 
-    extend: 'Ext.grid.Panel',
-    alias : 'widget.infantepadrelist', 
-    store:Ext.create('Ext.data.Store',{
-    	autoDestroy: true,  
-    	model: 'App.model.InfantePadre',
-    	data:[]
-    }),
-    frame:false,
-    selType : 'rowmodel',
-    height:150,
-    autoWidth:true,
-    viewConfig : {stripeRows: true},
-    margin: '2 2 2 2',	
-    
-    initComponent: function() {
-        
-    this.columns=[{
-		text: 'IdInfante',
-		dataIndex: 'IdInfante',
-		flex: 1,
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'IdTercero',
-		dataIndex: 'IdTercero',
-		sortable: true,
-		renderer: function(value, metadata, record, store){
-           	if(value>=0){
-            	return '<div class="x-cell-positive">'+Aicl.Util.formatInt(value)+'</div>';
-        	}else{
-            	return '<div class="x-cell-negative">'+Aicl.Util.formatInt(value)+'</div>';
-        	}
-        }
-	},
-	{
-		text: 'Parentesco',
-		dataIndex: 'Parentesco',
-		sortable: true
-	},
-	{
-		text: 'DocumentoTercero',
-		dataIndex: 'DocumentoTercero',
-		sortable: true
-	},
-	{
-		text: 'DVTercero',
-		dataIndex: 'DVTercero',
-		sortable: true
-	},
-	{
-		text: 'NombreTercero',
-		dataIndex: 'NombreTercero',
-		sortable: true
+Ext.define('App.model.InfanteAcudiente',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',	type: 'int'},
+		{name: 'IdInfante',	type: 'int'},
+		{name: 'IdTercero',	type: 'int'},
+		{name: 'DocumentoTercero',  type: 'string'},
+		{name: 'DVTercero',	type: 'string'},
+		{name: 'NombreTercero',	type: 'string'},
+		{name: 'CelularTercero',	type: 'string'},
+		{name: 'TelefonTercero',	type: 'string'},
+		{name: 'MailTercero',	type: 'string'}
+	]
+});
+
+Ext.define('App.store.InfanteAcudiente',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.InfanteAcudiente',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'InfanteAcudiente';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
 	}
-];
- 
-        this.dockedItems=[{
-            xtype: 'toolbar',
-            items: [{
-                text:'New',
-                tooltip:'add new record',
-                iconCls:'add',
-                disabled:true,
-                action: 'new'
-            },'-',{
-                text:'Delete',
-                tooltip:'delete selected record',
-                iconCls:'remove',
-                disabled:true,
-                action: 'delete'
-            }]		
-        }]
-                
-        this.callParent(arguments);
-    }
 });
