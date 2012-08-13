@@ -74,6 +74,8 @@ namespace Aicl.Galapago.BusinessLogic
                     request.NombreTercero=tercero.Nombre;
                     request.DocumentoTercero=tercero.Documento;
                     request.DVTercero=tercero.DigitoVerificacion;
+					request.TelefonoTercero= tercero.Telefono;
+					request.MailTercero= tercero.Mail;
                 }
 
                 proxy.Create<Infante>(request);
@@ -106,6 +108,8 @@ namespace Aicl.Galapago.BusinessLogic
                         request.NombreTercero=string.Empty;
                         request.DocumentoTercero=string.Empty;
                         request.DVTercero=string.Empty;
+						request.TelefonoTercero=string.Empty;
+						request.MailTercero=string.Empty;
                     }
                     else
                     {
@@ -118,6 +122,8 @@ namespace Aicl.Galapago.BusinessLogic
                             request.NombreTercero=tercero.Nombre;
                             request.DocumentoTercero=tercero.Documento;
                             request.DVTercero=tercero.DigitoVerificacion;
+							request.TelefonoTercero= tercero.Telefono;
+							request.MailTercero= tercero.Mail;
                         }
                     }
                 }
@@ -143,7 +149,6 @@ namespace Aicl.Galapago.BusinessLogic
             {
                 var oldData= proxy.FirstOrDefault<Infante>(q=>q.Id==request.Id);
                 oldData.AssertExists(request.Id);
-                //request.PopulateWith(oldData);
                 proxy.Delete<Infante>(q=>q.Id==request.Id);
             });
 

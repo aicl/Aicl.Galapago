@@ -1,11 +1,15 @@
 Ext.define('App.view.infante.Panel',{ 
     extend: 'Ext.panel.Panel',
     alias : 'widget.infantepanel',
-    frame: true,
-    width:965,
+    frame: false,
+    ui:'default-framed',
+    style: {border: 0, padding: 0},
+    margin: '0 0 0 0',
+    width:956,
     layout: 'hbox',
     dockedItems: [{
     	xtype: 'toolbar',
+    	style: {border: 0, padding: 1},
     	name:'mainToolbar',
     	dock: 'top',
     	items: [{
@@ -46,7 +50,8 @@ Ext.define('App.view.infante.TabPanel',{
 	extend: 'Ext.tab.Panel',
     alias : 'widget.infantetabpanel',
     frame: true,
-    anchor:'100%',
+    margin: '2 0 0 0',
+    autoWidth:true,
     items:[{
     	title:'Infante',
     	xtype:'panel',
@@ -54,13 +59,13 @@ Ext.define('App.view.infante.TabPanel',{
     	items:[{
         	xtype: 'panel', ui:'default-framed',
         	style: {border: 0, padding: 0},
-        	width: 535, height:535,
+        	width: 535, height:540,
         	layout:'hbox',
         	items:[{xtype:'infantephotoform'}, {xtype:'infanteform'}]
     	},{
         	xtype: 'panel', ui:'default-framed',
         	style: {border: 0, padding: 0},
-        	width: 410, height:535,
+        	width: 410, height:540,
         	items:[
         		{xtype:'infantepadrelist'},{xtype:'infantepadreform'},
         		{xtype:'infanteacudientelist'},{xtype:'infanteacudienteform'}
@@ -78,8 +83,8 @@ Ext.define('App.view.infante.PhotoForm', {
     extend: 'Ext.form.Panel',
     alias : 'widget.infantephotoform',
     frame:false,
-    margin: '5 0 0 5',
-    bodyStyle: 'padding:10px 10px 0',
+    margin: '2 0 0 0',
+    bodyStyle: 'padding:5px 5px 0',
     width: 150,
     height: 200,
     initComponent: function() {
@@ -132,7 +137,7 @@ Ext.define('App.view.infante.Form', {
     ui:'default-framed',
     style: {border: 0, padding: 0},
     frame:false,
-    margin: '5 0 0 5px',
+    margin: '2 0 0 5px',
     bodyStyle :'padding:0px 0px 0px 0px',
     width:370,
     autoHeight: true,
@@ -301,7 +306,6 @@ Ext.define('App.view.infante.List',{
     selType:'rowmodel',
     height: '100%',
     viewConfig : {	stripeRows: true  },
-    margin: '2 2 2 2',	
     
     initComponent: function() {
     	
@@ -385,8 +389,8 @@ Ext.define('App.view.infante.SearchWindow',{
     alias : 'widget.infantesearchwindow',
 	closable: true,
     closeAction: 'hide',
-    y:35,
-    x:30,
+    y:25,
+    x:25,
     autoHeight:true,
     width: 400,
     modal: false,
@@ -416,7 +420,6 @@ Ext.define('App.view.infante.TerceroForm', {
     alias : 'widget.infanteterceroform',
     ui:'default-framed',
     frame:false,
-    margin: '5 5 5 5px',
     bodyStyle :'padding:0px 0px 0px 0px',
     width:400,
     autoScroll: true,
@@ -441,7 +444,7 @@ Ext.define('App.view.infante.TerceroForm', {
 	},{
 		xtype: 'tipodocumentocombo',
 		name: 'IdTipoDocumento',
-		fieldLabel: 'TipoDocumento'
+		fieldLabel: 'Tipo Documento'
 	},{
 		name: 'Documento',
 		fieldLabel: 'Documento',
@@ -450,7 +453,7 @@ Ext.define('App.view.infante.TerceroForm', {
 		enforceMaxLength: true
 	},{
 		name: 'DigitoVerificacion',
-		fieldLabel: 'DigitoVerificacion',
+		fieldLabel: 'Digito Verificacion',
 		maxLength: 1,
 		enforceMaxLength: true
 	},{
@@ -542,8 +545,9 @@ Ext.define('App.view.infantepadre.List',{
     height:120,
     autoWidth:true,
     viewConfig : {stripeRows: true},
-    margin: '5 0 2 5',	
+    margin: '2 0 2 5',	
     title: 'Parientes',
+
     initComponent: function() {
     
     this.store = Ext.create('App.store.InfantePadre');
@@ -712,7 +716,7 @@ Ext.define('App.model.InfantePadre',{
 		{name: 'DVTercero',	type: 'string'},
 		{name: 'NombreTercero',type: 'string'},
 		{name: 'CelularTercero',	type: 'string'},
-		{name: 'TelefonTercero',	type: 'string'},
+		{name: 'TelefonoTercero',	type: 'string'},
 		{name: 'MailTercero',	type: 'string'}
 	]
 });
@@ -738,7 +742,7 @@ Ext.define('App.model.InfanteAcudiente',{
 		{name: 'DVTercero',	type: 'string'},
 		{name: 'NombreTercero',	type: 'string'},
 		{name: 'CelularTercero',	type: 'string'},
-		{name: 'TelefonTercero',	type: 'string'},
+		{name: 'TelefonoTercero',	type: 'string'},
 		{name: 'MailTercero',	type: 'string'}
 	]
 });

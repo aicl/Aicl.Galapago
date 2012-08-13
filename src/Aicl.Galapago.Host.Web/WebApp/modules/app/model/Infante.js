@@ -35,7 +35,7 @@ Ext.define('App.model.Infante',{
 	},{
 		name: 'CelularTercero',	type: 'string'
 	},{
-		name: 'TelefonTercero',	type: 'string'
+		name: 'TelefonoTercero',	type: 'string'
 	},{
 		name: 'MailTercero',	type: 'string'
 	}]

@@ -17,11 +17,17 @@ Ext.define('App.controller.Infante',{
     	{ref: 'terceroForm', 	 selector: 'infanteterceroform' },
     	{ref: 'terceroSaveButton', 	 selector: 'infanteterceroform button[action=save]' },
     	
-    	
+    	{ref: 'padreList', 	 selector: 'infantepadrelist' },
     	{ref: 'padreForm', 	 selector: 'infantepadreform' },
     	{ref: 'padreNewButton', selector: 'infantepadreform button[action=new]' },
     	{ref: 'padreSaveButton', selector: 'infantepadreform button[action=save]' },
-    	{ref: 'padreDeleteButton', selector: 'infantepadreform button[action=delete]' }
+    	{ref: 'padreDeleteButton', selector: 'infantepadreform button[action=delete]' },
+    	
+    	{ref: 'acudienteList', 	 selector: 'infanteacudientelist' },
+    	{ref: 'acudienteForm', 	 selector: 'infanteacudienteform' },
+    	{ref: 'acudienteNewButton', selector: 'infanteacudienteform button[action=new]' },
+    	{ref: 'acudienteSaveButton', selector: 'infanteacudienteform button[action=save]' },
+    	{ref: 'acudienteDeleteButton', selector: 'infanteacudienteform button[action=delete]' }
     	
     ],
 
@@ -43,14 +49,31 @@ Ext.define('App.controller.Infante',{
                 selectionchange: function( sm,  selections,  eOpts){
                 	var disable=true;
                 	if (selections.length){
-    					disable= !this.getStore('InfantePadre').canDestroy();
+    					disable= !this.getInfanteStore().canUpdate();
     					var record=selections[0];
+    					this.terceroAddLocal(record, 'IdTercero');
     					this.getPadreForm().getForm().loadRecord(record);
         			}
         			else{
         				this.getPadreForm().getForm().reset();
         			}
         			this.getPadreDeleteButton().setDisabled(disable);
+                }
+            },
+            
+            'infanteacudientelist': { 
+                selectionchange: function( sm,  selections,  eOpts){
+                	var disable=true;
+                	if (selections.length){
+    					disable= !this.getInfanteStore().canUpdate();
+    					var record=selections[0];
+    					this.terceroAddLocal(record, 'IdTercero');
+    					this.getAcudienteForm().getForm().loadRecord(record);
+        			}
+        			else{
+        				this.getAcudienteForm().getForm().reset();
+        			}
+        			this.getAcudienteDeleteButton().setDisabled(disable);
                 }
             },
             
@@ -62,7 +85,7 @@ Ext.define('App.controller.Infante',{
                 	documento=parseInt(searchText);
                 	if(isNaN(documento)){
                 		documento=''
-                		if(searchText.indexOf(',')>0){
+                		if(searchText.indexOf(',')>=0){
                 			var v= searchText.split(',');
                 			nombres=v[0].trim();
                 			apellidos=v[1].trim();
@@ -95,9 +118,14 @@ Ext.define('App.controller.Infante',{
             'toolbar[name=mainToolbar] button[action=new]':{
             	click:function(button, event, options){
                 	this.getInfanteForm().getForm().reset();
+                	
                 	this.getStore('InfantePadre').removeAll();
                 	this.getPadreSaveButton().setDisabled(true);
                 	this.getPadreNewButton().setDisabled(true);
+                	
+                	this.getStore('InfanteAcudiente').removeAll();
+                	this.getAcudienteSaveButton().setDisabled(true);
+                	this.getAcudienteNewButton().setDisabled(true);
                 }
             },
             
@@ -109,9 +137,10 @@ Ext.define('App.controller.Infante',{
             	}
             },
             
+            //padre
             'infantepadreform button[action=new]':{
             	click:function(button, event, options){
-                	this.getPadreForm().getForm().reset();
+            		this.getPadreList().getSelectionModel().deselectAll();
                 }
             },
             
@@ -122,6 +151,22 @@ Ext.define('App.controller.Infante',{
             		this.getStore('InfantePadre').save(record);
             	}
             },
+            
+            //acudiente
+            'infanteacudienteform button[action=new]':{
+            	click:function(button, event, options){
+            		this.getAcudienteList().getSelectionModel().deselectAll();
+                }
+            },
+            
+            'infanteacudienteform button[action=save]':{
+            	click: function(button, event, options){
+            		var record = this.getAcudienteForm().getForm().getFieldValues(true);
+            		this.getStore('InfanteAcudiente').getProxy().extraParams={format:'json'};
+            		this.getStore('InfanteAcudiente').save(record);
+            	}
+            },
+            
             //tercero 
             'infanteform button[action=new]': {
                 click: function(button, event, options){
@@ -136,8 +181,8 @@ Ext.define('App.controller.Infante',{
             			'DocumentoTercero':data.Documento,
             			'DVTercero':data.DigitoVerificacion,
             			'TelefonoTercero':data.Telefono,
-            			'CelularTercero':data.Celular
-            			
+            			'CelularTercero':data.Celular,
+            			'MailTercero':data.Mail
             		});
             	}
             },         
@@ -176,7 +221,7 @@ Ext.define('App.controller.Infante',{
     	
     	this.getInfanteStore().on('write', function(store, operation, eOpts ){
     		var record =  operation.getRecords()[0];
-            if (operation.action != 'destroy') {
+            if (operation.action == 'create') {
             	this.infanteLoadRecord(record);
             }            
     	}, this);
@@ -204,21 +249,15 @@ Ext.define('App.controller.Infante',{
     	var iaStore= me.getStore('InfanteAcudiente');
     	
     	this.getInfanteDeleteButton().setDisabled(!this.getInfanteStore().canDestroy());
-    	this.getPadreNewButton().setDisabled(!ipStore.canCreate());
-    	this.getPadreSaveButton().setDisabled(!ipStore.canUpdate());
     	
-    	var rt= this.getRemoteTerceroStore();
-		if(!rt.getById(record.get('IdTerceroFactura'))){
-			rt.addLocal({
-				Id:record.get('IdTerceroFactura'),
-				Nombre:record.get('NombreTercero'),
-				Documento:record.get('DocumentoTercero'),
-				DigitoVerificacion:record.get('DVTercero'),
-				Telefono:record.get('TelefonoTercero'),
-				Celular:record.get('CelularTercero')
-			})
-		};
-                    	
+    	this.getPadreNewButton().setDisabled(!this.getInfanteStore().canUpdate());
+    	this.getPadreSaveButton().setDisabled(!this.getInfanteStore().canUpdate());
+    	
+    	this.getAcudienteNewButton().setDisabled(!this.getInfanteStore().canUpdate());
+    	this.getAcudienteSaveButton().setDisabled(!this.getInfanteStore().canUpdate());
+    	
+    	this.terceroAddLocal(record, 'IdTerceroFactura');
+    	    	                    	
         this.getInfanteForm().getForm().loadRecord(record);        
         ipStore.removeAll();
         iaStore.removeAll();
@@ -242,6 +281,22 @@ Ext.define('App.controller.Infante',{
 				}
 			}
 		});
+    },
+    
+    terceroAddLocal:function(record, id){
+    	var rt= this.getRemoteTerceroStore();
+		if(!rt.getById(record.get(id))){
+			rt.addLocal({
+				Id:record.get(id),
+				Nombre:record.get('NombreTercero'),
+				Documento:record.get('DocumentoTercero'),
+				DigitoVerificacion:record.get('DVTercero'),
+				Telefono:record.get('TelefonoTercero'),
+				Celular:record.get('CelularTercero'),
+				Mail:record.get('MailTercero')
+			})
+		};
     }
+    
  	
 });

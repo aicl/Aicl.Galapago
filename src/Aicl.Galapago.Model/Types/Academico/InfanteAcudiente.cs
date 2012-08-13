@@ -32,6 +32,16 @@ namespace Aicl.Galapago.Model.Types
 
         [BelongsTo(typeof(Tercero),"Nombre")]
         public string NombreTercero {get;set;}
+
+		[BelongsTo(typeof(Tercero),"Celular")]
+        public string CelularTercero {get;set;}
+
+		[BelongsTo(typeof(Tercero),"Telefono")]
+        public string TelefonoTercero {get;set;}
+
+		[BelongsTo(typeof(Tercero),"Mail")]
+        public string MailTercero {get;set;}
+
         #endregion Tercero
 
     }
