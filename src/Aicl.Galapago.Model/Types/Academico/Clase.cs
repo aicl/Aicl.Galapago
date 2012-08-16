@@ -19,7 +19,7 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("DESCRIPCION")]
 		[Required]
 		[StringLength(30)]
-		public String Descripcion { get; set;} 
+		public String Nombre { get; set;} 
 
 		[Alias("ACTIVO")]
 		public bool Activo { get; set;} 

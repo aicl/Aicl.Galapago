@@ -24,7 +24,7 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("CALENDARIO")]
 		[Required]
 		[StringLength(1)]
-		public String Nombre { get; set;} 
+		public String Calendario { get; set;} 
 
 		[Alias("FECHA_INICIO")]
 		public DateTime FechaInicio { get; set;} 

@@ -597,6 +597,29 @@ Ext.form.Panel.implement({
 });
 
 
+//calendario
+
+Ext.define('App.model.Calendario',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Calendario',
+	fields:[
+		{name: 'Calendario',type: 'string'},
+		{name: 'Descripcion',type: 'string'}]
+});
+
+Ext.define('App.store.Calendario',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Calendario',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Calendario';
+		data=[{Calendario:'A',Descripcion:'Calendario A'},{Calendario:'B',Descripcion:'Calendario B'},{Calendario:'N',Descripcion:'N/A'}];
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
+});
+
+
+
 // tipo Documento
 Ext.define('App.model.TipoDocumento',{
 	extend: 'Ext.data.Model',
@@ -723,6 +746,216 @@ Ext.define('App.view.parentesco.ComboBox', {
 });
 
 
+// models && stores 
+Ext.define('App.model.Infante',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[{
+		name: 'Id',	type: 'int'
+	},{
+		name: 'Documento',	type: 'string'
+	},{
+		name: 'Nombres',type: 'string'
+	},{
+		name: 'Apellidos',	type: 'string'
+	},{
+		name: 'IdTerceroFactura',	type: 'int'
+	},{
+		name: 'FechaNacimiento',type: 'date',
+		convert: function(v){return Aicl.Util.convertToDate(v);}
+	},{
+		name: 'Sexo',	type: 'string'
+	},{
+		name: 'Direccion',	type: 'string'
+	},{
+		name: 'Telefono',	type: 'string'
+	},{
+		name: 'Celular',	type: 'string'
+	},{
+		name: 'Mail',		type: 'string'
+	},{
+		name: 'Comentario',	type: 'string'
+	},{
+		name: 'DocumentoTercero',type: 'string'
+	},{
+		name: 'DVTercero',	type: 'string'
+	},{
+		name: 'NombreTercero',	type: 'string'
+	},{
+		name: 'CelularTercero',	type: 'string'
+	},{
+		name: 'TelefonoTercero',	type: 'string'
+	},{
+		name: 'MailTercero',	type: 'string'
+	}]
+});
+
+Ext.define('App.store.Infante',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Infante',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Infante';
+		config.pageSize= 12;
+    	config.remoteSort=true;
+    	config.proxy= Aicl.Util.createRestProxy({
+    		url: config.url||(Aicl.Util.getUrlApi()+'/Infante'),
+    		totalProperty: 'TotalCount',
+    		storeId:config.storeId,
+        	pageParam:'page',
+        	limitParam:'limit',
+        	startParam:'start'
+    	});
+				
+		if(arguments.length==0)	this.callParent([config]);	else this.callParent(arguments);
+	}
+});
+
+Ext.define('App.model.InfanteAcudiente',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',	type: 'int'},
+		{name: 'IdInfante',	type: 'int'},
+		{name: 'IdTercero',	type: 'int'},
+		{name: 'DocumentoTercero',  type: 'string'},
+		{name: 'DVTercero',	type: 'string'},
+		{name: 'NombreTercero',	type: 'string'},
+		{name: 'CelularTercero',	type: 'string'},
+		{name: 'TelefonoTercero',	type: 'string'},
+		{name: 'MailTercero',	type: 'string'}
+	]
+});
+
+Ext.define('App.store.InfanteAcudiente',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.InfanteAcudiente',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'InfanteAcudiente';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
+});
+
+Ext.define('App.model.InfantePadre',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'IdInfante',	type: 'int'	},
+		{name: 'IdTercero',	type: 'int'	},
+		{name: 'Parentesco',type: 'string'},
+		{name: 'DocumentoTercero',type: 'string'},
+		{name: 'DVTercero',	type: 'string'},
+		{name: 'NombreTercero',type: 'string'},
+		{name: 'CelularTercero',	type: 'string'},
+		{name: 'TelefonoTercero',	type: 'string'},
+		{name: 'MailTercero',	type: 'string'}
+	]
+});
+
+Ext.define('App.store.InfantePadre',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.InfantePadre',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'InfantePadre';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
+});
+
+Ext.define('App.model.Matricula',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'IdInfante',	type: 'int'},
+		{name: 'IdCurso',	type: 'int'},
+		{name: 'IdIngreso',	type: 'int'},
+		{name: 'IdClase',	type: 'int'},
+		{name: 'Activo',	type: 'boolean'},
+		{name: 'Descripcion',	type: 'string'},
+		{name: 'FechaInicio',type: 'date',convert: function(v){return Aicl.Util.convertToDate(v);}},
+		{name: 'FechaTerminacion',	type: 'date',	convert: function(v){return Aicl.Util.convertToDate(v);}},
+		{name: 'Nombre',	type: 'string'},
+		{name: 'IdTercero',	type: 'int'},
+		{name: 'Valor',	type: 'number'},
+		{name: 'Saldo',	type: 'number'},
+		{name: 'CodigoDocumento',	type: 'string'},
+		{name: 'Documento',	type: 'string'}
+	]
+});
+
+Ext.define('App.store.Matricula',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Matricula',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Matricula';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.model.Pension',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'IdMatricula',type: 'int'},
+		{name: 'IdIngreso',	type: 'int'},
+		{name: 'Periodo',type: 'string'}
+	]
+});
+
+Ext.define('App.store.Pension',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Pension',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Pension';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.model.Curso',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'Descripcion',type: 'string'},
+		{name: 'Calendario',type: 'string'},
+		{name: 'FechaInicio',type: 'date',convert: function(v){return Aicl.Util.convertToDate(v);}},
+		{name: 'FechaTerminacion',type: 'date',convert: function(v){return Aicl.Util.convertToDate(v);}}
+	]
+});
+
+Ext.define('App.store.Curso',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Curso',
+	constructor: function(config){
+		config=config||{};
+		config.storeId=config.storeId||'Curso';
+		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
+	}
+});
+
+Ext.define('App.model.Clase',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'	},
+		{name: 'Nombre',type: 'string'},
+		{name: 'Activo',type: 'boolean'}
+	]
+});
+
+Ext.define('App.store.Clase',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Clase',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Clase';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+// fin models && stores
+
+
 Ext.define('EstadoAsentado', {
     extend: 'Ext.data.Model',
     idProperty: 'Id',
@@ -815,7 +1048,6 @@ Ext.define('centroautorizado.ComboBox',{
     forceSelection:true,
     name:'IdCentro'
 });
-
 
 Ext.define('CodigoEI',{
 	extend: 'Ext.data.Model',

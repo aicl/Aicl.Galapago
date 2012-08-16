@@ -92,6 +92,5 @@ namespace Aicl.Galapago.Model.Types
         public string NombreDocumentoTercero {get;set;}
         #endregion TipoDocumento Tercero
 
-
 	}
 }

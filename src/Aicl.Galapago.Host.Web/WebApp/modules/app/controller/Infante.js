@@ -1,6 +1,6 @@
 Ext.define('App.controller.Infante',{
 	extend: 'Ext.app.Controller',
-    stores: ['Infante','RemoteTercero'],  
+    stores: ['Infante','RemoteTercero','InfanteAcudiente','InfantePadre','Matricula','Curso','Clase'],  
     models: ['Infante','Tercero'],
     views:  ['infante.Panel' ],
     refs:[
@@ -27,7 +27,13 @@ Ext.define('App.controller.Infante',{
     	{ref: 'acudienteForm', 	 selector: 'infanteacudienteform' },
     	{ref: 'acudienteNewButton', selector: 'infanteacudienteform button[action=new]' },
     	{ref: 'acudienteSaveButton', selector: 'infanteacudienteform button[action=save]' },
-    	{ref: 'acudienteDeleteButton', selector: 'infanteacudienteform button[action=delete]' }
+    	{ref: 'acudienteDeleteButton', selector: 'infanteacudienteform button[action=delete]' },
+    	
+    	{ref: 'matriculaForm', 	 selector: 'infantematriculaform' },
+    	{ref: 'matriculaNewButton', selector: 'infantematriculaform button[action=new]' },
+    	{ref: 'matriculaSaveButton', selector: 'infantematriculaform button[action=save]' },
+    	{ref: 'matriculaAsentarButton', selector: 'infantematriculaform button[action=asentar]' },
+    	{ref: 'matriculaDeleteButton', selector: 'infantematriculaform button[action=delete]' }
     	
     ],
 
@@ -76,6 +82,33 @@ Ext.define('App.controller.Infante',{
         			this.getAcudienteDeleteButton().setDisabled(disable);
                 }
             },
+            
+            'infantematriculalist': { 
+                selectionchange: function( sm,  selections,  eOpts){
+                	var disable=true;
+                	
+                	if (selections.length){
+    					disable= !this.getInfanteStore().canUpdate();
+    					var record=selections[0];
+    					this.getMatriculaForm().getForm().loadRecord(record);
+    					if(record.get('IdIngreso')){
+    						this.getMatriculaAsentarButton().setIconCls('desasentar');
+    						this.getMatriculaAsentarButton().setTooltip('Reversar Matricula');
+    					}
+    					else{
+    						this.getMatriculaAsentarButton().setIconCls('sasentar');
+    						this.getMatriculaAsentarButton().setTooltip('Matricular');
+    					}
+    					
+        			}
+        			else{
+        				this.getMatriculaForm().getForm().reset();
+        			}
+        			this.getMatriculaDeleteButton().setDisabled(disable);
+        			this.getMatriculaAsentarButton().setDisabled(disable);
+                }
+            },
+           
             
         	'infantepanel button[action=buscarInfante]': {
                 click: function(button, event, options){
@@ -126,6 +159,12 @@ Ext.define('App.controller.Infante',{
                 	this.getStore('InfanteAcudiente').removeAll();
                 	this.getAcudienteSaveButton().setDisabled(true);
                 	this.getAcudienteNewButton().setDisabled(true);
+                	
+                	this.getMatriculaStore().removeAll();
+                	this.getMatriculaNewButton().setDisabled(true);
+    				this.getMatriculaSaveButton().setDisabled(true);
+    				
+    				
                 }
             },
             
@@ -197,6 +236,20 @@ Ext.define('App.controller.Infante',{
     },
     
     onLaunch: function(application){
+    	var me=this;
+    	Aicl.Util.executeRestRequest({
+			url : Aicl.Util.getUrlApi()+'/Infante/Aux'+'?format=json',
+			params:{Fecha:Ext.Date.format(new Date(),'d.m.Y'), Activo:true},
+			method : 'get',
+			callback : function(result,success) {
+				console.log('InfanteAux result', arguments);
+				if(success){
+					me.getCursoStore().loadRawData(result.CursoList);
+					me.getClaseStore().loadRawData(result.ClaseList);
+				}
+			}
+		});
+    	    	
     	
     	this.getInfanteStore().on('load', function(store , records, success, eOpts){
     		if(!success){
@@ -247,6 +300,7 @@ Ext.define('App.controller.Infante',{
     	var me=this;
     	var ipStore= me.getStore('InfantePadre');
     	var iaStore= me.getStore('InfanteAcudiente');
+    	var maStore = me.getMatriculaStore()
     	
     	this.getInfanteDeleteButton().setDisabled(!this.getInfanteStore().canDestroy());
     	
@@ -256,11 +310,15 @@ Ext.define('App.controller.Infante',{
     	this.getAcudienteNewButton().setDisabled(!this.getInfanteStore().canUpdate());
     	this.getAcudienteSaveButton().setDisabled(!this.getInfanteStore().canUpdate());
     	
+    	this.getMatriculaNewButton().setDisabled(!this.getInfanteStore().canUpdate());
+    	this.getMatriculaSaveButton().setDisabled(!this.getInfanteStore().canUpdate());
+    	
     	this.terceroAddLocal(record, 'IdTerceroFactura');
     	    	                    	
         this.getInfanteForm().getForm().loadRecord(record);        
         ipStore.removeAll();
         iaStore.removeAll();
+        maStore.removeAll();
         
         Aicl.Util.executeRestRequest({
 			url : Aicl.Util.getUrlApi()+'/Infante/Info/'+record.getId()+'?format=json',
@@ -268,16 +326,9 @@ Ext.define('App.controller.Infante',{
 			callback : function(result,success) {
 				console.log('InfanteInfo result', arguments);
 				if(success){
-					for(var r in result.InfantePadreList){
-						ipStore.addLocal(result.InfantePadreList[r]);
-					};
-					for(var r in result.InfanteAcudienteList){
-						iaStore.addLocal(result.InfanteAcudienteList[r]);
-					}
-					
-				}
-				else{
-					
+					ipStore.loadRawData(result.InfantePadreList);
+					iaStore.loadRawData(result.InfanteAcudienteList);	
+					maStore.loadRawData(result.InfanteMatriculaList);
 				}
 			}
 		});

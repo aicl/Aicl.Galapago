@@ -77,6 +77,9 @@
     <Compile Include="Services\Egreso\ComprobanteIngresoItemService.cs" />
     <Compile Include="Academico\InfanteService.cs" />
     <Compile Include="Academico\InfanteInfoService.cs" />
+    <Compile Include="Academico\CursoService.cs" />
+    <Compile Include="Academico\ClaseService.cs" />
+    <Compile Include="Academico\InfanteAuxService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
