@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using ServiceStack.ServiceInterface.ServiceModel;
 
@@ -6,7 +5,7 @@ namespace Aicl.Galapago.Model.Operations
 {
 	public class Response<T>:IHasResponseStatus where T:new()
 	{
-        private long? totalCount;
+        long? totalCount;
 
 		public Response ()
 		{
@@ -18,11 +17,10 @@ namespace Aicl.Galapago.Model.Operations
 		
 		public List<T> Data {get; set;}
 
-
         public long? TotalCount {
             get {return totalCount.HasValue? totalCount.Value: Data.Count;}
             set { totalCount=value;}
         }
-		
+
 	}
 }

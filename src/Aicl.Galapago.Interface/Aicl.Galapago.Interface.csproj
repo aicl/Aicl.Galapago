@@ -80,6 +80,7 @@
     <Compile Include="Academico\CursoService.cs" />
     <Compile Include="Academico\ClaseService.cs" />
     <Compile Include="Academico\InfanteAuxService.cs" />
+    <Compile Include="Academico\MatricualService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

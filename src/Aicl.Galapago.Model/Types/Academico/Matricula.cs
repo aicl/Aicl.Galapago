@@ -34,6 +34,12 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("ACTIVO")]
 		public bool Activo { get; set;} 
 
+		[Alias("ID_SUCURSAL")]
+		public Int32 IdSucursal { get; set;} 
+
+		[Alias("ID_CENTRO")]
+		public Int32 IdCentro { get; set;} 
+
 		#region Curso
 		[BelongsTo(typeof(Curso))]
 		public String Descripcion { get; set;} 

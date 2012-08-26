@@ -740,7 +740,7 @@ Ext.define('App.view.infantematricula.List',{
 	{
 		text: 'Matriculado',	dataIndex: 'IdIngreso', width:80},
 	{
-		text: 'Clase', dataIndex: 'Clase', width:150
+		text: 'Clase', dataIndex: 'Nombre', width:150
 	}];
              
     this.callParent(arguments);
@@ -791,6 +791,10 @@ Ext.define('App.view.infantematricula.Form', {
 		xtype: 'hidden', name: 'Id'
 	},{
 		xtype: 'hidden', name: 'IdInfante'
+	},{
+		xtype: 'sucursalautorizadacombo',fieldLabel: 'Sucursal'
+	},{
+		xtype: 'centroautorizadocombo',fieldLabel: 'Centro'
 	},{
 		xtype: 'infantecursocombo', name: 'IdCurso', fieldLabel: 'Curso', width:300
 	},{

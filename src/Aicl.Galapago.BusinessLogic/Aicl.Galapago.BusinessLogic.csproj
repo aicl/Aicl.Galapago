@@ -79,6 +79,7 @@
     <Compile Include="Academico\BL.Curso.cs" />
     <Compile Include="Academico\BL.Clase.cs" />
     <Compile Include="Academico\BL.InfanteAux.cs" />
+    <Compile Include="Academico\BL.Matricula.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

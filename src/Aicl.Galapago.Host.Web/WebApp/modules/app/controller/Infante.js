@@ -30,6 +30,8 @@ Ext.define('App.controller.Infante',{
     	{ref: 'acudienteDeleteButton', selector: 'infanteacudienteform button[action=delete]' },
     	
     	{ref: 'matriculaForm', 	 selector: 'infantematriculaform' },
+    	{ref: 'sucursalAutorizadaCombo', 	 selector: 'infantematriculaform sucursalautorizadacombo' },
+    	{ref: 'centroAutorizadoCombo', 	 selector: 'infantematriculaform centroautorizadocombo' },
     	{ref: 'matriculaNewButton', selector: 'infantematriculaform button[action=new]' },
     	{ref: 'matriculaSaveButton', selector: 'infantematriculaform button[action=save]' },
     	{ref: 'matriculaAsentarButton', selector: 'infantematriculaform button[action=asentar]' },
@@ -101,9 +103,7 @@ Ext.define('App.controller.Infante',{
     					}
     					
         			}
-        			else{
-        				this.getMatriculaForm().getForm().reset();
-        			}
+        			
         			this.getMatriculaDeleteButton().setDisabled(disable);
         			this.getMatriculaAsentarButton().setDisabled(disable);
                 }
@@ -162,9 +162,7 @@ Ext.define('App.controller.Infante',{
                 	
                 	this.getMatriculaStore().removeAll();
                 	this.getMatriculaNewButton().setDisabled(true);
-    				this.getMatriculaSaveButton().setDisabled(true);
-    				
-    				
+    				this.getMatriculaSaveButton().setDisabled(true);			
                 }
             },
             
@@ -231,14 +229,52 @@ Ext.define('App.controller.Infante',{
             		var record = this.getTerceroForm().getForm().getFieldValues(true);
             		this.getRemoteTerceroStore().save(record);
             	}
+            },
+            
+            //matricula
+            'infantematriculaform button[action=new]':{
+            	click:function(button, event, options){
+            		
+            	}
+            },
+            
+            'infantematriculaform button[action=save]':{
+            	click:function(button, event, options){
+            		var record = this.getMatriculaForm().getForm().getFieldValues(true);
+            		var maStore= this.getMatriculaStore();
+            		this.getMatriculaStore().getProxy().extraParams={
+            			format:'json',
+            			CrearItems:true
+            		};
+            		this.getMatriculaStore().save(record);            		
+            		
+            	}
+            },
+            
+            'infantematriculaform sucursalautorizadacombo':{
+            	select:function(combo, value, options){
+            		var sucursal=value[0];
+            		this.getCentroAutorizadoCombo().getStore().removeAll();
+            		this.getCentroAutorizadoCombo().getStore().loadRawData(getCentrosData(sucursal.getId()));
+            		this.getCentroAutorizadoCombo().getStore().clearFilter(true);
+            		this.getCentroAutorizadoCombo().getStore().
+            				filter([{filterFn: function(item) { return item.getId() > 1; }}])
+            		
+            		var centro = this.getCentroAutorizadoCombo().getStore().getAt(0);
+			        if (centro){
+			        	this.getCentroAutorizadoCombo().setValue(centro.getId());
+			      
+			        }
+            	}
             }
+            
         })
     },
     
     onLaunch: function(application){
     	var me=this;
     	Aicl.Util.executeRestRequest({
-			url : Aicl.Util.getUrlApi()+'/Infante/Aux'+'?format=json',
+			url : Aicl.Util.getUrlApi()+'/Infante/Aux',
 			params:{Fecha:Ext.Date.format(new Date(),'d.m.Y'), Activo:true},
 			method : 'get',
 			callback : function(result,success) {
@@ -291,9 +327,23 @@ Ext.define('App.controller.Infante',{
             this.getTerceroForm().getForm().clearInvalid();
     	}, this);
     	
+    	this.getMatriculaStore().on('write', function(store, operation, eOpts ){
+    		var result = Ext.decode(operation.response.responseText);
+    		console.log('matriculaStore on write result', result);
+    	}, this);
+    	
+    	
     	this.getTerceroSaveButton().setDisabled(!(this.getRemoteTerceroStore().canUpdate()));
     	this.getInfanteNewButton().setDisabled(!this.getInfanteStore().canCreate());
 		this.getInfanteSaveButton().setDisabled(!this.getInfanteStore().canUpdate());
+		
+		var suc = this.getSucursalAutorizadaCombo().getStore().getAt(0);
+        if (suc){
+        	this.getSucursalAutorizadaCombo().setValue(suc.getId());
+        	this.getSucursalAutorizadaCombo().fireEvent('select', 
+        	this.getSucursalAutorizadaCombo(), [suc]);
+        }
+				
     },
     
     infanteLoadRecord:function(record){
@@ -315,20 +365,22 @@ Ext.define('App.controller.Infante',{
     	
     	this.terceroAddLocal(record, 'IdTerceroFactura');
     	    	                    	
-        this.getInfanteForm().getForm().loadRecord(record);        
+        this.getInfanteForm().getForm().loadRecord(record);
+        this.getMatriculaForm().getForm().setValues({IdInfante:record.getId()});
+        
         ipStore.removeAll();
         iaStore.removeAll();
         maStore.removeAll();
         
         Aicl.Util.executeRestRequest({
-			url : Aicl.Util.getUrlApi()+'/Infante/Info/'+record.getId()+'?format=json',
+			url : Aicl.Util.getUrlApi()+'/Infante/Info/'+record.getId(),
 			method : 'get',
 			callback : function(result,success) {
 				console.log('InfanteInfo result', arguments);
 				if(success){
 					ipStore.loadRawData(result.InfantePadreList);
 					iaStore.loadRawData(result.InfanteAcudienteList);	
-					maStore.loadRawData(result.InfanteMatriculaList);
+					maStore.loadRawData(result.MatriculaList);
 				}
 			}
 		});

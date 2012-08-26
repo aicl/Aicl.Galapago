@@ -172,6 +172,10 @@
     <Compile Include="Types\Academico\InfanteAux.cs" />
     <Compile Include="Operations\InfanteAuxResponse.cs" />
     <Compile Include="Attributes\Academico\InfanteAux.cs" />
+    <Compile Include="Types\Academico\Tarifa.cs" />
+    <Compile Include="Types\Academico\MatriculaItem.cs" />
+    <Compile Include="Attributes\Academico\MatriculaItem.cs" />
+    <Compile Include="Operations\MatriculaResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
