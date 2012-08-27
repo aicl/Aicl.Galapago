@@ -74,19 +74,22 @@ Ext.define('App.view.infante.TabPanel',{
    	},{
     	title:'Matriculas',
     	xtype:'panel',
-    	layout:'hbox',
+    	layout:'vbox',
     	items:[{
         	xtype: 'panel', ui:'default-framed',
-        	style: {border: 1, padding: 0},
-        	width: 410, height:540,
-        	layout:'vbox',
-        	items:[{xtype:'infantematriculalist'},{xtype:'infantematriculaform'}]
+        	style: {border: 0, padding: 0},
+        	width: 946, height:200,
+        	layout:'hbox',
+        	items:[{xtype:'infantematriculalist'},
+        		{xtype:'infantematriculaform'}
+        	]
     	},{
         	xtype: 'panel', ui:'default-framed',
         	style: {border: 0, padding: 0},
-        	width: 536, height:540,
+        	width: 946, height:200,
+        	layout:'hbox',
         	items:[
-        		
+        		{xtype:'matriculaitemlist'},{xtype:'matriculaitemform'}
         	]
     	}]
    	}]
@@ -720,26 +723,32 @@ Ext.define('App.view.infanteacudiente.Form', {
 
 Ext.define('App.view.infantematricula.List',{ 
     extend: 'Ext.grid.Panel',
-    alias : 'widget.infantematriculalist', 
+    alias : 'widget.infantematriculalist',
+    title: 'Inscripciones',
     frame:false,
     selType : 'rowmodel',
-    height:150,
-    autoWidth:true,
+    autoHeight:true,
+    width:430,
+    autoScroll:true,
     viewConfig : { 	stripeRows: true   },
     margin: '2 0 0 0',  
-    initComponent: function() {
-    	
+    initComponent: function() {	
     this.store ='Matricula';     
-    	
     this.columns=[{
-		text: 'Curso',	dataIndex: 'Descripcion', width:180,
+		text: 'Curso',	dataIndex: 'Descripcion', width:180, flex:1,
 		renderer: function(value, metadata, record, store){
 			return value + ' Calendario:'+record.get('Calendario') ;
 		}
-	},
-	{
-		text: 'Matriculado',	dataIndex: 'IdIngreso', width:80},
-	{
+	},{
+		text: 'Matriculado',	dataIndex: 'IdIngreso', width:80,
+		renderer: function(value, metadata, record, store){
+			return Ext.String.format(
+			'<div class="{0}" style="text-align:center">{1}</div>',
+			value? 'x-cell-positive':'x-cell-negative',
+			value? 'Si': 'No'		
+			); 
+		}
+	},{
 		text: 'Clase', dataIndex: 'Nombre', width:150
 	}];
              
@@ -747,18 +756,19 @@ Ext.define('App.view.infantematricula.List',{
     }
 });
 
+
 Ext.define('App.view.infantematricula.Form', {
     extend: 'Ext.form.Panel',
     alias : 'widget.infantematriculaform',
     ui:'default-framed',
     frame:false,
-    margin: '2 0 0 0',
+    margin: '2 0 0 60',
     bodyStyle :'padding:0px 0px 0px 0px',
     style: {border: 0, padding: 0},
-    width:410,
+    width:455,
     autoHeight:true,
     autoScroll:true,
-    fieldDefaults : { msgTarget: 'side', labelWidth: 80,labelAlign: 'right'},
+    fieldDefaults : { msgTarget: 'side', labelWidth: 120,labelAlign: 'right'},
     defaultType:'textfield',
     defaults : { anchor: '100%',labelStyle: 'padding-left:4px;'},
          
@@ -796,27 +806,110 @@ Ext.define('App.view.infantematricula.Form', {
 	},{
 		xtype: 'centroautorizadocombo',fieldLabel: 'Centro'
 	},{
-		xtype: 'infantecursocombo', name: 'IdCurso', fieldLabel: 'Curso', width:300
+		xtype: 'infantecursocombo', name: 'IdCurso', fieldLabel: 'Curso'
 	},{
 		xtype: 'infanteclasecombo', name: 'IdClase', fieldLabel: 'Clase'
 	},{
         xtype      : 'fieldcontainer',
         fieldLabel : 'Estado',
-        defaultType: 'radiofield',
+        defaultType: 'checkboxfield',
         defaults: {flex: 1},
         layout: 'hbox',
         items: [{
           	name: 'Activo',
 			boxLabel: 'Activo',
 			inputValue:true
-		},{
-			name: 'Activo',
-			boxLabel: 'Suspendido',
-			inputValue:false
 		}]
 	}];
   
     this.callParent(arguments);
+    }
+});
+
+
+Ext.define('App.view.matriculaitem.List',{ 
+    extend: 'Ext.grid.Panel',
+    alias : 'widget.matriculaitemlist', 
+    frame:false,
+    selType : 'rowmodel',
+    autoHeight:true,
+    width:430,
+    autoScroll:true,
+    viewConfig : { 	stripeRows: true   },
+    margin: '2 0 0 0',
+    
+    initComponent: function() {
+        this.store ='MatriculaItem';
+        this.columns=[{
+			text: 'Item',
+			dataIndex: 'Descripcion',
+			flex:1
+		},{
+			text: 'Valor',
+			dataIndex: 'Valor',
+			width:80,
+			renderer: function(value, metadata, record, store){
+				return Ext.String.format(
+				'<div class="{0}">{1}</div>',
+				value>=0? 'x-cell-positive':'x-cell-negative',
+				Aicl.Util.formatCurrency(value)		
+				);
+        	}
+		}];
+                
+        this.callParent(arguments);
+    }
+});
+
+Ext.define('App.view.matriculaitem.Form', {
+    extend: 'Ext.form.Panel',
+    alias : 'widget.matriculaitemform',
+    ui:'default-framed',
+    frame:false,
+    margin: '2 0 0 60',
+    bodyStyle :'padding:0px 0px 0px 0px',
+    style: {border: 0, padding: 0},
+    width:455,
+    autoHeight:true,
+    autoScroll:true,
+    fieldDefaults : { msgTarget: 'side', labelWidth: 120,labelAlign: 'right'},
+    defaultType:'textfield',
+    defaults : { anchor: '100%',labelStyle: 'padding-left:4px;'},
+     
+    initComponent: function() {
+        this.items = [{	
+	    	xtype: 'toolbar',
+	    	name: 'matriculaItemToolbar',
+	        items: [{
+	            tooltip:'Crear Item',
+	            iconCls:'add',
+	            disabled:true,
+	            action: 'new'
+	        },'-',{
+	           	tooltip:'Borrar',
+	           	iconCls:'remove',
+	           	disabled:true,
+	          	action: 'delete'
+	        }]
+    	},{
+			xtype: 'hidden',
+			name: 'Id'
+		},{
+			xtype: 'hidden',
+			name: 'IdMatricula'
+		},{
+			xtype: 'infantetarifacombo',
+			fieldLabel: 'Item',
+			width:205
+		},{
+			xtype: 'numberfield',
+			name: 'Valor',
+			fieldLabel: 'Valor',
+			readOnly: true,
+			width:205
+		}];
+  
+        this.callParent(arguments);
     }
 });
 
@@ -858,6 +951,27 @@ Ext.define('App.view.infante.ClaseComboBox', {
         tpl: Ext.create('Ext.XTemplate',
             '<ul><tpl for=".">',
                 '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Nombre}</li>',
+            '</tpl></ul>'
+    )}
+});
+
+Ext.define('App.view.infante.TarifaComboBox', {
+	extend:'Ext.ux.form.field.BoxSelect',
+	alias : 'widget.infantetarifacombo',
+    displayField: 'Descripcion',
+	valueField: 'Id',
+	name:'IdTarifa',
+    store: 'Tarifa',
+    forceSelection:true,
+    multiSelect:false,
+    queryMode: 'local',
+    queryParam :'Descripcion',
+    triggerOnClick: false,
+    labelTpl: '{Descripcion}',
+    listConfig: {
+        tpl: Ext.create('Ext.XTemplate',
+            '<ul><tpl for=".">',
+                '<li role="option" class="' + Ext.baseCSSPrefix + 'boundlist-item' + '">{Descripcion} Valor:{Valor}</li>',
             '</tpl></ul>'
     )}
 });

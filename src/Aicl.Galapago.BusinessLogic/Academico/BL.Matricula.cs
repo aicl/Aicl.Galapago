@@ -18,46 +18,46 @@ namespace Aicl.Galapago.BusinessLogic
 		public static Response<Matricula> Post(this Matricula request, Factory factory,IHttpRequest httpRequest)
 		{  
             request.CheckId(Operaciones.Create);
-			var queryString= httpRequest.QueryString;
 
-			List<Matricula> data = new List<Matricula>();
-			List<MatriculaItem> miList= new List<MatriculaItem>();
+			if( request.IdIngreso.HasValue && request.IdIngreso.Value==default(int)) request.IdIngreso=null;
+			if( request.IdClase.HasValue && request.IdClase.Value==default(int)) request.IdClase=null;
+
+			var mr = new MatriculaResponse ();
+
+			var queryString= httpRequest.QueryString;
 
             factory.Execute(proxy=>{
 
-                proxy.Create<Matricula>(request);
+				proxy.Create<Matricula>(request);
 
-				data = proxy.Get<Matricula>(q=>	q.Id== request.Id);
+				var data = proxy.Get<Matricula>(q=>	q.Id== request.Id);
 
 				bool crearItems;
-                if (bool.TryParse( queryString["CrearItems"], out crearItems)){
+                if (bool.TryParse( queryString["CrearItems"], out crearItems) && crearItems){
 					var tarifas = proxy.Get<Tarifa>(q=>q.IdSucursal== request.IdSucursal &&
 					                                q.IdCentro==request.IdCentro && 
-					                                q.Activo==true);
+					                                q.Activo==true &&
+					                                q.IncluirEnMatricula==true);
 
 
 					foreach(Tarifa tarifa in tarifas){
 						var mi = new MatriculaItem(){
 							IdMatricula=request.Id,
 							IdTarifa= tarifa.Id,
-							Valor= tarifa.Valor
+							Valor= tarifa.Valor,
+							Descripcion= tarifa.Descripcion
 						};
 
 						proxy.Create<MatriculaItem>(mi);
-						miList.Add(mi);
+						mr.MatriculaItemList.Add(mi);
 					}
+					mr.TarifaList= tarifas;
 				}
 
+				mr.Data=data;
+
             });
-		
-
-
-			
-			return new MatriculaResponse (){
-				Data=data,
-				MatriculaItemList= miList
-			};	
-			
+			return mr;
 		}
 		#endregion post
 

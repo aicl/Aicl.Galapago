@@ -21,7 +21,7 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("NOMBRE")]
 		[StringLength(40)]
 		[Required]
-		public string Nombre { get; set;}
+		public string Descripcion { get; set;}
 
 		[Alias("VALOR")]
 		[DecimalLength(15,2)]

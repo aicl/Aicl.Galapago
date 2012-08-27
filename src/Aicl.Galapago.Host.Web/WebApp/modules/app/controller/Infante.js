@@ -1,6 +1,7 @@
 Ext.define('App.controller.Infante',{
 	extend: 'Ext.app.Controller',
-    stores: ['Infante','RemoteTercero','InfanteAcudiente','InfantePadre','Matricula','Curso','Clase'],  
+    stores: ['Infante','RemoteTercero','InfanteAcudiente',
+    'InfantePadre','Matricula','Curso','Clase','Tarifa','MatriculaItem'],  
     models: ['Infante','Tercero'],
     views:  ['infante.Panel' ],
     refs:[
@@ -91,14 +92,14 @@ Ext.define('App.controller.Infante',{
                 	
                 	if (selections.length){
     					disable= !this.getInfanteStore().canUpdate();
-    					var record=selections[0];
+    					var record=selections[0]; 
     					this.getMatriculaForm().getForm().loadRecord(record);
     					if(record.get('IdIngreso')){
     						this.getMatriculaAsentarButton().setIconCls('desasentar');
     						this.getMatriculaAsentarButton().setTooltip('Reversar Matricula');
     					}
     					else{
-    						this.getMatriculaAsentarButton().setIconCls('sasentar');
+    						this.getMatriculaAsentarButton().setIconCls('asentar');
     						this.getMatriculaAsentarButton().setTooltip('Matricular');
     					}
     					
@@ -241,6 +242,7 @@ Ext.define('App.controller.Infante',{
             'infantematriculaform button[action=save]':{
             	click:function(button, event, options){
             		var record = this.getMatriculaForm().getForm().getFieldValues(true);
+            		if(!record.Activo) record.Activo=false;
             		var maStore= this.getMatriculaStore();
             		this.getMatriculaStore().getProxy().extraParams={
             			format:'json',
@@ -330,6 +332,10 @@ Ext.define('App.controller.Infante',{
     	this.getMatriculaStore().on('write', function(store, operation, eOpts ){
     		var result = Ext.decode(operation.response.responseText);
     		console.log('matriculaStore on write result', result);
+    		this.getMatriculaItemStore().removeAll();
+    		this.getMatriculaItemStore().loadRawData(result.MatriculaItemList);
+    		this.getTarifaStore().removeAll();
+    		this.getTarifaStore().loadRawData(result.TarifaList);
     	}, this);
     	
     	

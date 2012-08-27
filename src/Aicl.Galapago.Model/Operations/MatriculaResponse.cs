@@ -9,9 +9,11 @@ namespace Aicl.Galapago.Model.Operations
 		public MatriculaResponse ():base()
 		{
 			MatriculaItemList= new List<MatriculaItem>();
+			TarifaList = new List<Tarifa>();
 		}
 
 		public List<MatriculaItem> MatriculaItemList {get; set;}
+		public List<Tarifa> TarifaList { get; set;}
 	}
 }
 

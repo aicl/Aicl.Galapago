@@ -598,7 +598,6 @@ Ext.form.Panel.implement({
 
 
 //calendario
-
 Ext.define('App.model.Calendario',{
 	extend: 'Ext.data.Model',
 	idProperty: 'Calendario',
@@ -617,8 +616,6 @@ Ext.define('App.store.Calendario',{
 		if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);
 	}
 });
-
-
 
 // tipo Documento
 Ext.define('App.model.TipoDocumento',{
@@ -663,7 +660,6 @@ Ext.define('tipdocumento.ComboBox', {
        	}
     }
 });
-
 
 // ciudad
 Ext.define('App.model.Ciudad',{
@@ -954,6 +950,48 @@ Ext.define('App.store.Clase',{
 	extend: 'Aicl.data.Store',
 	model: 'App.model.Clase',
 	constructor: function(config){config=config||{};config.storeId=config.storeId||'Clase';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+
+Ext.define('App.model.MatriculaItem',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',	type: 'int'},
+		{name: 'IdMatricula',type: 'int'},
+		{name: 'IdTarifa',	type: 'int'	},
+		{name: 'Valor',		type: 'number'},
+		{name: 'Descripcion', type:'string'}
+	]
+});
+
+Ext.define('App.store.MatriculaItem',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.MatriculaItem',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'MatriculaItem';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
+});
+
+Ext.define('App.model.Tarifa',{
+	extend: 'Ext.data.Model',
+	idProperty: 'Id',
+	fields:[
+		{name: 'Id',type: 'int'},
+		{name: 'Descripcion',type: 'string'},
+		{name: 'Valor',	type: 'number'},
+		{name: 'IdPresupuestoItem',	type: 'int'	},
+		{name: 'IncluirEnMatricula',type: 'boolean'},
+		{name: 'IncluirEnPension',	type: 'boolean'	},
+		{name: 'Activo',type: 'boolean'	},
+		{name: 'IdSucursal',type: 'int'	},
+		{name: 'IdCentro',	type: 'int'	},
+		{name: 'PresupuestoActivo',	type: 'boolean'}
+	]
+});
+
+Ext.define('App.store.Tarifa',{
+	extend: 'Aicl.data.Store',
+	model: 'App.model.Tarifa',
+	constructor: function(config){config=config||{};config.storeId=config.storeId||'Tarifa';if(arguments.length==0) this.callParent([config]);else this.callParent(arguments);}
 });
 
 // fin models && stores

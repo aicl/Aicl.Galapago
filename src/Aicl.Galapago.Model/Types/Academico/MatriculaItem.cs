@@ -1,11 +1,11 @@
 using System;
 using ServiceStack.DataAnnotations;
 using ServiceStack.DesignPatterns.Model;
-using System.ComponentModel.DataAnnotations;
 
 namespace Aicl.Galapago.Model.Types
 {
 	[Alias("MATRICULA_ITEM")]
+	[JoinTo(typeof(Tarifa),"IdTarifa","Id")]
 	public partial class MatriculaItem:IHasId<Int32>{
 
 		public MatriculaItem(){}
@@ -25,5 +25,9 @@ namespace Aicl.Galapago.Model.Types
 		[Alias("VALOR")]
 		[DecimalLength(15,2)]
 		public Decimal Valor { get; set;} 
+
+		[BelongsTo(typeof(Tarifa))]
+		public string Descripcion { get; set;}
+
 	}
 }
