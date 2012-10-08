@@ -365,7 +365,7 @@ Ext.define('App.view.infante.List',{
         xtype: 'toolbar',
         items: [{
             text:'Seleccionar',
-     		tooltip:'Seleccionar infate',
+     		tooltip:'Seleccionar infante',
       		iconCls:'select',
     		disabled:true,
     		action:'select'
